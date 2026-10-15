@@ -1,0 +1,12 @@
+{
+  "companies": [
+    {"id": "xai", "name": "xAI", "score": 128754, "posts": 2341, "progress": 0.82, "accent": "#e9b949", "logo": "/logos/xai.svg", "logoMode": "mask", "logoColor": "linear-gradient(160deg,#ffe08a,#d9a032)", "badge": "+10% (It’s his app)"},
+    {"id": "openai", "name": "OpenAI", "score": 96432, "posts": 1892, "progress": 0.83, "accent": "#34d399", "logo": "/logos/openai.svg", "logoMode": "mask", "logoColor": "#ffffff"},
+    {"id": "meta", "name": "Meta", "score": 45283, "posts": 983, "progress": 0.85, "accent": "#3b9cf6", "logo": "/logos/meta.svg", "logoMode": "image"},
+    {"id": "anthropic", "name": "Anthropic", "score": 71309, "posts": 1456, "progress": 0.85, "accent": "#9f6bf5", "logo": "/logos/anthropic.svg", "logoMode": "mask", "logoColor": "linear-gradient(160deg,#c4a1ff,#8b5cf6)"},
+    {"id": "deepmind", "name": "Google DeepMind", "score": 58667, "posts": 1102, "progress": 0.8, "accent": "#3b82f6", "logo": "/logos/deepmind.svg", "logoMode": "mask", "logoColor": "linear-gradient(135deg,#4f8df7 0%,#4f8df7 45%,#f7c544 55%,#f7c544 100%)"}
+  ],
+  "posts": [
+    {"id": "p1", "companyId": "xai", "name": "Elon Musk", "handle": "@elonmusk", "time": "3m", "text": "The whole world will watch this", "replies": "4.8K", "reposts": "9.2K", "likes": "61K", "inlineHandle": true}
+  ]
+}

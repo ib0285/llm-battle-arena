@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 52">
+  <path
+    d="M25 26c0-11.5 8.5-19 18-19 12.5 0 15.5 13 23.5 19-8 6-11 19-23.5 19-9.5 0-18-7.5-18-19z"
+    fill="none"
+    stroke="#3b9cf6"
+    stroke-width="7"
+  />
+  <path
+    d="M75 26c0 11.5-8.5 19-18 19-12.5 0-15.5-13-23.5-19 8-6 11-19 23.5-19 9.5 0 18 7.5 18 19z"
+    fill="none"
+    stroke="#3b9cf6"
+    stroke-width="7"
+  />
+</svg>

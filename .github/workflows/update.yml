@@ -1,0 +1,42 @@
+name: Update Arena Data
+
+on:
+  schedule:
+    - cron: '0 * * * *' # every hour
+  workflow_dispatch: # allow a manual run from the Actions tab
+
+# The hourly job only repairs the shape of scores.json. It needs
+# permission to commit that repair. The repository setting
+# "Workflow permissions" must also allow read and write.
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Repair scores.json format
+        run: python update_data.py
+
+      - name: Check scores.json
+        run: python -c "import json; d=json.load(open('scores.json')); assert isinstance(d.get('companies'), list) and d['companies']; assert isinstance(d.get('posts'), list); print('scores.json ok', len(d['companies']), 'companies', len(d['posts']), 'posts')"
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add scores.json
+          if git diff --staged --quiet; then
+            echo "No score file changes to save."
+            exit 0
+          fi
+          git commit -m "Update scores [skip ci]"
+          git push

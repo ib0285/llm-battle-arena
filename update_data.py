@@ -8,10 +8,17 @@ mean of those account numbers, weighted by how many posts each account made
 in the last 7 days (a busier account counts more). Accounts with no posts
 are left out.
 
-The board shows that raw score as an index from 1.0 to 10.0. The highest raw
-score is 10.0, and everyone else is 1 + 9 * (raw / best raw), rounded to one
-decimal. A company with fewer than 3 posts in the week is marked
-"not enough posts" and ranks last. There is no xAI boost.
+The Companies board uses only the official company accounts. Their raw score
+is the mean of those account numbers, weighted by how many posts each account
+made in the last 7 days (a busier account counts more). The Leaders board
+scores each person on their own, with the same per-follower number, then
+normalises that group separately. People are not mixed into the company score.
+
+Both boards show the raw score as an index from 1.0 to 10.0. The highest raw
+score in that board is 10.0, and everyone else is 1 + 9 * (raw / best raw),
+rounded to one decimal. Fewer than 3 posts in the week is "not enough posts"
+and ranks last. Leaders also keep a separate total-reach sum, which is not
+part of the index. There is no xAI boost.
 
 Follower counts are cached and refreshed at most once a day. A full pass
 (walk back 7 days, and refresh stale follower counts) runs at most every 3
@@ -150,6 +157,25 @@ def write_json(path, payload):
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
 
+def parse_account_entry(entry, company_id):
+    """Return (handle, role). A plain string stays a company account."""
+    if isinstance(entry, str):
+        handle = entry.strip().lstrip("@")
+        role = "company"
+    elif isinstance(entry, dict):
+        handle = str(entry.get("handle") or "").strip().lstrip("@")
+        role = entry.get("role")
+        if role == "person":
+            role = "leader"
+    else:
+        raise UpdateError(f"accounts.json has a bad entry for {company_id}")
+    if not handle:
+        raise UpdateError(f"accounts.json has a blank handle for {company_id}")
+    if role not in ("company", "leader"):
+        raise UpdateError(f"accounts.json role for @{handle} must be company or leader")
+    return handle, role
+
+
 def load_accounts(path):
     raw = load_json(path, "accounts.json")
     if not isinstance(raw, dict) or not raw:
@@ -160,16 +186,28 @@ def load_accounts(path):
             raise UpdateError(f"accounts.json has an unknown company '{company_id}'")
         if not isinstance(handles, list) or not handles:
             raise UpdateError(f"accounts.json needs at least one handle for {company_id}")
-        cleaned = []
-        for handle in handles:
-            if not isinstance(handle, str) or not handle.strip():
-                raise UpdateError(f"accounts.json has a blank handle for {company_id}")
-            cleaned.append(handle.strip().lstrip("@"))
-        accounts[company_id] = cleaned
+        grouped = {"company": [], "leader": [], "all": []}
+        seen = set()
+        for entry in handles:
+            handle, role = parse_account_entry(entry, company_id)
+            key = cache_key(handle)
+            if key in seen:
+                raise UpdateError(f"accounts.json lists @{handle} twice for {company_id}")
+            seen.add(key)
+            grouped[role].append(handle)
+            grouped["all"].append(handle)
+        accounts[company_id] = grouped
     missing = [company_id for company_id in COMPANY_ORDER if company_id not in accounts]
     if missing:
         raise UpdateError("accounts.json is missing " + ", ".join(missing))
     return accounts
+
+
+def account_handles(accounts, company_id, role="all"):
+    grouped = accounts.get(company_id) or {}
+    if isinstance(grouped, list):
+        return grouped
+    return list(grouped.get(role) or [])
 
 
 def parse_time(value):
@@ -675,10 +713,16 @@ def remember_snapshot(snapshots, companies, now):
         kept = snapshots
     else:
         payload = {}
+        leader_payload = {}
         for company in companies:
-            if company["status"] == "ok" and isinstance(company.get("index"), (int, float)):
-                payload[company["id"]] = {"index": company["index"], "raw": company.get("raw")}
-        kept = snapshots + [{"at": now.isoformat(), "companies": payload}]
+            if company["status"] != "ok" or not isinstance(company.get("index"), (int, float)):
+                continue
+            record = {"index": company["index"], "raw": company.get("raw")}
+            if company.get("handle"):
+                leader_payload[cache_key(company["handle"])] = record
+            elif company.get("id"):
+                payload[company["id"]] = record
+        kept = snapshots + [{"at": now.isoformat(), "companies": payload, "leaders": leader_payload}]
     pruned = []
     for item in kept:
         at = parse_time(item.get("at"))
@@ -704,16 +748,105 @@ def pick_mover(companies):
     return best("weekDelta", "week") or best("delta", "today")
 
 
-def posts_for(history, company_id):
-    return [post for post in history if post.get("companyId") == company_id]
+def posts_for(history, company_id, handles=None):
+    posts = [post for post in history if post.get("companyId") == company_id]
+    if handles is None:
+        return posts
+    wanted = {cache_key(handle) for handle in handles}
+    return [post for post in posts if cache_key(post.get("handle")) in wanted]
 
 
-def build_scores(previous, history, followers, failed_companies, snapshots, now):
+LEADER_NAMES = {
+    "elonmusk": "Elon Musk",
+    "Yuhu_ai_": "Yuhu",
+    "sama": "Sam Altman",
+    "gdb": "Greg Brockman",
+    "markchen90": "Mark Chen",
+    "DarioAmodei": "Dario Amodei",
+    "alexalbert__": "Alex Albert",
+    "bcherny": "Boris Cherny",
+    "finkd": "Mark Zuckerberg",
+    "alexandr_wang": "Alexandr Wang",
+    "demishassabis": "Demis Hassabis",
+    "OfficialLoganK": "Logan Kilpatrick",
+    "JeffDean": "Jeff Dean",
+}
+
+
+def person_name(posts, handle):
+    named = []
+    for post in posts:
+        created = parse_time(post.get("created"))
+        name = post.get("name")
+        if created is not None and isinstance(name, str) and name.strip():
+            named.append((created, name.strip()))
+    if named:
+        named.sort(key=lambda item: item[0])
+        return named[-1][1]
+    return LEADER_NAMES.get(handle) or LEADER_NAMES.get(handle.lower()) or handle
+
+
+def build_leaders(accounts, history, followers, snapshots, now):
+    """Score each person on their own. Total reach is not part of the index."""
+    rows = []
+    for company_id in COMPANY_ORDER:
+        for handle in account_handles(accounts, company_id, "leader"):
+            person_posts = posts_for(history, company_id, [handle])
+            row = {
+                "handle": "@" + handle.lstrip("@"),
+                "name": person_name(person_posts, handle),
+                "companyId": company_id,
+                "companyName": DISPLAY[company_id]["name"],
+                "score": 0,
+                "index": None,
+                "raw": None,
+                "posts": len(person_posts),
+                "progress": 0,
+                "delta": None,
+                "status": "not_enough_posts",
+                "reach": sum(engagement(post) for post in person_posts),
+                "biggestReach": False,
+            }
+            row["reachLabel"] = format_count(row["reach"])
+            rates = account_rates(person_posts, followers)
+            raw = company_raw(rates)
+            if len(person_posts) >= MIN_POSTS and raw is not None:
+                row["status"] = "ok"
+                row["raw"] = raw
+            rows.append(row)
+    apply_index(rows)
+    today = reference_snapshot(snapshots, now, TODAY_TARGET, TODAY_SLACK)
+    for row in rows:
+        if row["status"] != "ok":
+            row["delta"] = None
+            continue
+        previous = None
+        if isinstance(today, dict):
+            stored = today.get("leaders")
+            if isinstance(stored, dict):
+                entry = stored.get(cache_key(row["handle"]))
+                if isinstance(entry, dict):
+                    index = entry.get("index")
+                    if isinstance(index, (int, float)) and not isinstance(index, bool) and float(index) > 0:
+                        previous = float(index)
+        row["delta"] = percent_change(row.get("index"), previous)
+        row.pop("held", None)
+    for row in rows:
+        row.pop("held", None)
+    top_reach = max((row["reach"] for row in rows), default=0)
+    for row in rows:
+        row["biggestReach"] = bool(top_reach) and row["reach"] == top_reach
+    rows.sort(key=lambda row: (row["status"] == "ok", row.get("index") or 0, row["reach"]), reverse=True)
+    return rows
+
+
+def build_scores(previous, history, followers, failed_companies, snapshots, now, accounts):
     saved = previous_companies(previous)
     companies = []
     posts = []
     for company_id in COMPANY_ORDER:
-        company_posts = posts_for(history, company_id)
+        official = account_handles(accounts, company_id, "company")
+        company_posts = posts_for(history, company_id, official)
         if company_id in failed_companies:
             company = keep_previous(company_id, saved.get(company_id))
             companies.append(company)
@@ -743,9 +876,11 @@ def build_scores(previous, history, followers, failed_companies, snapshots, now)
     for index, post in enumerate(posts, start=1):
         post["id"] = f"p{index}"
     mover = pick_mover(companies)
+    leaders = build_leaders(accounts, history, followers, snapshots, now)
     updated = {
         "updatedAt": now.isoformat(),
         "companies": companies,
+        "leaders": leaders,
         "posts": posts,
     }
     if mover:
@@ -755,7 +890,7 @@ def build_scores(previous, history, followers, failed_companies, snapshots, now)
 
 def log_handles(accounts, history, followers):
     for company_id in COMPANY_ORDER:
-        for handle in accounts.get(company_id, []):
+        for handle in account_handles(accounts, company_id):
             items = [
                 post
                 for post in posts_for(history, company_id)
@@ -772,7 +907,7 @@ def collect(accounts, followers, api_key, http_get, now, full):
     tweets = []
     failed_companies = []
     for company_id in COMPANY_ORDER:
-        handles = accounts.get(company_id, [])
+        handles = account_handles(accounts, company_id)
         if not handles:
             failed_companies.append(company_id)
             print(f"{company_id}: no accounts listed, keeping the previous score", file=sys.stderr)
@@ -829,8 +964,8 @@ def execute(scores_path, accounts_path, api_key, http_get, now, data_dir=None, f
         history = merge_history(history, fetched, now)
         if not history:
             raise UpdateError("no posts from the last 7 days")
-        updated = build_scores(previous, history, followers, set(failed_companies), snapshots, now)
-        snapshots = remember_snapshot(snapshots, updated["companies"], now)
+        updated = build_scores(previous, history, followers, set(failed_companies), snapshots, now, accounts)
+        snapshots = remember_snapshot(snapshots, updated["companies"] + updated["leaders"], now)
         log_handles(accounts, history, followers)
     except UpdateError as exc:
         print(f"{exc}. scores.json was not changed.", file=sys.stderr)

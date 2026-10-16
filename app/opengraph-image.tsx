@@ -34,7 +34,7 @@ export default async function OpenGraphImage() {
           Who&apos;s winning attention on X
         </div>
         <div style={{ display: 'flex', fontSize: 26, color: '#b6b4c2', marginTop: 10 }}>
-          Engagement per follower, rolling 7 days
+          Companies · engagement per follower, rolling 7 days
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: 36 }}>
           {rows.map((company) => {

@@ -1,7 +1,35 @@
 {
-  "xai": ["xai", "elonmusk", "grok", "Yuhu_ai_"],
-  "openai": ["OpenAI", "sama", "gdb", "OpenAIDevs", "markchen90"],
-  "anthropic": ["AnthropicAI", "DarioAmodei", "claudeai", "alexalbert__", "bcherny"],
-  "meta": ["AIatMeta", "Meta", "finkd", "alexandr_wang"],
-  "deepmind": ["GoogleDeepMind", "demishassabis", "GeminiApp", "OfficialLoganK", "JeffDean"]
+  "xai": [
+    {"handle": "xai", "role": "company"},
+    {"handle": "grok", "role": "company"},
+    {"handle": "elonmusk", "role": "leader"},
+    {"handle": "Yuhu_ai_", "role": "leader"}
+  ],
+  "openai": [
+    {"handle": "OpenAI", "role": "company"},
+    {"handle": "OpenAIDevs", "role": "company"},
+    {"handle": "sama", "role": "leader"},
+    {"handle": "gdb", "role": "leader"},
+    {"handle": "markchen90", "role": "leader"}
+  ],
+  "anthropic": [
+    {"handle": "AnthropicAI", "role": "company"},
+    {"handle": "claudeai", "role": "company"},
+    {"handle": "DarioAmodei", "role": "leader"},
+    {"handle": "alexalbert__", "role": "leader"},
+    {"handle": "bcherny", "role": "leader"}
+  ],
+  "meta": [
+    {"handle": "AIatMeta", "role": "company"},
+    {"handle": "Meta", "role": "company"},
+    {"handle": "finkd", "role": "leader"},
+    {"handle": "alexandr_wang", "role": "leader"}
+  ],
+  "deepmind": [
+    {"handle": "GoogleDeepMind", "role": "company"},
+    {"handle": "GeminiApp", "role": "company"},
+    {"handle": "demishassabis", "role": "leader"},
+    {"handle": "OfficialLoganK", "role": "leader"},
+    {"handle": "JeffDean", "role": "leader"}
+  ]
 }

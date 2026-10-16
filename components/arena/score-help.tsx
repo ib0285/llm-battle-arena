@@ -37,15 +37,22 @@ export function ScoreHelp() {
               post for every 1,000 followers.
             </p>
             <p>
-              A company&apos;s score is the average of those account numbers, weighted by how many posts each account
-              made, so a busier account counts more. Accounts with no posts this week are left out.
+              <strong>Companies</strong> uses only the official lab accounts. A company&apos;s score is the average of
+              those account numbers, weighted by how many posts each account made, so a busier account counts more.
+              Personal accounts are not mixed in.
             </p>
             <p>
-              The board turns that into a number from 1.0 to 10.0. The leader is 10.0, and the bar shows how close
-              everyone else is. A company needs at least 3 posts in the 7 days. Otherwise it says &quot;not enough
-              posts&quot; and ranks last.
+              <strong>Leaders</strong> scores each person on their own with that same per-follower number, then scales
+              the people against each other. The best person is 10.0.
             </p>
-            <p>The arrow is the percent change since about a day ago.</p>
+            <p>
+              Both boards turn the number into an index from 1.0 to 10.0. Anyone with fewer than 3 posts in the 7 days
+              says &quot;not enough posts&quot; and ranks last. The arrow is the percent change since about a day ago.
+            </p>
+            <p>
+              Leaders also show <strong>Total reach</strong>: the plain sum of likes, reposts, and replies over those 7
+              days. It sits beside the index. The two numbers are not blended.
+            </p>
             <p className={styles.modalNote}>Just for fun, not a measure of which AI is best.</p>
             <button type="button" className={styles.modalClose} onClick={() => setOpen(false)}>
               Close

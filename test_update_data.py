@@ -482,6 +482,59 @@ class UpdateDataTests(unittest.TestCase):
         logged = "".join(call.args[0] for call in stdout.write.call_args_list)
         self.assertIn("@OpenAI: 3 posts, 18 engagement, 4000 followers", logged)
 
+    def test_companies_ignore_leaders_and_leaders_are_ranked_alone(self):
+        self.accounts.write_text(
+            json.dumps(
+                {
+                    "xai": [
+                        {"handle": "xai", "role": "company"},
+                        {"handle": "elonmusk", "role": "leader"},
+                    ],
+                    "openai": [{"handle": "OpenAI", "role": "company"}],
+                    "anthropic": [{"handle": "AnthropicAI", "role": "company"}],
+                    "meta": [{"handle": "AIatMeta", "role": "company"}],
+                    "deepmind": [{"handle": "GoogleDeepMind", "role": "leader"}],
+                }
+            ),
+            encoding="utf-8",
+        )
+
+        def http_get(url, params, api_key):
+            self.calls.append((url, params["userName"]))
+            if url == update_data.USER_URL:
+                return user_info(10_000)
+            handle = params["userName"]
+            if handle == "xai":
+                return page([tweet(f"x{i}", "xai", "xAI", 20 + i, 100, 0, 0, text="lab") for i in range(4)])
+            if handle == "elonmusk":
+                return page([tweet(f"e{i}", "elonmusk", "Elon Musk", 15 + i, 500, 0, 0, text="person") for i in range(4)])
+            if handle == "GoogleDeepMind":
+                return page([tweet(f"g{i}", "GoogleDeepMind", "Demis", 12, 50, 0, 0, text="short") for i in range(2)])
+            return page([tweet(f"{handle}{i}", handle, handle, 12, 10, 0, 0, text=handle) for i in range(3)])
+
+        code, _before, after = self.run_update(http_get, full=True)
+        self.assertEqual(code, 0)
+        data = json.loads(after)
+        by_id = {company["id"]: company for company in data["companies"]}
+        # xAI's 100 likes are not pulled up by Elon's 500. Rate is 100/10000*1000 = 10.
+        self.assertEqual(by_id["xai"]["posts"], 4)
+        self.assertEqual(by_id["xai"]["raw"], 10)
+        self.assertEqual(data["posts"][0]["handle"], "@xai")
+        handles = [call[1] for call in self.calls if call[0] == update_data.TWEETS_URL]
+        self.assertEqual(handles, ["xai", "elonmusk", "OpenAI", "AIatMeta", "AnthropicAI", "GoogleDeepMind"])
+        leaders = {row["handle"]: row for row in data["leaders"]}
+        self.assertEqual(leaders["@elonmusk"]["name"], "Elon Musk")
+        self.assertEqual(leaders["@elonmusk"]["companyId"], "xai")
+        self.assertEqual(leaders["@elonmusk"]["index"], 10)
+        self.assertEqual(leaders["@elonmusk"]["reach"], 2000)
+        self.assertEqual(leaders["@elonmusk"]["reachLabel"], "2K")
+        self.assertTrue(leaders["@elonmusk"]["biggestReach"])
+        self.assertEqual(leaders["@GoogleDeepMind"]["status"], "not_enough_posts")
+        self.assertIsNone(leaders["@GoogleDeepMind"]["index"])
+        self.assertEqual(leaders["@GoogleDeepMind"]["reach"], 100)
+        self.assertFalse(leaders["@GoogleDeepMind"]["biggestReach"])
+        self.assertNotEqual(data.get("mover", {}).get("companyId"), "elonmusk")
+
     def test_format_count(self):
         self.assertEqual(update_data.format_count(86), "86")
         self.assertEqual(update_data.format_count(1400), "1.4K")

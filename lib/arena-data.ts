@@ -47,9 +47,26 @@ export type Mover = {
   period: 'week' | 'today'
 }
 
+export type Leader = {
+  handle: string
+  name: string
+  companyId: CompanyId
+  companyName: string
+  score: number
+  index: number | null
+  posts: number
+  progress: number
+  delta: number | null
+  status: CompanyStatus
+  reach: number
+  reachLabel: string
+  biggestReach: boolean
+}
+
 export type ArenaData = {
   companies: Company[]
   posts: Post[]
+  leaders: Leader[]
   usingFallback: boolean
   updatedAt: string | null
   mover: Mover | null
@@ -242,6 +259,54 @@ const fallbackPosts: Post[] = [
   },
 ]
 
+const fallbackLeaders: Leader[] = [
+  {
+    handle: '@sama',
+    name: 'Sam Altman',
+    companyId: 'openai',
+    companyName: 'OpenAI',
+    score: 10,
+    index: 10,
+    posts: 9,
+    progress: 1,
+    delta: 6,
+    status: 'ok',
+    reach: 12_300_000,
+    reachLabel: '12.3M',
+    biggestReach: true,
+  },
+  {
+    handle: '@elonmusk',
+    name: 'Elon Musk',
+    companyId: 'xai',
+    companyName: 'xAI',
+    score: 7.4,
+    index: 7.4,
+    posts: 40,
+    progress: 0.74,
+    delta: -2,
+    status: 'ok',
+    reach: 8_200_000,
+    reachLabel: '8.2M',
+    biggestReach: false,
+  },
+  {
+    handle: '@demishassabis',
+    name: 'Demis Hassabis',
+    companyId: 'deepmind',
+    companyName: 'Google DeepMind',
+    score: 0,
+    index: null,
+    posts: 2,
+    progress: 0,
+    delta: null,
+    status: 'not_enough_posts',
+    reach: 1400,
+    reachLabel: '1.4K',
+    biggestReach: false,
+  },
+]
+
 const fallbackMover: Mover = {
   companyId: 'anthropic',
   name: 'Anthropic',
@@ -377,6 +442,39 @@ export function normalizePosts(input: unknown): Post[] | null {
   return posts
 }
 
+export function normalizeLeaders(input: unknown): Leader[] {
+  if (!Array.isArray(input)) return []
+  const leaders: Leader[] = []
+  input.forEach((raw) => {
+    if (!isRecord(raw)) return
+    const companyId = companyIdFrom(raw.companyId) ?? companyIdFrom(raw.companyName)
+    if (!companyId) return
+    const handle = asText(raw.handle)
+    if (!handle) return
+    const posts = asNumber(raw.posts)
+    if (posts === null) return
+    const status: CompanyStatus = raw.status === 'not_enough_posts' ? 'not_enough_posts' : raw.status === 'pending' ? 'pending' : 'ok'
+    const index = status === 'ok' ? asNumber(raw.index) ?? asNumber(raw.score) : null
+    const reach = asNumber(raw.reach) ?? 0
+    leaders.push({
+      handle: handle.startsWith('@') ? handle : `@${handle}`,
+      name: asText(raw.name, handle),
+      companyId,
+      companyName: asText(raw.companyName, DISPLAY[companyId].name),
+      score: index ?? 0,
+      index,
+      posts,
+      progress: status === 'ok' && index !== null ? Math.max(0, Math.min(1, (asNumber(raw.progress) ?? index / 10))) : 0,
+      delta: status === 'ok' ? asNumber(raw.delta) : null,
+      status,
+      reach,
+      reachLabel: asText(raw.reachLabel, formatNumber(reach)),
+      biggestReach: raw.biggestReach === true,
+    })
+  })
+  return leaders
+}
+
 function normalizeMover(raw: unknown): Mover | null {
   if (!isRecord(raw)) return null
   const companyId = companyIdFrom(raw.companyId) ?? companyIdFrom(raw.name)
@@ -403,6 +501,7 @@ export async function fetchArenaData(): Promise<ArenaData> {
     return {
       companies,
       posts: posts ?? fallbackPosts,
+      leaders: normalizeLeaders(record.leaders),
       usingFallback: false,
       updatedAt: asText(record.updatedAt) || null,
       mover: normalizeMover(record.mover),
@@ -412,6 +511,7 @@ export async function fetchArenaData(): Promise<ArenaData> {
     return {
       companies: fallbackCompanies,
       posts: fallbackPosts,
+      leaders: fallbackLeaders,
       usingFallback: true,
       updatedAt: null,
       mover: fallbackMover,

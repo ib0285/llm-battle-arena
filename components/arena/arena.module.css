@@ -139,8 +139,8 @@
 }
 
 .cardScore {
-  margin-top: calc(8 * var(--u));
-  font-size: calc(34 * var(--u));
+  margin-top: calc(4 * var(--u));
+  font-size: calc(30 * var(--u));
   font-weight: 700;
   color: #fff;
   line-height: 1.05;
@@ -150,12 +150,41 @@
 
 .cardLabel {
   margin-top: calc(3 * var(--u));
-  font-size: calc(14 * var(--u));
+  font-size: calc(13 * var(--u));
+  color: #b6b4c2;
+}
+
+.cardDelta,
+.coreDelta {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.cardDelta {
+  margin-top: calc(2 * var(--u));
+  font-size: calc(13 * var(--u));
+}
+
+.coreDelta {
+  margin-top: calc(4 * var(--u));
+  font-size: calc(16 * var(--u));
+}
+
+.up {
+  color: #3ee07a;
+}
+
+.down {
+  color: #ff6b81;
+}
+
+.flat {
   color: #b6b4c2;
 }
 
 .bar {
-  margin-top: calc(7 * var(--u));
+  margin-top: calc(5 * var(--u));
   height: calc(7 * var(--u));
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
@@ -170,7 +199,7 @@
 }
 
 .cardFoot {
-  margin-top: calc(8 * var(--u));
+  margin-top: calc(5 * var(--u));
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -248,12 +277,84 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+.infoLink {
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.72);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.infoLink:hover {
+  color: #fff;
+}
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.modal {
+  width: min(480px, 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: #12121a;
+  padding: 22px 22px 18px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+}
+
+.modal h2 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modal p {
+  margin-top: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.modalNote {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 600;
+}
+
+.modalClose {
+  margin-top: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font: inherit;
+  font-size: 14px;
+  padding: 6px 14px;
+  cursor: pointer;
+}
+
 .status {
   display: flex;
   flex-shrink: 0;
   flex-direction: column;
   align-items: flex-end;
   padding-top: 4px;
+}
+
+.liveRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .liveBadge {
@@ -348,6 +449,20 @@
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(10, 10, 15, 0.9);
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+.mover {
+  margin: 14px 14px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(62, 224, 122, 0.35);
+  background: rgba(62, 224, 122, 0.08);
+}
+
+.moverTitle {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 .feedHead {
@@ -496,11 +611,24 @@
 .stats {
   display: flex;
   align-items: center;
-  gap: 28px;
+  flex-wrap: wrap;
+  gap: 14px 22px;
   margin-top: 8px;
   color: rgba(255, 255, 255, 0.65);
   font-size: 13px;
   font-variant-numeric: tabular-nums;
+}
+
+.viewOnX {
+  margin-left: auto;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.viewOnX:hover {
+  color: #fff;
 }
 
 .stat {
@@ -546,6 +674,27 @@
 .empty {
   padding: 0 20px 8px;
   color: rgba(255, 255, 255, 0.55);
+}
+
+.footer {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  align-items: baseline;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.footer a {
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 @keyframes ping {

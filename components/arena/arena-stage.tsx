@@ -1,7 +1,8 @@
 import { Crown } from 'lucide-react'
-import { formatNumber, type Company, type CompanyId } from '@/lib/arena-data'
+import { formatIndex, type Company, type CompanyId } from '@/lib/arena-data'
 import { ArenaRings } from './arena-rings'
 import { CompanyCard } from './company-card'
+import { TodayDelta } from './today-delta'
 import styles from './arena.module.css'
 
 const layout: Record<CompanyId, { left: number; top: number; width: number; height: number }> = {
@@ -13,15 +14,9 @@ const layout: Record<CompanyId, { left: number; top: number; width: number; heig
 }
 
 export function ArenaStage({ companies }: { companies: Company[] }) {
-  const leader = [...companies].sort((a, b) => b.score - a.score)[0]
-
-  if (!leader) {
-    return (
-      <section className={styles.stage} aria-label="Engagement leaderboard">
-        <p className={styles.empty}>Scores aren’t available right now. Please check back in a few minutes.</p>
-      </section>
-    )
-  }
+  const leader = [...companies]
+    .filter((company) => company.status === 'ok' && company.index !== null)
+    .sort((a, b) => b.score - a.score || b.posts - a.posts)[0]
 
   return (
     <section className={styles.stage} aria-label="Engagement leaderboard">
@@ -29,14 +24,24 @@ export function ArenaStage({ companies }: { companies: Company[] }) {
         <ArenaRings />
 
         <div className={styles.core}>
-          <p className={styles.coreLabel}>Current Leader</p>
-          <p className={styles.coreName}>
-            <span className={styles.goldText}>{leader.name}</span>
-            <Crown className={styles.crown} strokeWidth={1.5} aria-hidden="true" />
-          </p>
-          <p className={styles.coreSub}>Leading the arena</p>
-          <p className={`${styles.coreScore} ${styles.goldText}`}>{formatNumber(leader.score)}</p>
-          <p className={styles.coreUnit}>Avg per post</p>
+          {leader ? (
+            <>
+              <p className={styles.coreLabel}>Current Leader</p>
+              <p className={styles.coreName}>
+                <span className={styles.goldText}>{leader.name}</span>
+                <Crown className={styles.crown} strokeWidth={1.5} aria-hidden="true" />
+              </p>
+              <p className={styles.coreSub}>Leading the arena</p>
+              <p className={`${styles.coreScore} ${styles.goldText}`}>{formatIndex(leader.index as number)}</p>
+              <p className={styles.coreUnit}>score · 7d</p>
+              <TodayDelta value={leader.delta} place="core" />
+            </>
+          ) : (
+            <>
+              <p className={styles.coreLabel}>Current Leader</p>
+              <p className={styles.coreSub}>Waiting for 7-day scores</p>
+            </>
+          )}
         </div>
 
         {companies.map((c) => (

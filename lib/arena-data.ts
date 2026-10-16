@@ -9,6 +9,8 @@ export const REVALIDATE_SECONDS = 300
 
 export type CompanyId = 'xai' | 'openai' | 'meta' | 'anthropic' | 'deepmind'
 
+export type CompanyStatus = 'ok' | 'not_enough_posts' | 'pending'
+
 export type Company = {
   id: CompanyId
   name: string
@@ -19,7 +21,9 @@ export type Company = {
   logo: string
   logoMode: 'mask' | 'image'
   logoColor?: string
-  badge?: string
+  index: number | null
+  delta: number | null
+  status: CompanyStatus
 }
 
 export type Post = {
@@ -33,15 +37,32 @@ export type Post = {
   reposts: string
   likes: string
   inlineHandle: boolean
+  url?: string
+}
+
+export type Mover = {
+  companyId: CompanyId
+  name: string
+  change: number
+  period: 'week' | 'today'
 }
 
 export type ArenaData = {
   companies: Company[]
   posts: Post[]
   usingFallback: boolean
+  updatedAt: string | null
+  mover: Mover | null
 }
 
-type CompanyDefaults = Omit<Company, 'score' | 'posts' | 'progress'>
+type CompanyDefaults = {
+  id: CompanyId
+  name: string
+  accent: string
+  logo: string
+  logoMode: 'mask' | 'image'
+  logoColor?: string
+}
 
 const DISPLAY: Record<CompanyId, CompanyDefaults> = {
   xai: {
@@ -51,7 +72,6 @@ const DISPLAY: Record<CompanyId, CompanyDefaults> = {
     logo: '/logos/xai.svg',
     logoMode: 'mask',
     logoColor: 'linear-gradient(160deg,#ffe08a,#d9a032)',
-    badge: '+10% (It’s his app)',
   },
   openai: {
     id: 'openai',
@@ -95,27 +115,30 @@ const NAME_TO_ID: Record<string, CompanyId> = {
   'google deepmind': 'deepmind',
 }
 
-// Full saved copy of the original scoreboard. Used only when the live file
-// cannot be read. Every company is included.
 const fallbackCompanies: Company[] = [
   {
     id: 'xai',
     name: 'xAI',
-    score: 128754,
-    posts: 2341,
-    progress: 0.82,
+    score: 8.4,
+    index: 8.4,
+    posts: 28,
+    progress: 0.84,
+    delta: 6,
+    status: 'ok',
     accent: '#e9b949',
     logo: '/logos/xai.svg',
     logoMode: 'mask',
     logoColor: 'linear-gradient(160deg,#ffe08a,#d9a032)',
-    badge: '+10% (It’s his app)',
   },
   {
     id: 'openai',
     name: 'OpenAI',
-    score: 96432,
-    posts: 1892,
-    progress: 0.83,
+    score: 7.2,
+    index: 7.2,
+    posts: 19,
+    progress: 0.72,
+    delta: -3,
+    status: 'ok',
     accent: '#34d399',
     logo: '/logos/openai.svg',
     logoMode: 'mask',
@@ -124,9 +147,12 @@ const fallbackCompanies: Company[] = [
   {
     id: 'meta',
     name: 'Meta',
-    score: 45283,
-    posts: 983,
-    progress: 0.85,
+    score: 4.6,
+    index: 4.6,
+    posts: 11,
+    progress: 0.46,
+    delta: 2,
+    status: 'ok',
     accent: '#3b9cf6',
     logo: '/logos/meta.svg',
     logoMode: 'image',
@@ -134,9 +160,12 @@ const fallbackCompanies: Company[] = [
   {
     id: 'anthropic',
     name: 'Anthropic',
-    score: 71309,
-    posts: 1456,
-    progress: 0.85,
+    score: 10,
+    index: 10,
+    posts: 16,
+    progress: 1,
+    delta: 12,
+    status: 'ok',
     accent: '#9f6bf5',
     logo: '/logos/anthropic.svg',
     logoMode: 'mask',
@@ -145,9 +174,12 @@ const fallbackCompanies: Company[] = [
   {
     id: 'deepmind',
     name: 'Google DeepMind',
-    score: 58667,
-    posts: 1102,
-    progress: 0.8,
+    score: 0,
+    index: null,
+    posts: 2,
+    progress: 0,
+    delta: null,
+    status: 'not_enough_posts',
     accent: '#3b82f6',
     logo: '/logos/deepmind.svg',
     logoMode: 'mask',
@@ -158,30 +190,6 @@ const fallbackCompanies: Company[] = [
 const fallbackPosts: Post[] = [
   {
     id: 'p1',
-    companyId: 'xai',
-    name: 'Elon Musk',
-    handle: '@elonmusk',
-    time: '3m',
-    text: 'The whole world will watch this',
-    replies: '4.8K',
-    reposts: '9.2K',
-    likes: '61K',
-    inlineHandle: true,
-  },
-  {
-    id: 'p2',
-    companyId: 'openai',
-    name: 'Thibault Sottiaux',
-    handle: '@thsottiaux',
-    time: '18m',
-    text: 'Day 11/ We’ve landed a series of changes and more compute to decrease capacity issues.',
-    replies: '86',
-    reposts: '142',
-    likes: '1.3K',
-    inlineHandle: false,
-  },
-  {
-    id: 'p3',
     companyId: 'anthropic',
     name: 'Anthropic',
     handle: '@AnthropicAI',
@@ -191,34 +199,75 @@ const fallbackPosts: Post[] = [
     reposts: '1.1K',
     likes: '6.4K',
     inlineHandle: false,
+    url: 'https://x.com/AnthropicAI',
+  },
+  {
+    id: 'p2',
+    companyId: 'xai',
+    name: 'Elon Musk',
+    handle: '@elonmusk',
+    time: '3h',
+    text: 'The whole world will watch this',
+    replies: '4.8K',
+    reposts: '9.2K',
+    likes: '61K',
+    inlineHandle: true,
+    url: 'https://x.com/elonmusk',
+  },
+  {
+    id: 'p3',
+    companyId: 'openai',
+    name: 'OpenAI',
+    handle: '@OpenAI',
+    time: '5h',
+    text: 'Day 11. We’ve landed a series of changes and more compute to decrease capacity issues.',
+    replies: '86',
+    reposts: '142',
+    likes: '1.3K',
+    inlineHandle: false,
+    url: 'https://x.com/OpenAI',
   },
   {
     id: 'p4',
     companyId: 'meta',
     name: 'AI at Meta',
     handle: '@AIatMeta',
-    time: '1h',
-    text: 'Today we’re releasing Muse Spark Open...',
+    time: '1d',
+    text: 'Today we’re releasing Muse Spark Open.',
     replies: '338',
     reposts: '1.6K',
     likes: '8.7K',
     inlineHandle: false,
-  },
-  {
-    id: 'p5',
-    companyId: 'deepmind',
-    name: 'Google DeepMind',
-    handle: '@GoogleDeepMind',
-    time: '11m',
-    text: 'Pushing the limits of what AI can reason about. Gemini 1.5 Pro update.',
-    replies: '503',
-    reposts: '142',
-    likes: '67',
-    inlineHandle: false,
+    url: 'https://x.com/AIatMeta',
   },
 ]
 
+const fallbackMover: Mover = {
+  companyId: 'anthropic',
+  name: 'Anthropic',
+  change: 18,
+  period: 'week',
+}
+
 export const formatNumber = (n: number) => n.toLocaleString('en-US')
+
+export function formatIndex(index: number) {
+  return index.toFixed(1)
+}
+
+export function formatUpdated(updatedAt: string | null, now = Date.now()): string | null {
+  if (!updatedAt) return null
+  const then = Date.parse(updatedAt)
+  if (Number.isNaN(then)) return null
+  const minutes = Math.max(0, Math.round((now - then) / 60000))
+  if (minutes < 1) return 'Updated just now'
+  if (minutes === 1) return 'Updated 1 min ago'
+  if (minutes < 60) return `Updated ${minutes} min ago`
+  const hours = Math.max(1, Math.round(minutes / 60))
+  if (hours < 48) return `Updated ${hours} hour${hours === 1 ? '' : 's'} ago`
+  const days = Math.round(hours / 24)
+  return `Updated ${days} days ago`
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -243,53 +292,58 @@ function companyIdFrom(value: unknown): CompanyId | null {
   return NAME_TO_ID[value.trim().toLowerCase()] ?? null
 }
 
-function normalizeCompany(raw: unknown): Omit<Company, 'progress'> & { progress: number | null } | null {
+function normalizeCompany(raw: unknown): Company | null {
   if (!isRecord(raw)) return null
   const id = companyIdFrom(raw.id) ?? companyIdFrom(raw.name) ?? companyIdFrom(raw.company)
   if (!id) return null
   const defaults = DISPLAY[id]
-  const score = asNumber(raw.score)
   const posts = asNumber(raw.posts)
-  if (score === null || posts === null) return null
-  let progress = asNumber(raw.progress)
-  if (progress !== null && progress > 1 && progress <= 100) progress = progress / 100
+  if (posts === null) return null
+  const indexField = asNumber(raw.index)
+  const scoreField = asNumber(raw.score)
+  let status: CompanyStatus = 'ok'
+  let index: number | null = null
+  if (raw.status === 'not_enough_posts') {
+    status = 'not_enough_posts'
+  } else if (indexField !== null) {
+    index = indexField
+  } else if (scoreField !== null && scoreField <= 10) {
+    index = scoreField
+  } else if (scoreField !== null) {
+    status = 'pending'
+  } else {
+    return null
+  }
+  if (status !== 'ok') index = null
+  const progressField = asNumber(raw.progress)
+  const progress =
+    status === 'ok' && index !== null
+      ? Math.max(0, Math.min(1, progressField === null ? index / 10 : progressField > 1 && progressField <= 100 ? progressField / 100 : progressField))
+      : 0
   const logoMode = raw.logoMode === 'image' || raw.logoMode === 'mask' ? raw.logoMode : defaults.logoMode
-  const company: Omit<Company, 'progress'> & { progress: number | null } = {
+  const company: Company = {
     id,
     name: asText(raw.name, defaults.name),
-    score,
+    score: index ?? 0,
     posts,
     progress,
     accent: asText(raw.accent, asText(raw.color, defaults.accent)),
     logo: asText(raw.logo, defaults.logo),
     logoMode,
+    index,
+    delta: status === 'ok' ? asNumber(raw.delta) : null,
+    status,
   }
   const logoColor = asText(raw.logoColor, defaults.logoColor ?? '')
   if (logoColor) company.logoColor = logoColor
-  const badge = raw.badge === undefined ? defaults.badge : asText(raw.badge)
-  if (badge) company.badge = badge
   return company
-}
-
-function withProgress(companies: Array<Omit<Company, 'progress'> & { progress: number | null }>): Company[] {
-  const highest = Math.max(...companies.map((company) => company.score), 1)
-  return companies.map((company) => {
-    const authored = company.progress
-    const progress =
-      authored === null
-        ? Math.round(Math.max(0.05, Math.min(1, company.score / highest)) * 100) / 100
-        : Math.max(0, Math.min(1, authored))
-    return { ...company, progress }
-  })
 }
 
 export function normalizeCompanies(input: unknown): Company[] | null {
   if (!Array.isArray(input)) return null
-  const companies = input
-    .map((item) => normalizeCompany(item))
-    .filter((item): item is NonNullable<typeof item> => item !== null)
+  const companies = input.map((item) => normalizeCompany(item)).filter((item): item is Company => item !== null)
   if (companies.length === 0) return null
-  return withProgress(companies)
+  return companies
 }
 
 export function normalizePosts(input: unknown): Post[] | null {
@@ -297,15 +351,15 @@ export function normalizePosts(input: unknown): Post[] | null {
   const posts: Post[] = []
   input.forEach((raw, index) => {
     if (!isRecord(raw)) return
-    const companyId =
-      companyIdFrom(raw.companyId) ?? companyIdFrom(raw.company) ?? companyIdFrom(raw.name)
+    const companyId = companyIdFrom(raw.companyId) ?? companyIdFrom(raw.company) ?? companyIdFrom(raw.name)
     if (!companyId) return
     const text = asText(raw.text)
     if (!text) return
     const handle = asText(raw.handle, `@${companyId}`)
     let name = asText(raw.name)
     if (!name || NAME_TO_ID[name.toLowerCase()]) name = DISPLAY[companyId].name
-    posts.push({
+    const url = asText(raw.url)
+    const post: Post = {
       id: asText(raw.id, `p${index + 1}`),
       companyId,
       name,
@@ -316,9 +370,25 @@ export function normalizePosts(input: unknown): Post[] | null {
       reposts: asText(raw.reposts, '0'),
       likes: asText(raw.likes, '0'),
       inlineHandle: raw.inlineHandle === true,
-    })
+    }
+    if (url) post.url = url
+    posts.push(post)
   })
   return posts
+}
+
+function normalizeMover(raw: unknown): Mover | null {
+  if (!isRecord(raw)) return null
+  const companyId = companyIdFrom(raw.companyId) ?? companyIdFrom(raw.name)
+  const change = asNumber(raw.change)
+  if (!companyId || change === null) return null
+  const period = raw.period === 'week' ? 'week' : 'today'
+  return {
+    companyId,
+    name: asText(raw.name, DISPLAY[companyId].name),
+    change,
+    period,
+  }
 }
 
 export async function fetchArenaData(): Promise<ArenaData> {
@@ -334,6 +404,8 @@ export async function fetchArenaData(): Promise<ArenaData> {
       companies,
       posts: posts ?? fallbackPosts,
       usingFallback: false,
+      updatedAt: asText(record.updatedAt) || null,
+      mover: normalizeMover(record.mover),
     }
   } catch (err) {
     console.error('Using saved arena scores', err)
@@ -341,6 +413,8 @@ export async function fetchArenaData(): Promise<ArenaData> {
       companies: fallbackCompanies,
       posts: fallbackPosts,
       usingFallback: true,
+      updatedAt: null,
+      mover: fallbackMover,
     }
   }
 }

@@ -10,9 +10,6 @@ export default async function HomePage() {
 
   return (
     <main className={styles.page} data-arena-source={usingFallback ? 'fallback' : 'live'}>
-      <header className={styles.header}>
-        <p className={styles.kicker}>LLM Battle Arena</p>
-      </header>
       {usingFallback ? (
         <p className={styles.notice} role="status">
           Live scores could not be loaded, so this page is showing the last saved copy.

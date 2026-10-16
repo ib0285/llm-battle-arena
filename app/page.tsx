@@ -1,13 +1,18 @@
-import { ArenaStage } from '@/components/arena/arena-stage'
-import { RecentPosts } from '@/components/arena/recent-posts'
+import { ArenaBoard } from '@/components/arena/arena-board'
 import { ScoreHelp } from '@/components/arena/score-help'
 import styles from '@/components/arena/arena.module.css'
 import { fetchArenaData, formatUpdated } from '@/lib/arena-data'
 
 export const revalidate = 300
 
-export default async function HomePage() {
-  const { companies, posts, usingFallback, updatedAt, mover } = await fetchArenaData()
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>
+}) {
+  const params = await searchParams
+  const initialTab = params.tab === 'leaders' ? 'leaders' : 'companies'
+  const { companies, leaders, posts, usingFallback, updatedAt, mover } = await fetchArenaData()
   const updatedLabel = formatUpdated(updatedAt)
   const waiting = companies.every((company) => company.status === 'pending')
 
@@ -43,12 +48,7 @@ export default async function HomePage() {
             The 7-day score will show up after the next data update.
           </p>
         ) : null}
-        <div className={styles.board}>
-          <div className={styles.stageWrap}>
-            <ArenaStage companies={companies} />
-          </div>
-          <RecentPosts posts={posts} companies={companies} mover={mover} />
-        </div>
+        <ArenaBoard companies={companies} leaders={leaders} posts={posts} mover={mover} initialTab={initialTab} />
         <footer className={styles.footer}>
           <p>
             A fun side project by Bakhytzhan Ibrayev ·{' '}

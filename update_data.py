@@ -76,6 +76,10 @@ SAMPLE = {
     ],
     "posts": [
         {"id": "p1", "companyId": "xai", "name": "Elon Musk", "handle": "@elonmusk", "time": "3m", "text": "The whole world will watch this", "replies": "4.8K", "reposts": "9.2K", "likes": "61K", "inlineHandle": True},
+        {"id": "p2", "companyId": "openai", "name": "Thibault Sottiaux", "handle": "@thsottiaux", "time": "18m", "text": "Day 11/ We’ve landed a series of changes and more compute to decrease capacity issues.", "replies": "86", "reposts": "142", "likes": "1.3K", "inlineHandle": False},
+        {"id": "p3", "companyId": "anthropic", "name": "Anthropic", "handle": "@AnthropicAI", "time": "42m", "text": "Applications are now open for two new Anthropic Fellowships.", "replies": "214", "reposts": "1.1K", "likes": "6.4K", "inlineHandle": False},
+        {"id": "p4", "companyId": "meta", "name": "AI at Meta", "handle": "@AIatMeta", "time": "1h", "text": "Today we’re releasing Muse Spark Open...", "replies": "338", "reposts": "1.6K", "likes": "8.7K", "inlineHandle": False},
+        {"id": "p5", "companyId": "deepmind", "name": "Google DeepMind", "handle": "@GoogleDeepMind", "time": "11m", "text": "Pushing the limits of what AI can reason about. Gemini 1.5 Pro update.", "replies": "503", "reposts": "142", "likes": "67", "inlineHandle": False},
     ],
 }
 

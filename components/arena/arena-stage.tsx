@@ -25,25 +25,23 @@ export function ArenaStage({ companies }: { companies: Company[] }) {
 
   return (
     <section className={styles.stage} aria-label="Engagement leaderboard">
-      <div className={styles.scaleBox}>
-        <div className={styles.inner}>
-          <ArenaRings />
+      <div className={styles.inner}>
+        <ArenaRings />
 
-          <div className={styles.core}>
-            <p className={styles.coreLabel}>Current Leader</p>
-            <p className={styles.coreName}>
-              <span className={styles.goldText}>{leader.name}</span>
-              <Crown className={styles.crown} strokeWidth={1.5} aria-hidden="true" />
-            </p>
-            <p className={styles.coreSub}>Leading the arena</p>
-            <p className={`${styles.coreScore} ${styles.goldText}`}>{formatNumber(leader.score)}</p>
-            <p className={styles.coreUnit}>24h Engagement</p>
-          </div>
-
-          {companies.map((c) => (
-            <CompanyCard key={c.id} company={c} box={layout[c.id]} splitName={c.id === 'deepmind'} />
-          ))}
+        <div className={styles.core}>
+          <p className={styles.coreLabel}>Current Leader</p>
+          <p className={styles.coreName}>
+            <span className={styles.goldText}>{leader.name}</span>
+            <Crown className={styles.crown} strokeWidth={1.5} aria-hidden="true" />
+          </p>
+          <p className={styles.coreSub}>Leading the arena</p>
+          <p className={`${styles.coreScore} ${styles.goldText}`}>{formatNumber(leader.score)}</p>
+          <p className={styles.coreUnit}>24h Engagement</p>
         </div>
+
+        {companies.map((c) => (
+          <CompanyCard key={c.id} company={c} box={layout[c.id]} splitName={c.id === 'deepmind'} />
+        ))}
       </div>
     </section>
   )

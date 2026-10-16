@@ -3,8 +3,8 @@
     {
       "id": "xai",
       "name": "xAI",
-      "score": 38760,
-      "posts": 28,
+      "score": 40920,
+      "posts": 26,
       "progress": 1.0,
       "accent": "#e9b949",
       "logo": "/logos/xai.svg",
@@ -15,7 +15,7 @@
     {
       "id": "openai",
       "name": "OpenAI",
-      "score": 3665,
+      "score": 3753,
       "posts": 5,
       "progress": 0.09,
       "accent": "#34d399",
@@ -26,9 +26,9 @@
     {
       "id": "meta",
       "name": "Meta",
-      "score": 4476,
+      "score": 4569,
       "posts": 17,
-      "progress": 0.12,
+      "progress": 0.11,
       "accent": "#3b9cf6",
       "logo": "/logos/meta.svg",
       "logoMode": "image"
@@ -36,9 +36,9 @@
     {
       "id": "anthropic",
       "name": "Anthropic",
-      "score": 2961,
+      "score": 3038,
       "posts": 4,
-      "progress": 0.08,
+      "progress": 0.07,
       "accent": "#9f6bf5",
       "logo": "/logos/anthropic.svg",
       "logoMode": "mask",
@@ -47,9 +47,9 @@
     {
       "id": "deepmind",
       "name": "Google DeepMind",
-      "score": 979,
+      "score": 1016,
       "posts": 3,
-      "progress": 0.03,
+      "progress": 0.02,
       "accent": "#3b82f6",
       "logo": "/logos/deepmind.svg",
       "logoMode": "mask",
@@ -62,11 +62,11 @@
       "companyId": "xai",
       "name": "Elon Musk",
       "handle": "@elonmusk",
-      "time": "13h",
+      "time": "14h",
       "text": "Maybe we should start a competitor to Amazon 🤔",
-      "replies": "18.2K",
-      "reposts": "14.1K",
-      "likes": "146.9K",
+      "replies": "18.5K",
+      "reposts": "14.3K",
+      "likes": "149.8K",
       "inlineHandle": false
     },
     {
@@ -74,11 +74,11 @@
       "companyId": "openai",
       "name": "OpenAI",
       "handle": "@OpenAI",
-      "time": "7h",
+      "time": "8h",
       "text": "New voices. Better accents. And less \"checking...\" GPT-Live-1.1 brings these updates to Voice in ChatGPT, Codex, and dots, with new voices in French, German, Hindi, Mexican Spanish, Korean, and Japanese. Rolling out today to all users. Coming soon to the API. https://t.co/L6K8ZUC1xm",
-      "replies": "588",
-      "reposts": "595",
-      "likes": "8.4K",
+      "replies": "596",
+      "reposts": "608",
+      "likes": "8.6K",
       "inlineHandle": false
     },
     {
@@ -86,11 +86,11 @@
       "companyId": "meta",
       "name": "Mark Zuckerberg",
       "handle": "@finkd",
-      "time": "9h",
+      "time": "10h",
       "text": "Muse Spark Open -- weights releasing today -- runs great on new Mac Studios thanks to work with @johnternus and Apple. https://t.co/U2wJNrKBOg",
-      "replies": "781",
+      "replies": "787",
       "reposts": "1.2K",
-      "likes": "21.2K",
+      "likes": "21.6K",
       "inlineHandle": false
     },
     {
@@ -100,8 +100,8 @@
       "handle": "@AnthropicAI",
       "time": "13h",
       "text": "Applications are now open for two new Anthropic Fellowships. STEM Fellows (science and engineering) and Conceptual Reasoning Fellows (philosophy, cognitive science, economics, policy, and law) will spend four months at Anthropic from January 2027, working to help Claude reason well about some of the hardest problems in those fields. For more information, see the descriptions below. The application deadline is October 28. Conceptual Reasoning Fellows: https://t.co/kTaBPqttbK STEM Fellows: https://t.co/KkD5ruJkjq",
-      "replies": "315",
-      "reposts": "452",
+      "replies": "316",
+      "reposts": "458",
       "likes": "5.8K",
       "inlineHandle": false
     },
@@ -110,10 +110,10 @@
       "companyId": "deepmind",
       "name": "Google Gemini",
       "handle": "@GeminiApp",
-      "time": "9h",
+      "time": "10h",
       "text": "Plus up your furniture with 3D-printed accessories using Gemini 4 Argon. Upload a pic with rough measurements, and use Canvas in Gemini to build an interactive 3D CAD studio where you can explore styles, tweak live sliders, and export printable STLs to upgrade your space.",
-      "replies": "68",
-      "reposts": "121",
+      "replies": "69",
+      "reposts": "127",
       "likes": "1.4K",
       "inlineHandle": false
     }

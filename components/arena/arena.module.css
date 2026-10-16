@@ -319,6 +319,8 @@
 
 .modal {
   width: min(480px, 100%);
+  max-height: min(640px, calc(100dvh - 32px));
+  overflow-y: auto;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: #12121a;
@@ -353,6 +355,78 @@
   font-size: 14px;
   padding: 6px 14px;
   cursor: pointer;
+  white-space: nowrap;
+}
+
+.changelog {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.changelog h3 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.changelogGroup {
+  margin-top: 10px;
+}
+
+.changelogDate {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+}
+
+.changelogList {
+  list-style: disc;
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.changelogItem {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.changelogChange {
+  display: block;
+}
+
+.changelogCredit {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+}
+
+.suggestFix {
+  display: block;
+  margin-top: 14px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 14px;
+  line-height: 1.4;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.suggestFix:hover {
+  color: #fff;
+}
+
+@media (max-width: 480px) {
+  .modalBackdrop {
+    padding: 12px;
+  }
+
+  .modal {
+    padding: 18px 16px 14px;
+  }
 }
 
 .status {

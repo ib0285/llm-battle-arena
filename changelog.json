@@ -1,0 +1,18 @@
+[
+  {
+    "date": "2026-10-16",
+    "change": "Tap a company or leader card to see their posts from the last 7 days."
+  },
+  {
+    "date": "2026-10-16",
+    "change": "Split the board into Companies and Leaders."
+  },
+  {
+    "date": "2026-10-16",
+    "change": "Fewer than 3 posts in the week is marked not enough posts and ranks last."
+  },
+  {
+    "date": "2026-10-16",
+    "change": "Score is engagement per follower over a rolling 7 days, shown as an index from 1.0 to 10.0."
+  }
+]

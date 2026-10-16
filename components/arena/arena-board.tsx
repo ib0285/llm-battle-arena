@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Company, Leader, Mover, Post } from '@/lib/arena-data'
+import type { Company, Leader, Mover, Post, TopPost } from '@/lib/arena-data'
 import { ArenaStage } from './arena-stage'
 import { LeadersBoard } from './leaders-board'
 import { RecentPosts } from './recent-posts'
@@ -12,12 +12,14 @@ export function ArenaBoard({
   leaders,
   posts,
   mover,
+  topPost,
   initialTab = 'companies',
 }: {
   companies: Company[]
   leaders: Leader[]
   posts: Post[]
   mover: Mover | null
+  topPost: TopPost | null
   initialTab?: 'companies' | 'leaders'
 }) {
   const [tab, setTab] = useState<'companies' | 'leaders'>(initialTab)
@@ -53,7 +55,7 @@ export function ArenaBoard({
           <div className={styles.stageWrap}>
             <ArenaStage companies={companies} />
           </div>
-          <RecentPosts posts={posts} companies={companies} mover={mover} />
+          <RecentPosts posts={posts} companies={companies} mover={mover} topPost={topPost} />
         </div>
       ) : (
         <div id="panel-leaders" role="tabpanel" aria-labelledby="tab-leaders">

@@ -12,7 +12,7 @@ export default async function HomePage({
 }) {
   const params = await searchParams
   const initialTab = params.tab === 'leaders' ? 'leaders' : 'companies'
-  const { companies, leaders, posts, usingFallback, updatedAt, mover } = await fetchArenaData()
+  const { companies, leaders, posts, usingFallback, updatedAt, mover, topPost } = await fetchArenaData()
   const updatedLabel = formatUpdated(updatedAt)
   const waiting = companies.every((company) => company.status === 'pending')
 
@@ -48,7 +48,14 @@ export default async function HomePage({
             The 7-day score will show up after the next data update.
           </p>
         ) : null}
-        <ArenaBoard companies={companies} leaders={leaders} posts={posts} mover={mover} initialTab={initialTab} />
+        <ArenaBoard
+          companies={companies}
+          leaders={leaders}
+          posts={posts}
+          mover={mover}
+          topPost={topPost}
+          initialTab={initialTab}
+        />
         <footer className={styles.footer}>
           <p>
             A fun side project by Bakhytzhan Ibrayev ·{' '}

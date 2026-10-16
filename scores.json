@@ -357,5 +357,19 @@
       "inlineHandle": false,
       "url": "https://x.com/GeminiApp/status/2110039322229649783"
     }
-  ]
+  ],
+  "topPost": {
+    "author": "Elon Musk",
+    "handle": "@elonmusk",
+    "lab": "xAI",
+    "companyId": "xai",
+    "text": "Turns out the future does have flying cars https://t.co/6fexPp6SXI",
+    "likes": "647.8K",
+    "reposts": "76.7K",
+    "replies": "31.9K",
+    "engagement": 756463,
+    "createdAt": "2026-10-16T01:57:58+00:00",
+    "time": "15h",
+    "url": "https://x.com/elonmusk/status/2110913107094606330"
+  }
 }

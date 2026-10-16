@@ -36,7 +36,7 @@ jobs:
         run: python update_data.py
 
       - name: Check scores.json
-        run: python -c "import json; d=json.load(open('scores.json')); assert d.get('updatedAt'); assert isinstance(d.get('companies'), list) and d['companies']; assert isinstance(d.get('leaders'), list); assert isinstance(d.get('posts'), list); print('scores.json ok', len(d['companies']), 'companies', len(d['leaders']), 'leaders', len(d['posts']), 'posts')"
+        run: python -c "import json; d=json.load(open('scores.json')); assert d.get('updatedAt'); assert isinstance(d.get('companies'), list) and d['companies']; assert isinstance(d.get('leaders'), list); assert isinstance(d.get('posts'), list); assert d.get('topPost') is None or isinstance(d.get('topPost'), dict); print('scores.json ok', len(d['companies']), 'companies', len(d['leaders']), 'leaders', len(d['posts']), 'posts')"
 
       - name: Commit and push if changed
         run: |

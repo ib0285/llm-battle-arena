@@ -5,9 +5,9 @@ on:
     - cron: '0 * * * *' # every hour
   workflow_dispatch: # allow a manual run from the Actions tab
 
-# The hourly job only repairs the shape of scores.json. It needs
-# permission to commit that repair. The repository setting
-# "Workflow permissions" must also allow read and write.
+# The hourly job reads recent posts from X and commits scores.json.
+# The repository setting "Workflow permissions" must allow read and write.
+# TWITTERAPI_IO_KEY is a repository secret. The script sends it as X-API-Key.
 permissions:
   contents: write
 
@@ -23,7 +23,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Repair scores.json format
+      - name: Test the score update
+        run: python -m unittest test_update_data.py
+
+      - name: Update scores from X
+        env:
+          TWITTERAPI_IO_KEY: ${{ secrets.TWITTERAPI_IO_KEY }}
         run: python update_data.py
 
       - name: Check scores.json

@@ -1,12 +1,15 @@
 import { ArenaStage } from '@/components/arena/arena-stage'
 import { RecentPosts } from '@/components/arena/recent-posts'
+import { ScoreHelp } from '@/components/arena/score-help'
 import styles from '@/components/arena/arena.module.css'
-import { fetchArenaData } from '@/lib/arena-data'
+import { fetchArenaData, formatUpdated } from '@/lib/arena-data'
 
 export const revalidate = 300
 
 export default async function HomePage() {
-  const { companies, posts, usingFallback } = await fetchArenaData()
+  const { companies, posts, usingFallback, updatedAt, mover } = await fetchArenaData()
+  const updatedLabel = formatUpdated(updatedAt)
+  const waiting = companies.every((company) => company.status === 'pending')
 
   return (
     <main className={styles.page} data-arena-source={usingFallback ? 'fallback' : 'live'}>
@@ -14,19 +17,20 @@ export default async function HomePage() {
         <header className={styles.header}>
           <div>
             <h1>LLM Battle Arena</h1>
-            <p className={styles.subtitle}>
-              Live race of posts on X · Score = average likes + reposts + replies per post, last 24 hours
-            </p>
+            <p className={styles.subtitle}>Who&apos;s winning attention on X · Engagement per follower, rolling 7 days</p>
+            <ScoreHelp />
           </div>
           <div className={styles.status} role="status" aria-live="polite">
-            <span className={styles.liveBadge}>
-              <span className={styles.pingWrap}>
-                <span className={styles.ping} />
-                <span className={styles.pingDot} />
+            <div className={styles.liveRow}>
+              <span className={styles.liveBadge}>
+                <span className={styles.pingWrap}>
+                  <span className={styles.ping} />
+                  <span className={styles.pingDot} />
+                </span>
+                LIVE
               </span>
-              LIVE
-            </span>
-            <span className={styles.updating}>Updating live</span>
+              {updatedLabel ? <span className={styles.updating}>{updatedLabel}</span> : null}
+            </div>
           </div>
         </header>
         {usingFallback ? (
@@ -34,12 +38,29 @@ export default async function HomePage() {
             Live scores could not be loaded, so this page is showing the last saved copy.
           </p>
         ) : null}
+        {waiting ? (
+          <p className={styles.notice} role="status">
+            The 7-day score will show up after the next data update.
+          </p>
+        ) : null}
         <div className={styles.board}>
           <div className={styles.stageWrap}>
             <ArenaStage companies={companies} />
           </div>
-          <RecentPosts posts={posts} companies={companies} />
+          <RecentPosts posts={posts} companies={companies} mover={mover} />
         </div>
+        <footer className={styles.footer}>
+          <p>
+            A fun side project by Bakhytzhan Ibrayev ·{' '}
+            <a href="https://x.com/BakhytzhanIbra1" target="_blank" rel="noopener noreferrer">
+              @BakhytzhanIbra1
+            </a>{' '}
+            · not affiliated with any lab
+          </p>
+          <a href="https://x.com/BakhytzhanIbra1" target="_blank" rel="noopener noreferrer">
+            Suggest an account
+          </a>
+        </footer>
       </div>
     </main>
   )

@@ -1,5 +1,5 @@
 import { BadgeCheck, ExternalLink, Heart, MessageCircle, Repeat2, RotateCw } from 'lucide-react'
-import type { Company, Post } from '@/lib/arena-data'
+import type { Company, Mover, Post } from '@/lib/arena-data'
 import { BrandLogo } from './brand-logo'
 import styles from './arena.module.css'
 
@@ -8,11 +8,30 @@ function XMark({ className }: { className?: string }) {
   return <span aria-hidden="true" className={classes} />
 }
 
-export function RecentPosts({ posts, companies }: { posts: Post[]; companies: Company[] }) {
+export function RecentPosts({
+  posts,
+  companies,
+  mover,
+}: {
+  posts: Post[]
+  companies: Company[]
+  mover: Mover | null
+}) {
   const byId = new Map(companies.map((company) => [company.id, company]))
+  const changeClass = mover && mover.change < 0 ? styles.down : styles.up
+  const changeText = mover ? `${mover.change > 0 ? '+' : ''}${mover.change}%` : ''
 
   return (
     <aside className={styles.feed} aria-labelledby="recent-posts-title">
+      {mover ? (
+        <div className={styles.mover}>
+          <p className={styles.moverTitle}>
+            <span aria-hidden="true">🚀 </span>
+            Biggest mover {mover.period === 'week' ? 'this week' : 'today'} · {mover.name}{' '}
+            <span className={changeClass}>{changeText}</span>
+          </p>
+        </div>
+      ) : null}
       <header className={styles.feedHead}>
         <h2 id="recent-posts-title">
           <XMark />
@@ -60,6 +79,11 @@ export function RecentPosts({ posts, companies }: { posts: Post[]; companies: Co
                         <span className={styles.srOnly}>Likes</span>
                         {post.likes}
                       </span>
+                      {post.url ? (
+                        <a className={styles.viewOnX} href={post.url} target="_blank" rel="noopener noreferrer">
+                          View on X ↗
+                        </a>
+                      ) : null}
                     </div>
                   </div>
                 </div>

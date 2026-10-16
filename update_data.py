@@ -1,15 +1,29 @@
 #!/usr/bin/env python3
-"""Fill scores.json from recent posts on X.
+"""Fill scores.json from a rolling week of posts on X.
 
-Reads the accounts in accounts.json, asks twitterapi.io for each account's
-latest tweets, and keeps the ones from the last 24 hours. A company's score
-is the average likes + reposts + replies per post. xAI then gets 10% on top
-of that average, which is the badge on its card. If a company has no posts
-in the window, its previous score stays.
+Each account's raw number is the average likes + reposts + replies per post,
+divided by that account's follower count, then multiplied by 1,000. That is
+engagement per post for every 1,000 followers. A company's raw score is the
+mean of those account numbers, weighted by how many posts each account made
+in the last 7 days (a busier account counts more). Accounts with no posts
+are left out.
 
-The hourly Action passes TWITTERAPI_IO_KEY. If that key is missing, the API
-cannot be used, or nobody has a post in the window, this script leaves
-scores.json untouched and exits with an error.
+The board shows that raw score as an index from 1.0 to 10.0. The highest raw
+score is 10.0, and everyone else is 1 + 9 * (raw / best raw), rounded to one
+decimal. A company with fewer than 3 posts in the week is marked
+"not enough posts" and ranks last. There is no xAI boost.
+
+Follower counts are cached and refreshed at most once a day. A full pass
+(walk back 7 days, and refresh stale follower counts) runs at most every 3
+hours. The hourly run only reads the newest page of each account and folds
+those posts into data/history.json, so older posts are not downloaded again.
+Posts older than 7 days are dropped. Metrics on a post are updated when that
+post is seen again.
+
+The Action passes TWITTERAPI_IO_KEY. If that key is missing, the API rejects
+it, every account fails, or the week is empty, this script leaves the data
+files untouched and exits with an error. One account failing does not stop
+the others. A company whose accounts all fail keeps its previous index.
 """
 
 import json
@@ -24,16 +38,29 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 SCORES_PATH = ROOT / "scores.json"
 ACCOUNTS_PATH = ROOT / "accounts.json"
+DATA_DIR = ROOT / "data"
+HISTORY_PATH = DATA_DIR / "history.json"
+FOLLOWERS_PATH = DATA_DIR / "followers.json"
+SNAPSHOTS_PATH = DATA_DIR / "snapshots.json"
+STATE_PATH = DATA_DIR / "state.json"
 
-API_URL = "https://api.twitterapi.io/twitter/user/last_tweets"
-WINDOW = timedelta(hours=24)
-# One page is about 20 tweets. Keep asking for the next page until a tweet is
-# older than 24 hours, and never go past five pages.
-MAX_PAGES = 5
+TWEETS_URL = "https://api.twitterapi.io/twitter/user/last_tweets"
+USER_URL = "https://api.twitterapi.io/twitter/user/info"
 
-# The "+10% (It's his app)" badge is a real boost. The saved xAI score is
-# round(average engagement per post × 1.1). Leader and progress use that number.
-XAI_SCORE_MULTIPLIER = 1.1
+WEEK = timedelta(days=7)
+FULL_EVERY = timedelta(hours=3)
+FOLLOWER_TTL = timedelta(days=1)
+# One page is about 20 tweets. The hourly run reads one page. A full pass
+# keeps going until a tweet is older than 7 days, and never past eight pages.
+MAX_PAGES_LIGHT = 1
+MAX_PAGES_FULL = 8
+MIN_POSTS = 3
+SNAPSHOT_GAP = timedelta(hours=20)
+TODAY_TARGET = timedelta(hours=24)
+TODAY_SLACK = timedelta(hours=8)
+WEEK_TARGET = timedelta(days=7)
+WEEK_SLACK = timedelta(hours=36)
+SNAPSHOT_KEEP = timedelta(days=10)
 
 DISPLAY = {
     "xai": {
@@ -42,7 +69,6 @@ DISPLAY = {
         "logo": "/logos/xai.svg",
         "logoMode": "mask",
         "logoColor": "linear-gradient(160deg,#ffe08a,#d9a032)",
-        "badge": "+10% (It’s his app)",
     },
     "openai": {
         "name": "OpenAI",
@@ -77,7 +103,7 @@ COMPANY_ORDER = ["xai", "openai", "meta", "anthropic", "deepmind"]
 
 
 class UpdateError(Exception):
-    """Stop before scores.json is changed."""
+    """Stop before any data file is changed."""
 
 
 class AccountError(Exception):
@@ -113,6 +139,17 @@ def load_json(path, label):
         raise UpdateError(f"{label} is not valid JSON ({exc})") from exc
 
 
+def load_optional(path):
+    if not path.exists():
+        return None
+    return load_json(path, path.name)
+
+
+def write_json(path, payload):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
 def load_accounts(path):
     raw = load_json(path, "accounts.json")
     if not isinstance(raw, dict) or not raw:
@@ -136,16 +173,19 @@ def load_accounts(path):
 
 
 def parse_time(value):
-    if not isinstance(value, str) or not value.strip():
+    if isinstance(value, datetime):
+        parsed = value
+    elif not isinstance(value, str) or not value.strip():
         return None
-    text = value.strip()
-    try:
-        parsed = datetime.strptime(text, "%a %b %d %H:%M:%S %z %Y")
-    except ValueError:
+    else:
+        text = value.strip()
         try:
-            parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+            parsed = datetime.strptime(text, "%a %b %d %H:%M:%S %z %Y")
         except ValueError:
-            return None
+            try:
+                parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+            except ValueError:
+                return None
     if parsed.tzinfo is None:
         parsed = parsed.replace(tzinfo=timezone.utc)
     return parsed.astimezone(timezone.utc)
@@ -184,14 +224,29 @@ def relative_time(created, now):
         return "1m"
     if minutes < 60:
         return f"{minutes}m"
-    return f"{minutes // 60}h"
+    hours = minutes // 60
+    if hours < 24:
+        return f"{hours}h"
+    return f"{max(1, hours // 24)}d"
 
 
 def engagement(tweet):
-    return tweet["likes"] + tweet["reposts"] + tweet["replies"]
+    return as_count(tweet.get("likes")) + as_count(tweet.get("reposts")) + as_count(tweet.get("replies"))
 
 
-def tweet_from_api(raw, fallback_handle):
+def round_half_up(value, places):
+    factor = 10 ** places
+    scaled = value * factor
+    if scaled >= 0:
+        return int(scaled + 0.5) / factor
+    return -int(-scaled + 0.5) / factor
+
+
+def cache_key(handle):
+    return str(handle or "").strip().lstrip("@").lower()
+
+
+def tweet_from_api(raw, fallback_handle, company_id):
     if not isinstance(raw, dict):
         return None
     if raw.get("retweeted_tweet") or raw.get("isReply"):
@@ -207,8 +262,10 @@ def tweet_from_api(raw, fallback_handle):
         handle = fallback_handle
     if not isinstance(name, str) or not name.strip():
         name = handle
+    tweet_id = str(raw.get("id") or "")
     return {
-        "id": str(raw.get("id") or ""),
+        "id": tweet_id or f"{cache_key(handle)}:{created.isoformat()}:{text.strip()[:40]}",
+        "companyId": company_id,
         "created": created,
         "text": " ".join(text.split()),
         "likes": as_count(raw.get("likeCount")),
@@ -228,46 +285,143 @@ def response_parts(body):
     return pinned, tweets
 
 
-def keep_tweet(raw, handle, seen, now):
-    tweet = tweet_from_api(raw, handle)
-    if tweet is None:
-        return None
-    key = tweet["id"] or f"{tweet['handle']}:{tweet['created'].isoformat()}:{tweet['text']}"
-    if key in seen:
-        return None
-    seen.add(key)
-    if now - tweet["created"] > WINDOW:
-        return None
-    return tweet
+def check_status(status, body):
+    if status in (401, 403):
+        raise UpdateError("twitterapi.io rejected the API key")
+    if status != 200 or not isinstance(body, dict) or body.get("status") == "error":
+        message = body.get("msg") if isinstance(body, dict) else ""
+        raise AccountError(message or f"HTTP {status}")
 
 
-def fetch_account(handle, api_key, http_get, now):
-    """Return original tweets from the last 24 hours for one handle."""
+def history_record(tweet):
+    return {
+        "id": tweet["id"],
+        "companyId": tweet["companyId"],
+        "handle": tweet["handle"],
+        "name": tweet["name"],
+        "created": tweet["created"].isoformat(),
+        "text": tweet["text"],
+        "likes": tweet["likes"],
+        "reposts": tweet["reposts"],
+        "replies": tweet["replies"],
+    }
+
+
+def load_history(path):
+    raw = load_optional(path)
+    if raw is None:
+        return []
+    posts = raw.get("posts") if isinstance(raw, dict) else None
+    if not isinstance(posts, list):
+        raise UpdateError("history.json has no posts list")
+    return [post for post in posts if isinstance(post, dict) and post.get("id")]
+
+
+def load_followers(path):
+    raw = load_optional(path)
+    if raw is None:
+        return {}
+    accounts = raw.get("accounts") if isinstance(raw, dict) else None
+    if accounts is None:
+        return {}
+    if not isinstance(accounts, dict):
+        raise UpdateError("followers.json is not valid")
+    cleaned = {}
+    for handle, entry in accounts.items():
+        if isinstance(entry, dict):
+            cleaned[cache_key(handle)] = {
+                "followers": as_count(entry.get("followers")),
+                "fetchedAt": entry.get("fetchedAt") or "",
+            }
+    return cleaned
+
+
+def load_snapshots(path):
+    raw = load_optional(path)
+    if raw is None:
+        return []
+    snapshots = raw.get("snapshots") if isinstance(raw, dict) else None
+    if not isinstance(snapshots, list):
+        raise UpdateError("snapshots.json is not valid")
+    return [item for item in snapshots if isinstance(item, dict)]
+
+
+def follower_count(followers, handle):
+    entry = followers.get(cache_key(handle)) or {}
+    return as_count(entry.get("followers"))
+
+
+def followers_need_fetch(entry, now, full):
+    count = as_count(entry.get("followers")) if isinstance(entry, dict) else 0
+    if count <= 0:
+        return True
+    fetched = parse_time(entry.get("fetchedAt")) if isinstance(entry, dict) else None
+    if fetched is None:
+        return True
+    if now - fetched < FOLLOWER_TTL:
+        return False
+    # A stale count is only refreshed on the full pass, and at most daily.
+    return bool(full)
+
+
+def fetch_followers(handle, api_key, http_get):
+    status, body = http_get(USER_URL, {"userName": handle}, api_key)
+    check_status(status, body)
+    data = body.get("data") if isinstance(body.get("data"), dict) else {}
+    if data.get("unavailable"):
+        raise AccountError(data.get("unavailableReason") or "unavailable")
+    count = as_count(data.get("followers"))
+    if count <= 0:
+        raise AccountError("no follower count")
+    return count
+
+
+def ensure_followers(handle, followers, api_key, http_get, now, full):
+    key = cache_key(handle)
+    entry = followers.get(key)
+    if not followers_need_fetch(entry, now, full):
+        return follower_count(followers, handle)
+    try:
+        count = fetch_followers(handle, api_key, http_get)
+    except AccountError:
+        cached = follower_count(followers, handle)
+        if cached > 0:
+            print(f"@{handle}: follower refresh failed, using the cached count", file=sys.stderr)
+            return cached
+        raise
+    followers[key] = {"followers": count, "fetchedAt": now.isoformat()}
+    return count
+
+
+def fetch_account(handle, company_id, api_key, http_get, now, full):
+    """Return original tweets inside the 7-day window for one handle."""
     collected = []
     seen = set()
     cursor = None
-    for page_number in range(MAX_PAGES):
+    pages = MAX_PAGES_FULL if full else MAX_PAGES_LIGHT
+    for page_number in range(pages):
         params = {"userName": handle, "includeReplies": "false", "cursor": cursor}
-        status, body = http_get(API_URL, params, api_key)
-        if status in (401, 403):
-            raise UpdateError("twitterapi.io rejected the API key")
-        if status != 200 or not isinstance(body, dict) or body.get("status") == "error":
-            message = body.get("msg") if isinstance(body, dict) else ""
-            raise AccountError(f"{handle}: {message or 'HTTP ' + str(status)}")
+        status, body = http_get(TWEETS_URL, params, api_key)
+        try:
+            check_status(status, body)
+        except AccountError as exc:
+            raise AccountError(f"{handle}: {exc}") from exc
         pinned, tweets = response_parts(body)
         if page_number == 0 and pinned is not None:
-            kept = keep_tweet(pinned, handle, seen, now)
-            if kept is not None:
+            kept = tweet_from_api(pinned, handle, company_id)
+            if kept is not None and now - kept["created"] <= WEEK and kept["id"] not in seen:
+                seen.add(kept["id"])
                 collected.append(kept)
         reached_older = False
         for raw in tweets:
-            parsed = tweet_from_api(raw, handle)
-            if parsed is not None and now - parsed["created"] > WINDOW:
+            parsed = tweet_from_api(raw, handle, company_id)
+            if parsed is not None and now - parsed["created"] > WEEK:
                 reached_older = True
                 continue
-            kept = keep_tweet(raw, handle, seen, now)
-            if kept is not None:
-                collected.append(kept)
+            if parsed is None or parsed["id"] in seen:
+                continue
+            seen.add(parsed["id"])
+            collected.append(parsed)
         # The timeline is newest first. A pinned post can be old without
         # meaning the rest of the timeline is old.
         if reached_older or not body.get("has_next_page") or not body.get("next_cursor"):
@@ -276,43 +430,84 @@ def fetch_account(handle, api_key, http_get, now):
     return collected
 
 
-def company_shell(company_id, previous):
+def merge_history(existing, tweets, now):
+    by_id = {}
+    for post in existing:
+        if isinstance(post, dict) and post.get("id"):
+            by_id[str(post["id"])] = dict(post)
+    for tweet in tweets:
+        record = history_record(tweet)
+        current = by_id.get(record["id"])
+        if current:
+            for field in ("likes", "reposts", "replies", "text", "name", "handle", "companyId"):
+                current[field] = record[field]
+            if not current.get("created"):
+                current["created"] = record["created"]
+        else:
+            by_id[record["id"]] = record
+    kept = []
+    for post in by_id.values():
+        created = parse_time(post.get("created"))
+        if created is None or now - created > WEEK:
+            continue
+        post["created"] = created.isoformat()
+        kept.append(post)
+    kept.sort(key=lambda post: (post.get("created") or "", str(post.get("id"))), reverse=True)
+    return kept
+
+
+def company_shell(company_id):
     display = DISPLAY[company_id]
     company = {
         "id": company_id,
         "name": display["name"],
         "score": 0,
+        "index": None,
+        "raw": None,
         "posts": 0,
         "progress": 0,
+        "delta": None,
+        "weekDelta": None,
+        "status": "not_enough_posts",
         "accent": display["accent"],
         "logo": display["logo"],
         "logoMode": display["logoMode"],
     }
     if display.get("logoColor"):
         company["logoColor"] = display["logoColor"]
-    if display.get("badge"):
-        company["badge"] = display["badge"]
-    if isinstance(previous, dict):
-        for field in ("name", "accent", "logo", "logoMode", "logoColor", "badge"):
-            if previous.get(field) not in (None, ""):
-                company[field] = previous[field]
     return company
 
 
-def featured_post(company_id, tweets, now, index):
-    best = max(tweets, key=lambda tweet: (engagement(tweet), tweet["created"]))
-    return {
-        "id": f"p{index}",
-        "companyId": company_id,
-        "name": best["name"],
-        "handle": "@" + best["handle"],
-        "time": relative_time(best["created"], now),
-        "text": best["text"],
-        "replies": format_count(best["replies"]),
-        "reposts": format_count(best["reposts"]),
-        "likes": format_count(best["likes"]),
-        "inlineHandle": False,
-    }
+def stored_index(company):
+    """Return a previous 1.0–10.0 index, ignoring the old engagement totals."""
+    if not isinstance(company, dict):
+        return None
+    index = company.get("index")
+    if isinstance(index, (int, float)) and not isinstance(index, bool):
+        return float(index)
+    score = company.get("score")
+    if isinstance(score, (int, float)) and not isinstance(score, bool) and 0 <= float(score) <= 10:
+        return float(score)
+    return None
+
+
+def keep_previous(company_id, old):
+    company = company_shell(company_id)
+    index = stored_index(old)
+    if index is None or not isinstance(old, dict):
+        return company
+    company["index"] = index
+    company["score"] = index
+    company["raw"] = old.get("raw") if isinstance(old.get("raw"), (int, float)) else None
+    company["posts"] = as_count(old.get("posts"))
+    company["progress"] = old.get("progress") if isinstance(old.get("progress"), (int, float)) else round_half_up(index / 10, 2)
+    company["delta"] = old.get("delta") if isinstance(old.get("delta"), (int, float)) and not isinstance(old.get("delta"), bool) else None
+    company["weekDelta"] = old.get("weekDelta") if isinstance(old.get("weekDelta"), (int, float)) and not isinstance(old.get("weekDelta"), bool) else None
+    status = old.get("status")
+    company["status"] = status if status in ("ok", "not_enough_posts") else "ok"
+    # A failed fetch must not be rescaled against the companies that did update.
+    company["held"] = True
+    return company
 
 
 def previous_companies(scores):
@@ -338,53 +533,243 @@ def previous_post(scores, company_id):
     return None
 
 
-def apply_progress(companies):
-    highest = max((company["score"] for company in companies), default=0) or 0
-    for company in companies:
-        if highest <= 0:
-            company["progress"] = 0
+def tweet_url(handle, tweet_id):
+    if not handle or not isinstance(tweet_id, str) or not tweet_id:
+        return ""
+    # Ids we invented for tweets that had none contain ":" and are not real links.
+    if any(mark in tweet_id for mark in (":", "/", "?", " ")):
+        return ""
+    return f"https://x.com/{handle}/status/{tweet_id}"
+
+
+def featured_post(company_id, posts, now, index):
+    parsed = []
+    for post in posts:
+        created = parse_time(post.get("created"))
+        if created is None:
+            continue
+        parsed.append({**post, "created": created})
+    if not parsed:
+        return None
+    best = max(parsed, key=lambda post: (engagement(post), post["created"]))
+    url = tweet_url(best.get("handle"), str(best.get("id") or ""))
+    featured = {
+        "id": f"p{index}",
+        "companyId": company_id,
+        "name": best.get("name") or best.get("handle"),
+        "handle": "@" + str(best.get("handle") or "").lstrip("@"),
+        "time": relative_time(best["created"], now),
+        "text": best.get("text") or "",
+        "replies": format_count(best.get("replies")),
+        "reposts": format_count(best.get("reposts")),
+        "likes": format_count(best.get("likes")),
+        "inlineHandle": False,
+    }
+    if url:
+        featured["url"] = url
+    return featured
+
+
+def account_rates(posts, followers):
+    grouped = {}
+    for post in posts:
+        grouped.setdefault(cache_key(post.get("handle")), []).append(post)
+    rates = []
+    for handle, items in grouped.items():
+        followers_count = follower_count(followers, handle)
+        if followers_count <= 0 or not items:
+            continue
+        total = sum(engagement(item) for item in items)
+        rate = (total / len(items)) / followers_count * 1000
+        rates.append({"handle": handle, "posts": len(items), "engagement": total, "followers": followers_count, "rate": rate})
+    return rates
+
+
+def company_raw(rates):
+    """Post-weighted mean of per-account engagement per 1,000 followers."""
+    total_posts = sum(item["posts"] for item in rates)
+    if total_posts <= 0:
+        return None
+    return sum(item["rate"] * item["posts"] for item in rates) / total_posts
+
+
+def apply_index(companies):
+    eligible = [
+        company
+        for company in companies
+        if not company.get("held") and company["status"] == "ok" and isinstance(company.get("raw"), (int, float))
+    ]
+    max_raw = max((company["raw"] for company in eligible), default=0)
+    for company in eligible:
+        if max_raw <= 0:
+            index = 1.0
+        elif company["raw"] == max_raw:
+            index = 10.0
         else:
-            company["progress"] = round(company["score"] / highest, 2)
+            index = round_half_up(1 + 9 * (company["raw"] / max_raw), 1)
+            if index >= 10:
+                index = 9.9
+        company["index"] = index
+        company["score"] = index
+        company["raw"] = round(company["raw"], 4)
+        company["progress"] = round_half_up(index / 10, 2)
     return companies
 
 
-def build_scores(previous, tweets_by_company, failed_companies, now):
+def reference_snapshot(snapshots, now, target_age, slack):
+    target = now - target_age
+    best = None
+    best_gap = None
+    for snapshot in snapshots:
+        at = parse_time(snapshot.get("at"))
+        if at is None or at > now:
+            continue
+        gap = abs(at - target)
+        if gap > slack:
+            continue
+        if best is None or gap < best_gap:
+            best = snapshot
+            best_gap = gap
+    return best
+
+
+def snapshot_value(snapshot, company_id):
+    if not isinstance(snapshot, dict):
+        return None
+    companies = snapshot.get("companies")
+    if not isinstance(companies, dict):
+        return None
+    entry = companies.get(company_id)
+    if not isinstance(entry, dict):
+        return None
+    index = entry.get("index")
+    if isinstance(index, (int, float)) and not isinstance(index, bool) and float(index) > 0:
+        return float(index)
+    return None
+
+
+def percent_change(current, previous):
+    if previous is None or previous <= 0 or current is None:
+        return None
+    return int(round_half_up((current - previous) / previous * 100, 0))
+
+
+def apply_deltas(companies, snapshots, now):
+    today = reference_snapshot(snapshots, now, TODAY_TARGET, TODAY_SLACK)
+    week = reference_snapshot(snapshots, now, WEEK_TARGET, WEEK_SLACK)
+    for company in companies:
+        if company.get("held") or company["status"] != "ok":
+            if company["status"] != "ok":
+                company["delta"] = None
+                company["weekDelta"] = None
+            continue
+        company["delta"] = percent_change(company.get("index"), snapshot_value(today, company["id"]))
+        company["weekDelta"] = percent_change(company.get("index"), snapshot_value(week, company["id"]))
+    return companies
+
+
+def remember_snapshot(snapshots, companies, now):
+    times = [parse_time(item.get("at")) for item in snapshots]
+    times = [item for item in times if item is not None]
+    if times and now - max(times) < SNAPSHOT_GAP:
+        kept = snapshots
+    else:
+        payload = {}
+        for company in companies:
+            if company["status"] == "ok" and isinstance(company.get("index"), (int, float)):
+                payload[company["id"]] = {"index": company["index"], "raw": company.get("raw")}
+        kept = snapshots + [{"at": now.isoformat(), "companies": payload}]
+    pruned = []
+    for item in kept:
+        at = parse_time(item.get("at"))
+        if at is not None and now - at <= SNAPSHOT_KEEP:
+            pruned.append(item)
+    pruned.sort(key=lambda item: item.get("at") or "")
+    return pruned
+
+
+def pick_mover(companies):
+    def best(field, period):
+        pool = [company for company in companies if isinstance(company.get(field), (int, float)) and not isinstance(company.get(field), bool)]
+        if not pool:
+            return None
+        winner = max(pool, key=lambda company: (company[field], company.get("posts") or 0))
+        return {
+            "companyId": winner["id"],
+            "name": winner["name"],
+            "change": int(winner[field]),
+            "period": period,
+        }
+
+    return best("weekDelta", "week") or best("delta", "today")
+
+
+def posts_for(history, company_id):
+    return [post for post in history if post.get("companyId") == company_id]
+
+
+def build_scores(previous, history, followers, failed_companies, snapshots, now):
     saved = previous_companies(previous)
     companies = []
     posts = []
-    total_tweets = 0
     for company_id in COMPANY_ORDER:
-        tweets = tweets_by_company.get(company_id, [])
-        total_tweets += len(tweets)
-        if company_id in failed_companies or not tweets:
-            old = saved.get(company_id)
-            if old is None:
-                continue
-            company = company_shell(company_id, old)
-            company["score"] = int(old.get("score") or 0)
-            company["posts"] = int(old.get("posts") or 0)
+        company_posts = posts_for(history, company_id)
+        if company_id in failed_companies:
+            company = keep_previous(company_id, saved.get(company_id))
             companies.append(company)
             old_post = previous_post(previous, company_id)
             if old_post:
                 posts.append(old_post)
             continue
-        company = company_shell(company_id, saved.get(company_id))
-        average = sum(engagement(tweet) for tweet in tweets) / len(tweets)
-        if company_id == "xai":
-            average *= XAI_SCORE_MULTIPLIER
-        company["score"] = int(round(average))
-        company["posts"] = len(tweets)
+        company = company_shell(company_id)
+        company["posts"] = len(company_posts)
+        rates = account_rates(company_posts, followers)
+        raw = company_raw(rates)
+        if len(company_posts) < MIN_POSTS or raw is None:
+            company["status"] = "not_enough_posts"
+        else:
+            company["status"] = "ok"
+            company["raw"] = raw
         companies.append(company)
-        posts.append(featured_post(company_id, tweets, now, len(posts) + 1))
-    if total_tweets == 0:
-        raise UpdateError("no posts from the last 24 hours")
+        featured = featured_post(company_id, company_posts, now, len(posts) + 1)
+        if featured:
+            posts.append(featured)
+    if not any(company["status"] == "ok" or company["posts"] for company in companies):
+        raise UpdateError("no posts from the last 7 days")
+    apply_index(companies)
+    apply_deltas(companies, snapshots, now)
+    for company in companies:
+        company.pop("held", None)
     for index, post in enumerate(posts, start=1):
         post["id"] = f"p{index}"
-    return {"companies": apply_progress(companies), "posts": posts}
+    mover = pick_mover(companies)
+    updated = {
+        "updatedAt": now.isoformat(),
+        "companies": companies,
+        "posts": posts,
+    }
+    if mover:
+        updated["mover"] = mover
+    return updated
 
 
-def collect(accounts, api_key, http_get, now):
-    tweets_by_company = {}
+def log_handles(accounts, history, followers):
+    for company_id in COMPANY_ORDER:
+        for handle in accounts.get(company_id, []):
+            items = [
+                post
+                for post in posts_for(history, company_id)
+                if cache_key(post.get("handle")) == cache_key(handle)
+            ]
+            total = sum(engagement(post) for post in items)
+            post_word = "post" if len(items) == 1 else "posts"
+            print(
+                f"@{handle}: {len(items)} {post_word}, {total} engagement, {follower_count(followers, handle)} followers"
+            )
+
+
+def collect(accounts, followers, api_key, http_get, now, full):
+    tweets = []
     failed_companies = []
     for company_id in COMPANY_ORDER:
         handles = accounts.get(company_id, [])
@@ -392,45 +777,80 @@ def collect(accounts, api_key, http_get, now):
             failed_companies.append(company_id)
             print(f"{company_id}: no accounts listed, keeping the previous score", file=sys.stderr)
             continue
-        collected = []
         successes = 0
         for handle in handles:
             try:
-                tweets = fetch_account(handle, api_key, http_get, now)
+                ensure_followers(handle, followers, api_key, http_get, now, full)
+                fetched = fetch_account(handle, company_id, api_key, http_get, now, full)
             except AccountError as exc:
                 print(f"{company_id}: skipped @{handle} ({exc})", file=sys.stderr)
                 continue
             successes += 1
-            collected.extend(tweets)
-            handle_engagement = sum(engagement(tweet) for tweet in tweets)
-            print(f"@{handle}: {len(tweets)} posts, {handle_engagement} engagement")
+            tweets.extend(fetched)
         if successes == 0:
             failed_companies.append(company_id)
             print(f"{company_id}: no account could be read, keeping the previous score", file=sys.stderr)
-            continue
-        tweets_by_company[company_id] = collected
-        post_word = "post" if len(collected) == 1 else "posts"
-        account_word = "account" if successes == 1 else "accounts"
-        print(f"{company_id}: {len(collected)} {post_word} in the last 24 hours from {successes} {account_word}")
     if len(failed_companies) == len(COMPANY_ORDER):
         raise UpdateError("every account request failed")
-    return tweets_by_company, failed_companies
+    return tweets, failed_companies
 
 
-def execute(scores_path, accounts_path, api_key, http_get, now):
+def choose_full(state, now, forced):
+    if forced:
+        return True
+    if not isinstance(state, dict):
+        return True
+    last = parse_time(state.get("fullRefreshAt"))
+    if last is None:
+        return True
+    return now - last >= FULL_EVERY
+
+
+def execute(scores_path, accounts_path, api_key, http_get, now, data_dir=None, full=None):
     if not str(api_key or "").strip():
         print("TWITTERAPI_IO_KEY is missing. scores.json was not changed.", file=sys.stderr)
         return 1
+    data_dir = Path(data_dir) if data_dir is not None else scores_path.parent / "data"
+    history_path = data_dir / "history.json"
+    followers_path = data_dir / "followers.json"
+    snapshots_path = data_dir / "snapshots.json"
+    state_path = data_dir / "state.json"
     try:
         accounts = load_accounts(accounts_path)
         previous = load_json(scores_path, "scores.json")
-        tweets_by_company, failed_companies = collect(accounts, api_key.strip(), http_get, now)
-        updated = build_scores(previous, tweets_by_company, set(failed_companies), now)
+        history = load_history(history_path)
+        followers = load_followers(followers_path)
+        snapshots = load_snapshots(snapshots_path)
+        state = load_optional(state_path) or {}
+        forced = bool(full) if full is not None else os.environ.get("ARENA_FULL_REFRESH", "").strip().lower() in ("1", "true", "full", "yes")
+        full_run = choose_full(state, now, forced)
+        print("Refresh mode: full 7-day" if full_run else "Refresh mode: hourly newest page")
+        fetched, failed_companies = collect(accounts, followers, api_key.strip(), http_get, now, full_run)
+        history = merge_history(history, fetched, now)
+        if not history:
+            raise UpdateError("no posts from the last 7 days")
+        updated = build_scores(previous, history, followers, set(failed_companies), snapshots, now)
+        snapshots = remember_snapshot(snapshots, updated["companies"], now)
+        log_handles(accounts, history, followers)
     except UpdateError as exc:
         print(f"{exc}. scores.json was not changed.", file=sys.stderr)
         return 1
-    text = json.dumps(updated, indent=2, ensure_ascii=False) + "\n"
-    scores_path.write_text(text, encoding="utf-8")
+    if full_run:
+        state = {"fullRefreshAt": now.isoformat()}
+    elif not isinstance(state, dict):
+        state = {}
+    follower_payload = {
+        "accounts": {
+            handle: followers[handle]
+            for handle in sorted(followers)
+            if follower_count(followers, handle) > 0
+        }
+    }
+    write_json(history_path, {"posts": history})
+    write_json(followers_path, follower_payload)
+    write_json(snapshots_path, {"snapshots": snapshots})
+    write_json(state_path, state)
+    write_json(scores_path, updated)
     print("Updated scores.json")
     return 0
 

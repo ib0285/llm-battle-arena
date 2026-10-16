@@ -1,7 +1,62 @@
+import type { CSSProperties } from 'react'
 import { BadgeCheck, ExternalLink, Heart, MessageCircle, Repeat2, RotateCw } from 'lucide-react'
-import type { Company, Mover, Post } from '@/lib/arena-data'
+import type { Company, Mover, Post, TopPost } from '@/lib/arena-data'
 import { BrandLogo } from './brand-logo'
 import styles from './arena.module.css'
+
+function TopPostCard({ post, company }: { post: TopPost; company?: Company }) {
+  return (
+    <article
+      className={styles.topPost}
+      style={{ '--accent': company?.accent ?? '#e9b949' } as CSSProperties}
+      aria-label="Top post today"
+    >
+      <p className={styles.topPostLabel}>
+        <span aria-hidden="true">🔥 </span>
+        Top post today
+      </p>
+      <div className={styles.postRow}>
+        <div className={styles.postAvatar}>
+          {company ? <BrandLogo company={company} className={styles.avatarLogo} /> : null}
+        </div>
+        <div className={styles.postBody}>
+          <div className={styles.nameRow}>
+            <span className={styles.postName}>{post.author}</span>
+            <BadgeCheck className={styles.verified} strokeWidth={2.5} aria-label="Verified" />
+            <span className={styles.topPostLab}>{post.lab}</span>
+            <span className={styles.handleLine}>
+              {post.handle}
+              {post.time ? ` · ${post.time}` : ''}
+            </span>
+          </div>
+          <p className={styles.postText}>{post.text}</p>
+          <div className={styles.stats}>
+            <span className={styles.stat}>
+              <MessageCircle aria-hidden="true" />
+              <span className={styles.srOnly}>Replies</span>
+              {post.replies}
+            </span>
+            <span className={styles.stat}>
+              <Repeat2 aria-hidden="true" />
+              <span className={styles.srOnly}>Reposts</span>
+              {post.reposts}
+            </span>
+            <span className={styles.stat}>
+              <Heart aria-hidden="true" />
+              <span className={styles.srOnly}>Likes</span>
+              {post.likes}
+            </span>
+            {post.url ? (
+              <a className={styles.viewOnX} href={post.url} target="_blank" rel="noopener noreferrer">
+                View on X ↗
+              </a>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </article>
+  )
+}
 
 function XMark({ className }: { className?: string }) {
   const classes = className ? `${styles.xMark} ${className}` : styles.xMark
@@ -12,10 +67,12 @@ export function RecentPosts({
   posts,
   companies,
   mover,
+  topPost,
 }: {
   posts: Post[]
   companies: Company[]
   mover: Mover | null
+  topPost: TopPost | null
 }) {
   const byId = new Map(companies.map((company) => [company.id, company]))
   const changeClass = mover && mover.change < 0 ? styles.down : styles.up
@@ -41,6 +98,7 @@ export function RecentPosts({
           <RotateCw className={styles.refreshIcon} aria-hidden="true" />
         </button>
       </header>
+      {topPost ? <TopPostCard post={topPost} company={byId.get(topPost.companyId)} /> : null}
       {posts.length === 0 ? (
         <p className={styles.empty}>No posts yet. They will show up here after they are added to the score file.</p>
       ) : (

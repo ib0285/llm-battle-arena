@@ -206,10 +206,9 @@ class UpdateDataTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(before, after)
 
-    def test_scores_sum_engagement_without_xai_multiplier(self):
+    def test_score_is_average_per_post_with_xai_boost(self):
         def http_get(url, params, api_key):
             self.assertEqual(api_key, "test-key")
-            self.assertIn("X-API-Key", "X-API-Key")
             handle = params["userName"]
             self.calls.append((handle, params.get("cursor"), params["includeReplies"]))
             if handle == "xai":
@@ -231,15 +230,17 @@ class UpdateDataTests(unittest.TestCase):
         self.assertEqual(code, 0)
         data = json.loads(after)
         by_id = {company["id"]: company for company in data["companies"]}
-        # 111 from @xai plus 225 from @elonmusk. The badge does not add 10%.
-        self.assertEqual(by_id["xai"]["score"], 336)
+        # 336 engagement across 2 posts is an average of 168. xAI is 168 × 1.1.
+        self.assertEqual(by_id["xai"]["score"], 185)
         self.assertEqual(by_id["xai"]["posts"], 2)
         self.assertEqual(by_id["xai"]["badge"], "+10% (It’s his app)")
         self.assertEqual(by_id["openai"]["score"], 12)
         self.assertEqual(by_id["openai"]["posts"], 1)
-        self.assertEqual(by_id["meta"]["score"], 0)
+        # Meta had no posts in the window, so the previous score stays.
+        self.assertEqual(by_id["meta"]["score"], 5)
+        self.assertEqual(by_id["meta"]["posts"], 1)
         self.assertEqual(by_id["xai"]["progress"], 1)
-        self.assertEqual(by_id["openai"]["progress"], round(12 / 336, 2))
+        self.assertEqual(by_id["openai"]["progress"], round(12 / 185, 2))
         self.assertEqual(data["posts"][0]["name"], "Elon Musk")
         self.assertEqual(data["posts"][0]["handle"], "@elonmusk")
         self.assertEqual(data["posts"][0]["time"], "5m")
@@ -263,7 +264,7 @@ class UpdateDataTests(unittest.TestCase):
         self.assertEqual(code, 0)
         data = json.loads(after)
         xai = next(company for company in data["companies"] if company["id"] == "xai")
-        self.assertEqual(xai["score"], 12)
+        self.assertEqual(xai["score"], 13)
         self.assertEqual(xai["posts"], 1)
         self.assertEqual(data["posts"][0]["text"], "still counted")
 
@@ -311,7 +312,7 @@ class UpdateDataTests(unittest.TestCase):
         data = json.loads(after)
         openai = next(company for company in data["companies"] if company["id"] == "openai")
         self.assertEqual(openai["posts"], 21)
-        self.assertEqual(openai["score"], 1020)
+        self.assertEqual(openai["score"], round(1020 / 21))
 
     def test_stops_before_a_second_page_when_a_tweet_is_older_than_a_day(self):
         def http_get(url, params, api_key):
@@ -330,6 +331,42 @@ class UpdateDataTests(unittest.TestCase):
         code, _before, _after = self.run_update(http_get)
         self.assertEqual(code, 0)
         self.assertNotIn("should-not-fetch", self.calls)
+
+    def test_paginates_through_fresh_pages_and_stops_at_five(self):
+        def http_get(url, params, api_key):
+            handle = params["userName"]
+            cursor = params.get("cursor")
+            self.calls.append((handle, cursor))
+            if handle != "OpenAI":
+                return page([tweet(handle, handle, handle, 20, 2, 0, 0, text=handle)])
+            page_number = 1 if not cursor else int(cursor)
+            tweets = [
+                tweet(f"{page_number}-{i}", "OpenAI", "OpenAI", 5, 1, 0, 0, text=f"page {page_number} item {i}")
+                for i in range(20)
+            ]
+            return page(tweets, has_next=True, cursor=str(page_number + 1))
+
+        code, _before, after = self.run_update(http_get)
+        self.assertEqual(code, 0)
+        openai_calls = [call for call in self.calls if call[0] == "OpenAI"]
+        self.assertEqual(len(openai_calls), 5)
+        self.assertNotIn(("OpenAI", "6"), openai_calls)
+        data = json.loads(after)
+        openai = next(company for company in data["companies"] if company["id"] == "openai")
+        self.assertEqual(openai["posts"], 100)
+        self.assertEqual(openai["score"], 1)
+
+    def test_handle_log_lists_posts_and_engagement(self):
+        def http_get(url, params, api_key):
+            if params["userName"] == "OpenAI":
+                return page([tweet("o1", "OpenAI", "OpenAI", 8, 4, 1, 1, text="logged")])
+            return page([tweet(params["userName"], params["userName"], params["userName"], 8, 1, 0, 0)])
+
+        with mock.patch("sys.stdout") as stdout:
+            code, _before, _after = self.run_update(http_get)
+        self.assertEqual(code, 0)
+        logged = "".join(call.args[0] for call in stdout.write.call_args_list)
+        self.assertIn("@OpenAI: 1 posts, 6 engagement", logged)
 
     def test_format_count_and_recent_post_picks_highest_engagement(self):
         self.assertEqual(update_data.format_count(86), "86")

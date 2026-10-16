@@ -36,7 +36,7 @@ export function ArenaStage({ companies }: { companies: Company[] }) {
           </p>
           <p className={styles.coreSub}>Leading the arena</p>
           <p className={`${styles.coreScore} ${styles.goldText}`}>{formatNumber(leader.score)}</p>
-          <p className={styles.coreUnit}>24h Engagement</p>
+          <p className={styles.coreUnit}>Avg per post</p>
         </div>
 
         {companies.map((c) => (

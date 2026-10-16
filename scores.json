@@ -3,8 +3,8 @@
     {
       "id": "xai",
       "name": "xAI",
-      "score": 540836,
-      "posts": 19,
+      "score": 38760,
+      "posts": 28,
       "progress": 1.0,
       "accent": "#e9b949",
       "logo": "/logos/xai.svg",
@@ -15,9 +15,9 @@
     {
       "id": "openai",
       "name": "OpenAI",
-      "score": 18108,
+      "score": 3665,
       "posts": 5,
-      "progress": 0.03,
+      "progress": 0.09,
       "accent": "#34d399",
       "logo": "/logos/openai.svg",
       "logoMode": "mask",
@@ -26,9 +26,9 @@
     {
       "id": "meta",
       "name": "Meta",
-      "score": 75236,
-      "posts": 16,
-      "progress": 0.14,
+      "score": 4476,
+      "posts": 17,
+      "progress": 0.12,
       "accent": "#3b9cf6",
       "logo": "/logos/meta.svg",
       "logoMode": "image"
@@ -36,9 +36,9 @@
     {
       "id": "anthropic",
       "name": "Anthropic",
-      "score": 11674,
+      "score": 2961,
       "posts": 4,
-      "progress": 0.02,
+      "progress": 0.08,
       "accent": "#9f6bf5",
       "logo": "/logos/anthropic.svg",
       "logoMode": "mask",
@@ -47,9 +47,9 @@
     {
       "id": "deepmind",
       "name": "Google DeepMind",
-      "score": 2866,
+      "score": 979,
       "posts": 3,
-      "progress": 0.01,
+      "progress": 0.03,
       "accent": "#3b82f6",
       "logo": "/logos/deepmind.svg",
       "logoMode": "mask",
@@ -64,9 +64,9 @@
       "handle": "@elonmusk",
       "time": "13h",
       "text": "Maybe we should start a competitor to Amazon 🤔",
-      "replies": "18.1K",
-      "reposts": "13.9K",
-      "likes": "145.6K",
+      "replies": "18.2K",
+      "reposts": "14.1K",
+      "likes": "146.9K",
       "inlineHandle": false
     },
     {
@@ -76,9 +76,9 @@
       "handle": "@OpenAI",
       "time": "7h",
       "text": "New voices. Better accents. And less \"checking...\" GPT-Live-1.1 brings these updates to Voice in ChatGPT, Codex, and dots, with new voices in French, German, Hindi, Mexican Spanish, Korean, and Japanese. Rolling out today to all users. Coming soon to the API. https://t.co/L6K8ZUC1xm",
-      "replies": "583",
-      "reposts": "586",
-      "likes": "8.3K",
+      "replies": "588",
+      "reposts": "595",
+      "likes": "8.4K",
       "inlineHandle": false
     },
     {
@@ -86,11 +86,11 @@
       "companyId": "meta",
       "name": "Mark Zuckerberg",
       "handle": "@finkd",
-      "time": "8h",
+      "time": "9h",
       "text": "Muse Spark Open -- weights releasing today -- runs great on new Mac Studios thanks to work with @johnternus and Apple. https://t.co/U2wJNrKBOg",
-      "replies": "776",
+      "replies": "781",
       "reposts": "1.2K",
-      "likes": "21K",
+      "likes": "21.2K",
       "inlineHandle": false
     },
     {
@@ -98,11 +98,11 @@
       "companyId": "anthropic",
       "name": "Anthropic",
       "handle": "@AnthropicAI",
-      "time": "12h",
+      "time": "13h",
       "text": "Applications are now open for two new Anthropic Fellowships. STEM Fellows (science and engineering) and Conceptual Reasoning Fellows (philosophy, cognitive science, economics, policy, and law) will spend four months at Anthropic from January 2027, working to help Claude reason well about some of the hardest problems in those fields. For more information, see the descriptions below. The application deadline is October 28. Conceptual Reasoning Fellows: https://t.co/kTaBPqttbK STEM Fellows: https://t.co/KkD5ruJkjq",
-      "replies": "313",
-      "reposts": "449",
-      "likes": "5.7K",
+      "replies": "315",
+      "reposts": "452",
+      "likes": "5.8K",
       "inlineHandle": false
     },
     {
@@ -113,8 +113,8 @@
       "time": "9h",
       "text": "Plus up your furniture with 3D-printed accessories using Gemini 4 Argon. Upload a pic with rough measurements, and use Canvas in Gemini to build an interactive 3D CAD studio where you can explore styles, tweak live sliders, and export printable STLs to upgrade your space.",
       "replies": "68",
-      "reposts": "117",
-      "likes": "1.3K",
+      "reposts": "121",
+      "likes": "1.4K",
       "inlineHandle": false
     }
   ]

@@ -43,7 +43,7 @@ export function CompanyCard({ company, box, splitName }: CompanyCardProps) {
       </div>
 
       <p className={styles.cardScore}>{formatNumber(company.score)}</p>
-      <p className={styles.cardLabel}>24h Engagement</p>
+      <p className={styles.cardLabel}>Avg per post</p>
 
       <div
         className={styles.bar}

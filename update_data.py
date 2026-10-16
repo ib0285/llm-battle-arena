@@ -2,9 +2,10 @@
 """Fill scores.json from recent posts on X.
 
 Reads the accounts in accounts.json, asks twitterapi.io for each account's
-latest tweets, and keeps the ones from the last 24 hours. Company score is
-likes + reposts + replies. The xAI badge stays a label. The score itself is
-not multiplied, because the website never applies the 10% in the math.
+latest tweets, and keeps the ones from the last 24 hours. A company's score
+is the average likes + reposts + replies per post. xAI then gets 10% on top
+of that average, which is the badge on its card. If a company has no posts
+in the window, its previous score stays.
 
 The hourly Action passes TWITTERAPI_IO_KEY. If that key is missing, the API
 cannot be used, or nobody has a post in the window, this script leaves
@@ -26,13 +27,13 @@ ACCOUNTS_PATH = ROOT / "accounts.json"
 
 API_URL = "https://api.twitterapi.io/twitter/user/last_tweets"
 WINDOW = timedelta(hours=24)
-# One page is 20 tweets. A second page is requested only when every tweet on
-# the first page is still inside the 24 hour window.
-MAX_PAGES = 2
+# One page is about 20 tweets. Keep asking for the next page until a tweet is
+# older than 24 hours, and never go past five pages.
+MAX_PAGES = 5
 
-# The badge is the "+10%" note on the card. The page shows that text and does
-# not multiply the score, so the saved score stays the plain 24 hour total.
-XAI_SCORE_MULTIPLIER = 1
+# The "+10% (It's his app)" badge is a real boost. The saved xAI score is
+# round(average engagement per post × 1.1). Leader and progress use that number.
+XAI_SCORE_MULTIPLIER = 1.1
 
 DISPLAY = {
     "xai": {
@@ -355,7 +356,7 @@ def build_scores(previous, tweets_by_company, failed_companies, now):
     for company_id in COMPANY_ORDER:
         tweets = tweets_by_company.get(company_id, [])
         total_tweets += len(tweets)
-        if company_id in failed_companies:
+        if company_id in failed_companies or not tweets:
             old = saved.get(company_id)
             if old is None:
                 continue
@@ -368,14 +369,13 @@ def build_scores(previous, tweets_by_company, failed_companies, now):
                 posts.append(old_post)
             continue
         company = company_shell(company_id, saved.get(company_id))
-        score = sum(engagement(tweet) for tweet in tweets)
+        average = sum(engagement(tweet) for tweet in tweets) / len(tweets)
         if company_id == "xai":
-            score = int(round(score * XAI_SCORE_MULTIPLIER))
-        company["score"] = score
+            average *= XAI_SCORE_MULTIPLIER
+        company["score"] = int(round(average))
         company["posts"] = len(tweets)
         companies.append(company)
-        if tweets:
-            posts.append(featured_post(company_id, tweets, now, len(posts) + 1))
+        posts.append(featured_post(company_id, tweets, now, len(posts) + 1))
     if total_tweets == 0:
         raise UpdateError("no posts from the last 24 hours")
     for index, post in enumerate(posts, start=1):
@@ -402,6 +402,8 @@ def collect(accounts, api_key, http_get, now):
                 continue
             successes += 1
             collected.extend(tweets)
+            handle_engagement = sum(engagement(tweet) for tweet in tweets)
+            print(f"@{handle}: {len(tweets)} posts, {handle_engagement} engagement")
         if successes == 0:
             failed_companies.append(company_id)
             print(f"{company_id}: no account could be read, keeping the previous score", file=sys.stderr)

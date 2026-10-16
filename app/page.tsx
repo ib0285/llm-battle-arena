@@ -15,7 +15,7 @@ export default async function HomePage() {
           <div>
             <h1>LLM Battle Arena</h1>
             <p className={styles.subtitle}>
-              Live race of posts on X · Scores = likes + reposts + replies in last 24 hours
+              Live race of posts on X · Score = average likes + reposts + replies per post, last 24 hours
             </p>
           </div>
           <div className={styles.status} role="status" aria-live="polite">
@@ -27,7 +27,6 @@ export default async function HomePage() {
               LIVE
             </span>
             <span className={styles.updating}>Updating live</span>
-            <span className={styles.pill}>Prototype · Sample data</span>
           </div>
         </header>
         {usingFallback ? (

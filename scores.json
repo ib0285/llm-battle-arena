@@ -3,8 +3,8 @@
     {
       "id": "xai",
       "name": "xAI",
-      "score": 40920,
-      "posts": 26,
+      "score": 68706,
+      "posts": 21,
       "progress": 1.0,
       "accent": "#e9b949",
       "logo": "/logos/xai.svg",
@@ -15,9 +15,9 @@
     {
       "id": "openai",
       "name": "OpenAI",
-      "score": 3753,
+      "score": 4246,
       "posts": 5,
-      "progress": 0.09,
+      "progress": 0.06,
       "accent": "#34d399",
       "logo": "/logos/openai.svg",
       "logoMode": "mask",
@@ -26,9 +26,9 @@
     {
       "id": "meta",
       "name": "Meta",
-      "score": 4569,
-      "posts": 17,
-      "progress": 0.11,
+      "score": 6299,
+      "posts": 12,
+      "progress": 0.09,
       "accent": "#3b9cf6",
       "logo": "/logos/meta.svg",
       "logoMode": "image"
@@ -36,9 +36,9 @@
     {
       "id": "anthropic",
       "name": "Anthropic",
-      "score": 3038,
+      "score": 3442,
       "posts": 4,
-      "progress": 0.07,
+      "progress": 0.05,
       "accent": "#9f6bf5",
       "logo": "/logos/anthropic.svg",
       "logoMode": "mask",
@@ -47,7 +47,7 @@
     {
       "id": "deepmind",
       "name": "Google DeepMind",
-      "score": 1016,
+      "score": 1317,
       "posts": 3,
       "progress": 0.02,
       "accent": "#3b82f6",
@@ -62,11 +62,11 @@
       "companyId": "xai",
       "name": "Elon Musk",
       "handle": "@elonmusk",
-      "time": "14h",
-      "text": "Maybe we should start a competitor to Amazon 🤔",
-      "replies": "18.5K",
-      "reposts": "14.3K",
-      "likes": "149.8K",
+      "time": "6h",
+      "text": "Turns out the future does have flying cars https://t.co/6fexPp6SXI",
+      "replies": "18.8K",
+      "reposts": "47.8K",
+      "likes": "399.5K",
       "inlineHandle": false
     },
     {
@@ -74,11 +74,11 @@
       "companyId": "openai",
       "name": "OpenAI",
       "handle": "@OpenAI",
-      "time": "8h",
+      "time": "14h",
       "text": "New voices. Better accents. And less \"checking...\" GPT-Live-1.1 brings these updates to Voice in ChatGPT, Codex, and dots, with new voices in French, German, Hindi, Mexican Spanish, Korean, and Japanese. Rolling out today to all users. Coming soon to the API. https://t.co/L6K8ZUC1xm",
-      "replies": "596",
-      "reposts": "608",
-      "likes": "8.6K",
+      "replies": "678",
+      "reposts": "675",
+      "likes": "9.5K",
       "inlineHandle": false
     },
     {
@@ -86,11 +86,11 @@
       "companyId": "meta",
       "name": "Mark Zuckerberg",
       "handle": "@finkd",
-      "time": "10h",
+      "time": "15h",
       "text": "Muse Spark Open -- weights releasing today -- runs great on new Mac Studios thanks to work with @johnternus and Apple. https://t.co/U2wJNrKBOg",
-      "replies": "787",
-      "reposts": "1.2K",
-      "likes": "21.6K",
+      "replies": "844",
+      "reposts": "1.3K",
+      "likes": "23.6K",
       "inlineHandle": false
     },
     {
@@ -98,11 +98,11 @@
       "companyId": "anthropic",
       "name": "Anthropic",
       "handle": "@AnthropicAI",
-      "time": "13h",
+      "time": "19h",
       "text": "Applications are now open for two new Anthropic Fellowships. STEM Fellows (science and engineering) and Conceptual Reasoning Fellows (philosophy, cognitive science, economics, policy, and law) will spend four months at Anthropic from January 2027, working to help Claude reason well about some of the hardest problems in those fields. For more information, see the descriptions below. The application deadline is October 28. Conceptual Reasoning Fellows: https://t.co/kTaBPqttbK STEM Fellows: https://t.co/KkD5ruJkjq",
-      "replies": "316",
-      "reposts": "458",
-      "likes": "5.8K",
+      "replies": "340",
+      "reposts": "503",
+      "likes": "6.2K",
       "inlineHandle": false
     },
     {
@@ -110,11 +110,11 @@
       "companyId": "deepmind",
       "name": "Google Gemini",
       "handle": "@GeminiApp",
-      "time": "10h",
+      "time": "15h",
       "text": "Plus up your furniture with 3D-printed accessories using Gemini 4 Argon. Upload a pic with rough measurements, and use Canvas in Gemini to build an interactive 3D CAD studio where you can explore styles, tweak live sliders, and export printable STLs to upgrade your space.",
-      "replies": "69",
-      "reposts": "127",
-      "likes": "1.4K",
+      "replies": "88",
+      "reposts": "179",
+      "likes": "2.1K",
       "inlineHandle": false
     }
   ]

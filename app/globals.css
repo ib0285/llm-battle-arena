@@ -8,13 +8,17 @@ body {
   padding: 0;
 }
 
+html {
+  line-height: 1.5;
+}
+
 body {
   min-height: 100vh;
-  color: #f4f4f7;
-  background:
-    radial-gradient(1100px 640px at 42% 42%, rgba(58, 31, 122, 0.28), transparent 62%),
-    #07070c;
-  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: #fff;
+  background: #07070b;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1,

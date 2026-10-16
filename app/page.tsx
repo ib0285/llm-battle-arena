@@ -10,13 +10,38 @@ export default async function HomePage() {
 
   return (
     <main className={styles.page} data-arena-source={usingFallback ? 'fallback' : 'live'}>
-      {usingFallback ? (
-        <p className={styles.notice} role="status">
-          Live scores could not be loaded, so this page is showing the last saved copy.
-        </p>
-      ) : null}
-      <ArenaStage companies={companies} />
-      <RecentPosts posts={posts} companies={companies} />
+      <div className={styles.shell}>
+        <header className={styles.header}>
+          <div>
+            <h1>LLM Battle Arena</h1>
+            <p className={styles.subtitle}>
+              Live race of posts on X · Scores = likes + reposts + replies in last 24 hours
+            </p>
+          </div>
+          <div className={styles.status} role="status" aria-live="polite">
+            <span className={styles.liveBadge}>
+              <span className={styles.pingWrap}>
+                <span className={styles.ping} />
+                <span className={styles.pingDot} />
+              </span>
+              LIVE
+            </span>
+            <span className={styles.updating}>Updating live</span>
+            <span className={styles.pill}>Prototype · Sample data</span>
+          </div>
+        </header>
+        {usingFallback ? (
+          <p className={styles.notice} role="status">
+            Live scores could not be loaded, so this page is showing the last saved copy.
+          </p>
+        ) : null}
+        <div className={styles.board}>
+          <div className={styles.stageWrap}>
+            <ArenaStage companies={companies} />
+          </div>
+          <RecentPosts posts={posts} companies={companies} />
+        </div>
+      </div>
     </main>
   )
 }

@@ -1,19 +1,26 @@
-import type { CSSProperties } from 'react'
+import { BadgeCheck, ExternalLink, Heart, MessageCircle, Repeat2, RotateCw } from 'lucide-react'
 import type { Company, Post } from '@/lib/arena-data'
 import { BrandLogo } from './brand-logo'
 import styles from './arena.module.css'
+
+function XMark({ className }: { className?: string }) {
+  const classes = className ? `${styles.xMark} ${className}` : styles.xMark
+  return <span aria-hidden="true" className={classes} />
+}
 
 export function RecentPosts({ posts, companies }: { posts: Post[]; companies: Company[] }) {
   const byId = new Map(companies.map((company) => [company.id, company]))
 
   return (
-    <aside className={styles.feed} aria-label="Recent posts">
+    <aside className={styles.feed} aria-labelledby="recent-posts-title">
       <header className={styles.feedHead}>
-        <h2>Recent Posts</h2>
-        <span className={styles.live}>
-          <span className={`${styles.dot} ${styles.liveDot}`} />
-          Live
-        </span>
+        <h2 id="recent-posts-title">
+          <XMark />
+          Recent Posts
+        </h2>
+        <button type="button" className={styles.refresh} aria-label="Refresh posts">
+          <RotateCw className={styles.refreshIcon} aria-hidden="true" />
+        </button>
       </header>
       {posts.length === 0 ? (
         <p className={styles.empty}>No posts yet. They will show up here after they are added to the score file.</p>
@@ -21,39 +28,51 @@ export function RecentPosts({ posts, companies }: { posts: Post[]; companies: Co
         <ul className={styles.feedList}>
           {posts.map((post) => {
             const company = byId.get(post.companyId)
-            const style = { '--accent': company?.accent ?? '#e9b949' } as CSSProperties
             return (
-              <li key={post.id} className={styles.post} data-post={post.id} style={style}>
-                <div className={styles.postTop}>
-                  {company ? (
-                    <BrandLogo company={company} className={styles.feedLogo} />
-                  ) : (
-                    <span className={styles.feedLogo} aria-hidden="true" />
-                  )}
-                  <p className={styles.postMeta}>
-                    <span className={styles.postName}>{post.name}</span>
-                    {post.inlineHandle ? <span className={styles.postHandle}> {post.handle}</span> : null}
-                    {post.time ? <span className={styles.postTime}> · {post.time}</span> : null}
-                    {post.inlineHandle ? null : <span className={styles.postHandleBlock}>{post.handle}</span>}
-                  </p>
+              <li key={post.id} className={styles.post} data-post={post.id}>
+                <div className={styles.postRow}>
+                  <div className={styles.postAvatar}>
+                    {company ? <BrandLogo company={company} className={styles.avatarLogo} /> : null}
+                  </div>
+                  <div className={styles.postBody}>
+                    <div className={styles.nameRow}>
+                      <span className={styles.postName}>{post.name}</span>
+                      <BadgeCheck className={styles.verified} strokeWidth={2.5} aria-label="Verified" />
+                      <span className={styles.handleLine}>
+                        {post.handle}
+                        {post.time ? ` · ${post.time}` : ''}
+                      </span>
+                    </div>
+                    <p className={styles.postText}>{post.text}</p>
+                    <div className={styles.stats}>
+                      <span className={styles.stat}>
+                        <MessageCircle aria-hidden="true" />
+                        <span className={styles.srOnly}>Replies</span>
+                        {post.replies}
+                      </span>
+                      <span className={styles.stat}>
+                        <Repeat2 aria-hidden="true" />
+                        <span className={styles.srOnly}>Reposts</span>
+                        {post.reposts}
+                      </span>
+                      <span className={styles.stat}>
+                        <Heart aria-hidden="true" />
+                        <span className={styles.srOnly}>Likes</span>
+                        {post.likes}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <p className={styles.postText}>{post.text}</p>
-                <p className={styles.stats}>
-                  <span>
-                    <span className={styles.statLabel}>Replies</span> {post.replies}
-                  </span>
-                  <span>
-                    <span className={styles.statLabel}>Reposts</span> {post.reposts}
-                  </span>
-                  <span>
-                    <span className={styles.statLabel}>Likes</span> {post.likes}
-                  </span>
-                </p>
+                <XMark className={styles.cornerX} />
               </li>
             )
           })}
         </ul>
       )}
+      <a className={styles.more} href="https://x.com/search?q=AI" target="_blank" rel="noopener noreferrer">
+        View more on X
+        <ExternalLink className={styles.moreIcon} aria-hidden="true" />
+      </a>
     </aside>
   )
 }

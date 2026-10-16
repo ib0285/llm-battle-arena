@@ -1,0 +1,29 @@
+{
+  "snapshots": [
+    {
+      "at": "2026-10-16T17:32:23.343184+00:00",
+      "companies": {
+        "xai": {
+          "index": 1.4,
+          "raw": 0.2337
+        },
+        "openai": {
+          "index": 5.7,
+          "raw": 2.9686
+        },
+        "meta": {
+          "index": 5.6,
+          "raw": 2.8827
+        },
+        "anthropic": {
+          "index": 8.0,
+          "raw": 4.4335
+        },
+        "deepmind": {
+          "index": 10.0,
+          "raw": 5.7008
+        }
+      }
+    }
+  ]
+}

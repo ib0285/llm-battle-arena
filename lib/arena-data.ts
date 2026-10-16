@@ -40,6 +40,21 @@ export type Post = {
   url?: string
 }
 
+export type TopPost = {
+  author: string
+  handle: string
+  lab: string
+  companyId: CompanyId
+  text: string
+  likes: string
+  reposts: string
+  replies: string
+  engagement: number
+  url?: string
+  createdAt: string
+  time: string
+}
+
 export type Mover = {
   companyId: CompanyId
   name: string
@@ -70,6 +85,7 @@ export type ArenaData = {
   usingFallback: boolean
   updatedAt: string | null
   mover: Mover | null
+  topPost: TopPost | null
 }
 
 type CompanyDefaults = {
@@ -475,6 +491,43 @@ export function normalizeLeaders(input: unknown): Leader[] {
   return leaders
 }
 
+function countLabel(value: unknown): string {
+  const number = asNumber(value)
+  if (number === null) return asText(value, '0')
+  const rounded = Math.max(0, Math.round(number))
+  if (rounded < 1000) return String(rounded)
+  const scaled = rounded < 1_000_000 ? rounded / 1000 : rounded / 1_000_000
+  const suffix = rounded < 1_000_000 ? 'K' : 'M'
+  return `${scaled.toFixed(1).replace(/\.0$/, '')}${suffix}`
+}
+
+export function normalizeTopPost(raw: unknown): TopPost | null {
+  if (!isRecord(raw)) return null
+  const companyId = companyIdFrom(raw.companyId) ?? companyIdFrom(raw.lab)
+  if (!companyId) return null
+  const text = asText(raw.text)
+  const author = asText(raw.author, asText(raw.name))
+  const handle = asText(raw.handle)
+  if (!text || !author || !handle) return null
+  const engagement = asNumber(raw.engagement)
+  const url = asText(raw.url)
+  const post: TopPost = {
+    author,
+    handle: handle.startsWith('@') ? handle : `@${handle}`,
+    lab: asText(raw.lab, DISPLAY[companyId].name),
+    companyId,
+    text,
+    likes: countLabel(raw.likes),
+    reposts: countLabel(raw.reposts),
+    replies: countLabel(raw.replies),
+    engagement: engagement ?? 0,
+    createdAt: asText(raw.createdAt),
+    time: asText(raw.time),
+  }
+  if (url) post.url = url
+  return post
+}
+
 function normalizeMover(raw: unknown): Mover | null {
   if (!isRecord(raw)) return null
   const companyId = companyIdFrom(raw.companyId) ?? companyIdFrom(raw.name)
@@ -505,6 +558,7 @@ export async function fetchArenaData(): Promise<ArenaData> {
       usingFallback: false,
       updatedAt: asText(record.updatedAt) || null,
       mover: normalizeMover(record.mover),
+      topPost: normalizeTopPost(record.topPost),
     }
   } catch (err) {
     console.error('Using saved arena scores', err)
@@ -515,6 +569,7 @@ export async function fetchArenaData(): Promise<ArenaData> {
       usingFallback: true,
       updatedAt: null,
       mover: fallbackMover,
+      topPost: null,
     }
   }
 }

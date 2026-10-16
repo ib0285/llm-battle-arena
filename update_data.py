@@ -55,6 +55,7 @@ TWEETS_URL = "https://api.twitterapi.io/twitter/user/last_tweets"
 USER_URL = "https://api.twitterapi.io/twitter/user/info"
 
 WEEK = timedelta(days=7)
+DAY = timedelta(hours=24)
 FULL_EVERY = timedelta(hours=3)
 FOLLOWER_TTL = timedelta(days=1)
 # One page is about 20 tweets. The hourly run reads one page. A full pass
@@ -580,6 +581,43 @@ def tweet_url(handle, tweet_id):
     return f"https://x.com/{handle}/status/{tweet_id}"
 
 
+def top_post(history, now):
+    """Highest engagement post from the last 24 hours, across every stored account."""
+    parsed = []
+    for post in history:
+        created = parse_time(post.get("created"))
+        if created is None or created > now or now - created > DAY:
+            continue
+        company_id = post.get("companyId")
+        if company_id not in DISPLAY:
+            continue
+        parsed.append({**post, "created": created, "companyId": company_id})
+    if not parsed:
+        return None
+    best = max(parsed, key=lambda post: (engagement(post), post["created"]))
+    handle = str(best.get("handle") or "").strip().lstrip("@")
+    likes = as_count(best.get("likes"))
+    reposts = as_count(best.get("reposts"))
+    replies = as_count(best.get("replies"))
+    featured = {
+        "author": best.get("name") or handle,
+        "handle": f"@{handle}" if handle else "",
+        "lab": DISPLAY[best["companyId"]]["name"],
+        "companyId": best["companyId"],
+        "text": best.get("text") or "",
+        "likes": format_count(likes),
+        "reposts": format_count(reposts),
+        "replies": format_count(replies),
+        "engagement": likes + reposts + replies,
+        "createdAt": best["created"].isoformat(),
+        "time": relative_time(best["created"], now),
+    }
+    url = tweet_url(handle, str(best.get("id") or ""))
+    if url:
+        featured["url"] = url
+    return featured
+
+
 def featured_post(company_id, posts, now, index):
     parsed = []
     for post in posts:
@@ -885,6 +923,9 @@ def build_scores(previous, history, followers, failed_companies, snapshots, now,
     }
     if mover:
         updated["mover"] = mover
+    featured_today = top_post(history, now)
+    if featured_today:
+        updated["topPost"] = featured_today
     return updated
 
 

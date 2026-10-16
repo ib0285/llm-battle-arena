@@ -534,6 +534,89 @@ class UpdateDataTests(unittest.TestCase):
         self.assertEqual(leaders["@GoogleDeepMind"]["reach"], 100)
         self.assertFalse(leaders["@GoogleDeepMind"]["biggestReach"])
         self.assertNotEqual(data.get("mover", {}).get("companyId"), "elonmusk")
+        self.assertEqual(data["topPost"]["author"], "Elon Musk")
+        self.assertEqual(data["topPost"]["handle"], "@elonmusk")
+        self.assertEqual(data["topPost"]["lab"], "xAI")
+        self.assertEqual(data["topPost"]["text"], "person")
+        self.assertEqual(data["topPost"]["engagement"], 500)
+        self.assertEqual(data["topPost"]["url"], "https://x.com/elonmusk/status/e0")
+        self.assertEqual({call[0] for call in self.calls}, {update_data.TWEETS_URL, update_data.USER_URL})
+
+    def test_top_post_is_the_highest_engagement_in_the_last_day(self):
+        day_ago = NOW - timedelta(hours=5)
+        history = [
+            {
+                "id": "old",
+                "companyId": "xai",
+                "handle": "elonmusk",
+                "name": "Elon Musk",
+                "created": (NOW - timedelta(hours=25)).isoformat(),
+                "text": "yesterday",
+                "likes": 9000,
+                "reposts": 0,
+                "replies": 0,
+            },
+            {
+                "id": "small",
+                "companyId": "openai",
+                "handle": "sama",
+                "name": "Sam Altman",
+                "created": (NOW - timedelta(hours=2)).isoformat(),
+                "text": "smaller",
+                "likes": 10,
+                "reposts": 0,
+                "replies": 0,
+            },
+            {
+                "id": "best",
+                "companyId": "xai",
+                "handle": "elonmusk",
+                "name": "Elon Musk",
+                "created": day_ago.isoformat(),
+                "text": "winner",
+                "likes": 100,
+                "reposts": 20,
+                "replies": 5,
+            },
+            {
+                "id": "older-tie",
+                "companyId": "meta",
+                "handle": "finkd",
+                "name": "Mark Zuckerberg",
+                "created": (NOW - timedelta(hours=6)).isoformat(),
+                "text": "same total, older",
+                "likes": 125,
+                "reposts": 0,
+                "replies": 0,
+            },
+        ]
+        top = update_data.top_post(history, NOW)
+        self.assertEqual(top["author"], "Elon Musk")
+        self.assertEqual(top["handle"], "@elonmusk")
+        self.assertEqual(top["lab"], "xAI")
+        self.assertEqual(top["companyId"], "xai")
+        self.assertEqual(top["text"], "winner")
+        self.assertEqual(top["likes"], "100")
+        self.assertEqual(top["reposts"], "20")
+        self.assertEqual(top["replies"], "5")
+        self.assertEqual(top["engagement"], 125)
+        self.assertEqual(top["url"], "https://x.com/elonmusk/status/best")
+        self.assertEqual(top["createdAt"], day_ago.isoformat())
+        self.assertIsNone(update_data.top_post([history[0]], NOW))
+
+    def test_no_posts_in_the_last_day_omits_top_post(self):
+        def http_get(url, params, api_key):
+            if url == update_data.USER_URL:
+                return user_info(10_000)
+            return page(
+                [tweet(f"{params['userName']}{i}", params["userName"], params["userName"], 30 * 60, 10, 1, 1) for i in range(3)]
+            )
+
+        code, _before, after = self.run_update(http_get, full=True)
+        self.assertEqual(code, 0)
+        data = json.loads(after)
+        self.assertNotIn("topPost", data)
+        self.assertGreaterEqual(len(data["posts"]), 1)
 
     def test_format_count(self):
         self.assertEqual(update_data.format_count(86), "86")

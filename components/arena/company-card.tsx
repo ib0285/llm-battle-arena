@@ -10,14 +10,16 @@ type CompanyCardProps = {
   company: Company
   box: Box
   splitName?: boolean
+  selected?: boolean
+  onSelect?: () => void
 }
 
 const u = (n: number) => `calc(${n} * var(--u))`
 
-export function CompanyCard({ company, box, splitName }: CompanyCardProps) {
+export function CompanyCard({ company, box, splitName, selected, onSelect }: CompanyCardProps) {
   const qualified = company.status === 'ok' && company.index !== null
   const scoreText = qualified ? formatIndex(company.index as number) : '—'
-  const label = company.status === 'not_enough_posts' ? 'not enough posts' : 'score · 7d'
+  const label = company.status === 'not_enough_posts' ? 'not enough posts' : "This week's score"
   const style = {
     '--accent': company.accent,
     left: u(box.left),
@@ -29,7 +31,21 @@ export function CompanyCard({ company, box, splitName }: CompanyCardProps) {
   const [first, ...rest] = company.name.split(' ')
 
   return (
-    <article className={styles.card} style={style} aria-label={`${company.name}: ${qualified ? scoreText : label}`}>
+    <article
+      className={selected ? `${styles.card} ${styles.cardOn}` : styles.card}
+      style={style}
+      role="button"
+      tabIndex={0}
+      aria-pressed={selected}
+      aria-label={`${company.name}: ${qualified ? scoreText : label}. Show posts.`}
+      onClick={onSelect}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          onSelect?.()
+        }
+      }}
+    >
       <div className={styles.cardHead}>
         <BrandLogo company={company} className={styles.cardLogo} />
         <h2 className={styles.cardName}>

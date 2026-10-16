@@ -1,4 +1,5 @@
 import { ArenaBoard } from '@/components/arena/arena-board'
+import { resolveOpen } from '@/lib/resolve-open'
 import { ScoreHelp } from '@/components/arena/score-help'
 import styles from '@/components/arena/arena.module.css'
 import { fetchArenaData, formatUpdated } from '@/lib/arena-data'
@@ -8,11 +9,11 @@ export const revalidate = 300
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string }>
+  searchParams: Promise<{ tab?: string; open?: string }>
 }) {
   const params = await searchParams
-  const initialTab = params.tab === 'leaders' ? 'leaders' : 'companies'
-  const { companies, leaders, posts, usingFallback, updatedAt, mover, topPost } = await fetchArenaData()
+  const { companies, leaders, posts, leaderPosts, usingFallback, updatedAt, mover, topPost } = await fetchArenaData()
+  const { tab: initialTab, openId } = resolveOpen(params.tab, params.open, companies, leaders)
   const updatedLabel = formatUpdated(updatedAt)
   const waiting = companies.every((company) => company.status === 'pending')
 
@@ -22,7 +23,9 @@ export default async function HomePage({
         <header className={styles.header}>
           <div>
             <h1>LLM Battle Arena</h1>
-            <p className={styles.subtitle}>Who&apos;s winning attention on X · Engagement per follower, rolling 7 days</p>
+            <p className={styles.subtitle}>
+              Who gets the most reaction per follower on X this week. Tap anyone to see their posts.
+            </p>
             <ScoreHelp />
           </div>
           <div className={styles.status} role="status" aria-live="polite">
@@ -52,9 +55,11 @@ export default async function HomePage({
           companies={companies}
           leaders={leaders}
           posts={posts}
+          leaderPosts={leaderPosts}
           mover={mover}
           topPost={topPost}
           initialTab={initialTab}
+          initialOpen={openId}
         />
         <footer className={styles.footer}>
           <p>

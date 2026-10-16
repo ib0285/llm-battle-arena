@@ -541,6 +541,14 @@ class UpdateDataTests(unittest.TestCase):
         self.assertEqual(data["topPost"]["engagement"], 500)
         self.assertEqual(data["topPost"]["url"], "https://x.com/elonmusk/status/e0")
         self.assertEqual({call[0] for call in self.calls}, {update_data.TWEETS_URL, update_data.USER_URL})
+        self.assertEqual([item["text"] for item in by_id["xai"]["highlights"]], ["lab", "lab", "lab", "lab"])
+        self.assertTrue(by_id["xai"]["highlights"][0]["url"].endswith("/x0"))
+        self.assertEqual(by_id["xai"]["reactions"], 400)
+        self.assertEqual(by_id["xai"]["reactionsLabel"], "400")
+        self.assertEqual(leaders["@elonmusk"]["highlights"][0]["likes"], 500)
+        self.assertTrue(leaders["@elonmusk"]["highlights"][0]["url"].endswith("/e0"))
+        self.assertEqual(data["leaderPosts"][0]["handle"], "@elonmusk")
+        self.assertNotIn("person", [item["text"] for item in by_id["xai"]["highlights"]])
 
     def test_top_post_is_the_highest_engagement_in_the_last_day(self):
         day_ago = NOW - timedelta(hours=5)
@@ -617,6 +625,27 @@ class UpdateDataTests(unittest.TestCase):
         data = json.loads(after)
         self.assertNotIn("topPost", data)
         self.assertGreaterEqual(len(data["posts"]), 1)
+
+    def test_highlights_keep_the_strongest_posts_and_trim_text(self):
+        posts = []
+        for index in range(8):
+            posts.append(
+                {
+                    "id": str(index),
+                    "handle": "xai",
+                    "text": ("word " * 40) + "tail",
+                    "likes": index,
+                    "reposts": 0,
+                    "replies": 0,
+                    "created": (NOW - timedelta(minutes=index)).isoformat(),
+                }
+            )
+        highlights = update_data.highlights_for(posts)
+        self.assertEqual(len(highlights), 6)
+        self.assertEqual(highlights[0]["likes"], 7)
+        self.assertLessEqual(len(highlights[0]["text"]), 90)
+        self.assertTrue(highlights[0]["text"].endswith("…"))
+        self.assertNotIn("tail", highlights[0]["text"])
 
     def test_format_count(self):
         self.assertEqual(update_data.format_count(86), "86")

@@ -13,7 +13,15 @@ const layout: Record<CompanyId, { left: number; top: number; width: number; heig
   deepmind: { left: 498, top: 422, width: 178, height: 164 },
 }
 
-export function ArenaStage({ companies }: { companies: Company[] }) {
+export function ArenaStage({
+  companies,
+  selectedId,
+  onSelect,
+}: {
+  companies: Company[]
+  selectedId: string | null
+  onSelect: (id: Company['id']) => void
+}) {
   const leader = [...companies]
     .filter((company) => company.status === 'ok' && company.index !== null)
     .sort((a, b) => b.score - a.score || b.posts - a.posts)[0]
@@ -45,7 +53,14 @@ export function ArenaStage({ companies }: { companies: Company[] }) {
         </div>
 
         {companies.map((c) => (
-          <CompanyCard key={c.id} company={c} box={layout[c.id]} splitName={c.id === 'deepmind'} />
+          <CompanyCard
+            key={c.id}
+            company={c}
+            box={layout[c.id]}
+            splitName={c.id === 'deepmind'}
+            selected={selectedId === c.id}
+            onSelect={() => onSelect(c.id)}
+          />
         ))}
       </div>
     </section>

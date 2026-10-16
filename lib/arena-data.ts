@@ -11,6 +11,15 @@ export type CompanyId = 'xai' | 'openai' | 'meta' | 'anthropic' | 'deepmind'
 
 export type CompanyStatus = 'ok' | 'not_enough_posts' | 'pending'
 
+export type EntityPost = {
+  text: string
+  likes: number
+  reposts: number
+  replies: number
+  at: string
+  url?: string
+}
+
 export type Company = {
   id: CompanyId
   name: string
@@ -24,6 +33,9 @@ export type Company = {
   index: number | null
   delta: number | null
   status: CompanyStatus
+  highlights: EntityPost[]
+  reactions: number
+  reactionsLabel: string
 }
 
 export type Post = {
@@ -76,6 +88,7 @@ export type Leader = {
   reach: number
   reachLabel: string
   biggestReach: boolean
+  highlights: EntityPost[]
 }
 
 export type ArenaData = {
@@ -86,6 +99,7 @@ export type ArenaData = {
   updatedAt: string | null
   mover: Mover | null
   topPost: TopPost | null
+  leaderPosts: Post[]
 }
 
 type CompanyDefaults = {
@@ -148,7 +162,7 @@ const NAME_TO_ID: Record<string, CompanyId> = {
   'google deepmind': 'deepmind',
 }
 
-const fallbackCompanies: Company[] = [
+const fallbackCompanies: Company[] = ([
   {
     id: 'xai',
     name: 'xAI',
@@ -218,7 +232,12 @@ const fallbackCompanies: Company[] = [
     logoMode: 'mask',
     logoColor: 'linear-gradient(135deg,#4f8df7 0%,#4f8df7 45%,#f7c544 55%,#f7c544 100%)',
   },
-]
+] satisfies Array<Omit<Company, 'highlights' | 'reactions' | 'reactionsLabel'>>).map((company) => ({
+  ...company,
+  highlights: [],
+  reactions: 0,
+  reactionsLabel: '0',
+}))
 
 const fallbackPosts: Post[] = [
   {
@@ -275,7 +294,7 @@ const fallbackPosts: Post[] = [
   },
 ]
 
-const fallbackLeaders: Leader[] = [
+const fallbackLeaders: Leader[] = ([
   {
     handle: '@sama',
     name: 'Sam Altman',
@@ -321,7 +340,10 @@ const fallbackLeaders: Leader[] = [
     reachLabel: '1.4K',
     biggestReach: false,
   },
-]
+] satisfies Array<Omit<Leader, 'highlights'>>).map((person) => ({
+  ...person,
+  highlights: [],
+}))
 
 const fallbackMover: Mover = {
   companyId: 'anthropic',
@@ -414,6 +436,9 @@ function normalizeCompany(raw: unknown): Company | null {
     index,
     delta: status === 'ok' ? asNumber(raw.delta) : null,
     status,
+    highlights: normalizeEntityPosts(raw.highlights),
+    reactions: asNumber(raw.reactions) ?? 0,
+    reactionsLabel: asText(raw.reactionsLabel, formatCount(asNumber(raw.reactions) ?? 0)),
   }
   const logoColor = asText(raw.logoColor, defaults.logoColor ?? '')
   if (logoColor) company.logoColor = logoColor
@@ -486,19 +511,60 @@ export function normalizeLeaders(input: unknown): Leader[] {
       reach,
       reachLabel: asText(raw.reachLabel, formatNumber(reach)),
       biggestReach: raw.biggestReach === true,
+      highlights: normalizeEntityPosts(raw.highlights),
     })
   })
   return leaders
 }
 
-function countLabel(value: unknown): string {
-  const number = asNumber(value)
-  if (number === null) return asText(value, '0')
-  const rounded = Math.max(0, Math.round(number))
+export function formatCount(value: number): string {
+  const rounded = Math.max(0, Math.round(value))
   if (rounded < 1000) return String(rounded)
   const scaled = rounded < 1_000_000 ? rounded / 1000 : rounded / 1_000_000
   const suffix = rounded < 1_000_000 ? 'K' : 'M'
   return `${scaled.toFixed(1).replace(/\.0$/, '')}${suffix}`
+}
+
+export function timeAgo(iso: string, now = Date.now()): string {
+  const then = Date.parse(iso)
+  if (Number.isNaN(then)) return ''
+  const minutes = Math.max(0, Math.floor((now - then) / 60000))
+  if (minutes < 1) return '1m ago'
+  if (minutes < 60) return `${minutes}m ago`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `${hours}h ago`
+  return `${Math.max(1, Math.floor(hours / 24))}d ago`
+}
+
+export function leaderKey(handle: string) {
+  return handle.trim().replace(/^@/, '').toLowerCase()
+}
+
+function normalizeEntityPosts(input: unknown): EntityPost[] {
+  if (!Array.isArray(input)) return []
+  const posts: EntityPost[] = []
+  input.forEach((raw) => {
+    if (!isRecord(raw)) return
+    const text = asText(raw.text)
+    if (!text) return
+    const url = asText(raw.url)
+    const post: EntityPost = {
+      text,
+      likes: asNumber(raw.likes) ?? 0,
+      reposts: asNumber(raw.reposts) ?? 0,
+      replies: asNumber(raw.replies) ?? 0,
+      at: asText(raw.at),
+    }
+    if (url) post.url = url
+    posts.push(post)
+  })
+  return posts
+}
+
+function countLabel(value: unknown): string {
+  const number = asNumber(value)
+  if (number === null) return asText(value, '0')
+  return formatCount(number)
 }
 
 export function normalizeTopPost(raw: unknown): TopPost | null {
@@ -559,6 +625,7 @@ export async function fetchArenaData(): Promise<ArenaData> {
       updatedAt: asText(record.updatedAt) || null,
       mover: normalizeMover(record.mover),
       topPost: normalizeTopPost(record.topPost),
+      leaderPosts: normalizePosts(record.leaderPosts) ?? [],
     }
   } catch (err) {
     console.error('Using saved arena scores', err)
@@ -570,6 +637,7 @@ export async function fetchArenaData(): Promise<ArenaData> {
       updatedAt: null,
       mover: fallbackMover,
       topPost: null,
+      leaderPosts: [],
     }
   }
 }

@@ -68,11 +68,13 @@ export function RecentPosts({
   companies,
   mover,
   topPost,
+  heading,
 }: {
   posts: Post[]
   companies: Company[]
   mover: Mover | null
   topPost: TopPost | null
+  heading: string
 }) {
   const byId = new Map(companies.map((company) => [company.id, company]))
   const changeClass = mover && mover.change < 0 ? styles.down : styles.up
@@ -92,7 +94,7 @@ export function RecentPosts({
       <header className={styles.feedHead}>
         <h2 id="recent-posts-title">
           <XMark />
-          Recent Posts
+          {heading}
         </h2>
         <button type="button" className={styles.refresh} aria-label="Refresh posts">
           <RotateCw className={styles.refreshIcon} aria-hidden="true" />

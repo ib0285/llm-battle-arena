@@ -1,16 +1,121 @@
 {
   "companies": [
-    {"id": "xai", "name": "xAI", "score": 128754, "posts": 2341, "progress": 0.82, "accent": "#e9b949", "logo": "/logos/xai.svg", "logoMode": "mask", "logoColor": "linear-gradient(160deg,#ffe08a,#d9a032)", "badge": "+10% (It’s his app)"},
-    {"id": "openai", "name": "OpenAI", "score": 96432, "posts": 1892, "progress": 0.83, "accent": "#34d399", "logo": "/logos/openai.svg", "logoMode": "mask", "logoColor": "#ffffff"},
-    {"id": "meta", "name": "Meta", "score": 45283, "posts": 983, "progress": 0.85, "accent": "#3b9cf6", "logo": "/logos/meta.svg", "logoMode": "image"},
-    {"id": "anthropic", "name": "Anthropic", "score": 71309, "posts": 1456, "progress": 0.85, "accent": "#9f6bf5", "logo": "/logos/anthropic.svg", "logoMode": "mask", "logoColor": "linear-gradient(160deg,#c4a1ff,#8b5cf6)"},
-    {"id": "deepmind", "name": "Google DeepMind", "score": 58667, "posts": 1102, "progress": 0.8, "accent": "#3b82f6", "logo": "/logos/deepmind.svg", "logoMode": "mask", "logoColor": "linear-gradient(135deg,#4f8df7 0%,#4f8df7 45%,#f7c544 55%,#f7c544 100%)"}
+    {
+      "id": "xai",
+      "name": "xAI",
+      "score": 540836,
+      "posts": 19,
+      "progress": 1.0,
+      "accent": "#e9b949",
+      "logo": "/logos/xai.svg",
+      "logoMode": "mask",
+      "logoColor": "linear-gradient(160deg,#ffe08a,#d9a032)",
+      "badge": "+10% (It’s his app)"
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI",
+      "score": 18108,
+      "posts": 5,
+      "progress": 0.03,
+      "accent": "#34d399",
+      "logo": "/logos/openai.svg",
+      "logoMode": "mask",
+      "logoColor": "#ffffff"
+    },
+    {
+      "id": "meta",
+      "name": "Meta",
+      "score": 75236,
+      "posts": 16,
+      "progress": 0.14,
+      "accent": "#3b9cf6",
+      "logo": "/logos/meta.svg",
+      "logoMode": "image"
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic",
+      "score": 11674,
+      "posts": 4,
+      "progress": 0.02,
+      "accent": "#9f6bf5",
+      "logo": "/logos/anthropic.svg",
+      "logoMode": "mask",
+      "logoColor": "linear-gradient(160deg,#c4a1ff,#8b5cf6)"
+    },
+    {
+      "id": "deepmind",
+      "name": "Google DeepMind",
+      "score": 2866,
+      "posts": 3,
+      "progress": 0.01,
+      "accent": "#3b82f6",
+      "logo": "/logos/deepmind.svg",
+      "logoMode": "mask",
+      "logoColor": "linear-gradient(135deg,#4f8df7 0%,#4f8df7 45%,#f7c544 55%,#f7c544 100%)"
+    }
   ],
   "posts": [
-    {"id": "p1", "companyId": "xai", "name": "Elon Musk", "handle": "@elonmusk", "time": "3m", "text": "The whole world will watch this", "replies": "4.8K", "reposts": "9.2K", "likes": "61K", "inlineHandle": true},
-    {"id": "p2", "companyId": "openai", "name": "Thibault Sottiaux", "handle": "@thsottiaux", "time": "18m", "text": "Day 11/ We’ve landed a series of changes and more compute to decrease capacity issues.", "replies": "86", "reposts": "142", "likes": "1.3K", "inlineHandle": false},
-    {"id": "p3", "companyId": "anthropic", "name": "Anthropic", "handle": "@AnthropicAI", "time": "42m", "text": "Applications are now open for two new Anthropic Fellowships.", "replies": "214", "reposts": "1.1K", "likes": "6.4K", "inlineHandle": false},
-    {"id": "p4", "companyId": "meta", "name": "AI at Meta", "handle": "@AIatMeta", "time": "1h", "text": "Today we’re releasing Muse Spark Open...", "replies": "338", "reposts": "1.6K", "likes": "8.7K", "inlineHandle": false},
-    {"id": "p5", "companyId": "deepmind", "name": "Google DeepMind", "handle": "@GoogleDeepMind", "time": "11m", "text": "Pushing the limits of what AI can reason about. Gemini 1.5 Pro update.", "replies": "503", "reposts": "142", "likes": "67", "inlineHandle": false}
+    {
+      "id": "p1",
+      "companyId": "xai",
+      "name": "Elon Musk",
+      "handle": "@elonmusk",
+      "time": "13h",
+      "text": "Maybe we should start a competitor to Amazon 🤔",
+      "replies": "18.1K",
+      "reposts": "13.9K",
+      "likes": "145.6K",
+      "inlineHandle": false
+    },
+    {
+      "id": "p2",
+      "companyId": "openai",
+      "name": "OpenAI",
+      "handle": "@OpenAI",
+      "time": "7h",
+      "text": "New voices. Better accents. And less \"checking...\" GPT-Live-1.1 brings these updates to Voice in ChatGPT, Codex, and dots, with new voices in French, German, Hindi, Mexican Spanish, Korean, and Japanese. Rolling out today to all users. Coming soon to the API. https://t.co/L6K8ZUC1xm",
+      "replies": "583",
+      "reposts": "586",
+      "likes": "8.3K",
+      "inlineHandle": false
+    },
+    {
+      "id": "p3",
+      "companyId": "meta",
+      "name": "Mark Zuckerberg",
+      "handle": "@finkd",
+      "time": "8h",
+      "text": "Muse Spark Open -- weights releasing today -- runs great on new Mac Studios thanks to work with @johnternus and Apple. https://t.co/U2wJNrKBOg",
+      "replies": "776",
+      "reposts": "1.2K",
+      "likes": "21K",
+      "inlineHandle": false
+    },
+    {
+      "id": "p4",
+      "companyId": "anthropic",
+      "name": "Anthropic",
+      "handle": "@AnthropicAI",
+      "time": "12h",
+      "text": "Applications are now open for two new Anthropic Fellowships. STEM Fellows (science and engineering) and Conceptual Reasoning Fellows (philosophy, cognitive science, economics, policy, and law) will spend four months at Anthropic from January 2027, working to help Claude reason well about some of the hardest problems in those fields. For more information, see the descriptions below. The application deadline is October 28. Conceptual Reasoning Fellows: https://t.co/kTaBPqttbK STEM Fellows: https://t.co/KkD5ruJkjq",
+      "replies": "313",
+      "reposts": "449",
+      "likes": "5.7K",
+      "inlineHandle": false
+    },
+    {
+      "id": "p5",
+      "companyId": "deepmind",
+      "name": "Google Gemini",
+      "handle": "@GeminiApp",
+      "time": "9h",
+      "text": "Plus up your furniture with 3D-printed accessories using Gemini 4 Argon. Upload a pic with rough measurements, and use Canvas in Gemini to build an interactive 3D CAD studio where you can explore styles, tweak live sliders, and export printable STLs to upgrade your space.",
+      "replies": "68",
+      "reposts": "117",
+      "likes": "1.3K",
+      "inlineHandle": false
+    }
   ]
 }

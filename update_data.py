@@ -63,6 +63,8 @@ FOLLOWER_TTL = timedelta(days=1)
 MAX_PAGES_LIGHT = 1
 MAX_PAGES_FULL = 8
 MIN_POSTS = 3
+HIGHLIGHT_LIMIT = 6
+HIGHLIGHT_TEXT = 90
 SNAPSHOT_GAP = timedelta(hours=20)
 TODAY_TARGET = timedelta(hours=24)
 TODAY_SLACK = timedelta(hours=8)
@@ -618,6 +620,43 @@ def top_post(history, now):
     return featured
 
 
+def trim_text(text, limit=HIGHLIGHT_TEXT):
+    compact = " ".join(str(text or "").split())
+    if len(compact) <= limit:
+        return compact
+    return compact[: limit - 1].rstrip() + "…"
+
+
+def highlight_from(post):
+    created = post.get("created")
+    if not isinstance(created, str):
+        created = created.isoformat() if hasattr(created, "isoformat") else ""
+    handle = str(post.get("handle") or "").strip().lstrip("@")
+    item = {
+        "text": trim_text(post.get("text")),
+        "likes": as_count(post.get("likes")),
+        "reposts": as_count(post.get("reposts")),
+        "replies": as_count(post.get("replies")),
+        "at": created,
+    }
+    url = tweet_url(handle, str(post.get("id") or ""))
+    if url:
+        item["url"] = url
+    return item
+
+
+def highlights_for(posts, limit=HIGHLIGHT_LIMIT):
+    """Strongest stored posts for one account or lab. No network calls."""
+    parsed = []
+    for post in posts:
+        created = parse_time(post.get("created"))
+        if created is None:
+            continue
+        parsed.append({**post, "created": created})
+    parsed.sort(key=lambda post: (engagement(post), post["created"]), reverse=True)
+    return [highlight_from(post) for post in parsed[:limit]]
+
+
 def featured_post(company_id, posts, now, index):
     parsed = []
     for post in posts:
@@ -846,6 +885,7 @@ def build_leaders(accounts, history, followers, snapshots, now):
                 "biggestReach": False,
             }
             row["reachLabel"] = format_count(row["reach"])
+            row["highlights"] = highlights_for(person_posts)
             rates = account_rates(person_posts, followers)
             raw = company_raw(rates)
             if len(person_posts) >= MIN_POSTS and raw is not None:
@@ -878,6 +918,29 @@ def build_leaders(accounts, history, followers, snapshots, now):
     return rows
 
 
+def leader_feed(accounts, history, now, limit=8):
+    """One strong post per person, for the Leaders tab feed."""
+    ranked = []
+    for company_id in COMPANY_ORDER:
+        for handle in account_handles(accounts, company_id, "leader"):
+            person_posts = posts_for(history, company_id, [handle])
+            if not person_posts:
+                continue
+            best = max(
+                person_posts,
+                key=lambda post: (engagement(post), parse_time(post.get("created")) or datetime.min.replace(tzinfo=timezone.utc)),
+            )
+            featured = featured_post(company_id, [best], now, 1)
+            if featured:
+                ranked.append((engagement(best), featured))
+    ranked.sort(key=lambda item: item[0], reverse=True)
+    posts = []
+    for index, (_, featured) in enumerate(ranked[:limit], start=1):
+        featured["id"] = f"l{index}"
+        posts.append(featured)
+    return posts
+
+
 def build_scores(previous, history, followers, failed_companies, snapshots, now, accounts):
     saved = previous_companies(previous)
     companies = []
@@ -887,6 +950,9 @@ def build_scores(previous, history, followers, failed_companies, snapshots, now,
         company_posts = posts_for(history, company_id, official)
         if company_id in failed_companies:
             company = keep_previous(company_id, saved.get(company_id))
+            company["highlights"] = highlights_for(company_posts)
+            company["reactions"] = sum(engagement(post) for post in company_posts)
+            company["reactionsLabel"] = format_count(company["reactions"])
             companies.append(company)
             old_post = previous_post(previous, company_id)
             if old_post:
@@ -905,6 +971,9 @@ def build_scores(previous, history, followers, failed_companies, snapshots, now,
         featured = featured_post(company_id, company_posts, now, len(posts) + 1)
         if featured:
             posts.append(featured)
+        company["highlights"] = highlights_for(company_posts)
+        company["reactions"] = sum(engagement(post) for post in company_posts)
+        company["reactionsLabel"] = format_count(company["reactions"])
     if not any(company["status"] == "ok" or company["posts"] for company in companies):
         raise UpdateError("no posts from the last 7 days")
     apply_index(companies)
@@ -926,6 +995,7 @@ def build_scores(previous, history, followers, failed_companies, snapshots, now,
     featured_today = top_post(history, now)
     if featured_today:
         updated["topPost"] = featured_today
+    updated["leaderPosts"] = leader_feed(accounts, history, now)
     return updated
 
 

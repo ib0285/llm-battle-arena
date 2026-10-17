@@ -92,14 +92,16 @@ export function EntityPosts({ posts, shareHref }: { posts: EntityPost[]; shareHr
           })}
         </ul>
       )}
-      {posts.length > 3 ? (
-        <button type="button" className={styles.showMore} onClick={() => setMore((open) => !open)}>
-          {more ? 'Show less' : 'Show more'}
-        </button>
-      ) : null}
-      <a className={styles.shareBtn} href={shareHref} target="_blank" rel="noopener noreferrer">
-        Share on X
-      </a>
+      <div className={styles.entityActions}>
+        {posts.length > 3 ? (
+          <button type="button" className={styles.showMore} onClick={() => setMore((open) => !open)}>
+            {more ? 'Show less' : 'Show more'}
+          </button>
+        ) : null}
+        <a className={styles.shareBtn} href={shareHref} target="_blank" rel="noopener noreferrer">
+          Share on X
+        </a>
+      </div>
     </div>
   )
 }

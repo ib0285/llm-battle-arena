@@ -2,7 +2,8 @@ import { ArenaBoard } from '@/components/arena/arena-board'
 import { resolveOpen } from '@/lib/resolve-open'
 import { ScoreHelp } from '@/components/arena/score-help'
 import styles from '@/components/arena/arena.module.css'
-import { fetchArenaData, formatUpdated } from '@/lib/arena-data'
+import { UpdatedLabel } from '@/components/arena/refresh-scores'
+import { fetchArenaData } from '@/lib/arena-data'
 
 export const revalidate = 300
 
@@ -14,7 +15,6 @@ export default async function HomePage({
   const params = await searchParams
   const { companies, leaders, posts, leaderPosts, usingFallback, updatedAt, mover, topPost } = await fetchArenaData()
   const { tab: initialTab, openId } = resolveOpen(params.tab, params.open, companies, leaders)
-  const updatedLabel = formatUpdated(updatedAt)
   const waiting = companies.every((company) => company.status === 'pending')
 
   return (
@@ -37,7 +37,7 @@ export default async function HomePage({
                 </span>
                 LIVE
               </span>
-              {updatedLabel ? <span className={styles.updating}>{updatedLabel}</span> : null}
+              <UpdatedLabel updatedAt={updatedAt} />
             </div>
           </div>
         </header>
@@ -58,6 +58,7 @@ export default async function HomePage({
           leaderPosts={leaderPosts}
           mover={mover}
           topPost={topPost}
+          updatedAt={updatedAt}
           initialTab={initialTab}
           initialOpen={openId}
         />

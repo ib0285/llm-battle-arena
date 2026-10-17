@@ -1,7 +1,7 @@
 // Scores are loaded on the server from the GitHub file, then passed into
 // the page. The browser does not fetch this itself.
 
-const GITHUB_DATA_URL =
+export const GITHUB_DATA_URL =
   process.env.ARENA_SCORES_URL ||
   'https://raw.githubusercontent.com/ib0285/llm-battle-arena/main/scores.json'
 
@@ -610,7 +610,7 @@ function normalizeMover(raw: unknown): Mover | null {
 
 export async function fetchArenaData(): Promise<ArenaData> {
   try {
-    const res = await fetch(GITHUB_DATA_URL, { next: { revalidate: REVALIDATE_SECONDS } })
+    const res = await fetch(GITHUB_DATA_URL, { next: { revalidate: REVALIDATE_SECONDS, tags: ['scores'] } })
     if (!res.ok) throw new Error(`Score file responded ${res.status}`)
     const data: unknown = await res.json()
     const record = isRecord(data) ? data : {}

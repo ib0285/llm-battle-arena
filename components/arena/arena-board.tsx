@@ -39,6 +39,7 @@ export function ArenaBoard({
   leaderPosts,
   mover,
   topPost,
+  updatedAt,
   initialTab = 'companies',
   initialOpen = null,
 }: {
@@ -48,6 +49,7 @@ export function ArenaBoard({
   leaderPosts: Post[]
   mover: Mover | null
   topPost: TopPost | null
+  updatedAt: string | null
   initialTab?: 'companies' | 'leaders'
   initialOpen?: string | null
 }) {
@@ -129,7 +131,14 @@ export function ArenaBoard({
               </section>
             ) : null}
           </div>
-          <RecentPosts heading="Recent posts" posts={posts} companies={companies} mover={mover} topPost={topPost} />
+          <RecentPosts
+            heading="Recent posts"
+            posts={posts}
+            companies={companies}
+            mover={mover}
+            topPost={topPost}
+            updatedAt={updatedAt}
+          />
         </div>
       ) : (
         <div className={styles.board} id="panel-leaders" role="tabpanel" aria-labelledby="tab-leaders">
@@ -140,6 +149,7 @@ export function ArenaBoard({
             companies={companies}
             mover={null}
             topPost={null}
+            updatedAt={updatedAt}
           />
         </div>
       )}

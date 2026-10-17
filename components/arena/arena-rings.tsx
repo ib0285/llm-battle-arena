@@ -62,6 +62,25 @@ export function ArenaRings() {
         )
       })}
 
+      {/* Slow drift stays on the ring. Cards are not in this group. */}
+      <g className={styles.ringDrift}>
+        <circle cx={CX + 292} cy={CY} r="4.5" fill="#fbe3a0" opacity="0.9" />
+        <circle cx={CX - 206} cy={CY - 8} r="3.2" fill="#d6ccff" opacity="0.75" />
+        <circle cx={CX + 8} cy={CY + 205} r="3" fill="#f6cf6b" opacity="0.55" />
+      </g>
+      <circle
+        className={styles.ringSweep}
+        cx={CX}
+        cy={CY}
+        r="292"
+        fill="none"
+        stroke="#f6cf6b"
+        strokeOpacity="0.45"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeDasharray="36 1800"
+      />
+
       {/* Purple band */}
       <circle cx={CX} cy={CY} r="230" fill="url(#purpleBand)" />
       <circle cx={CX} cy={CY} r="205" fill="none" stroke="#7c4dff" strokeOpacity="0.8" strokeWidth="14" filter="url(#softGlow)" />

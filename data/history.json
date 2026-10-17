@@ -1,15 +1,70 @@
 {
   "posts": [
     {
+      "id": "2111239586873745604",
+      "companyId": "xai",
+      "handle": "elonmusk",
+      "name": "Elon Musk",
+      "created": "2026-10-16T23:35:17+00:00",
+      "text": "Grok @Bot got much faster",
+      "likes": 4536,
+      "reposts": 416,
+      "replies": 860
+    },
+    {
+      "id": "2111239205951086616",
+      "companyId": "xai",
+      "handle": "elonmusk",
+      "name": "Elon Musk",
+      "created": "2026-10-16T23:33:46+00:00",
+      "text": "Also, ask Grok @Bot to connect to your 𝕏 DMs. Best way to use it.",
+      "likes": 2669,
+      "reposts": 330,
+      "replies": 479
+    },
+    {
+      "id": "2111238267878449283",
+      "companyId": "xai",
+      "handle": "elonmusk",
+      "name": "Elon Musk",
+      "created": "2026-10-16T23:30:02+00:00",
+      "text": "This is what I do, but at 1.5X",
+      "likes": 3752,
+      "reposts": 302,
+      "replies": 654
+    },
+    {
+      "id": "2111237499083252185",
+      "companyId": "meta",
+      "handle": "alexandr_wang",
+      "name": "Alexandr Wang",
+      "created": "2026-10-16T23:26:59+00:00",
+      "text": "after an exciting week of launches (muse wonder [full] & muse spark open), i want to write a note of appreciation to the amazing research teams at meta superintelligence labs on reaching such a special milestone ♥️ we started MSL and TBD a little more than a year ago and set a goal of producing a frontier model within a year or so. given where llama4 landed, that was an incredibly audacious goal, and we knew it wouldn't be easy. many people told us it would be impossible. we knew it was unlikely, but still worth doing. a remarkable group of researchers and engineers joined the effort from inside and outside meta. every single person came in, picked up a shovel, and got to work with earnestness and urgency. nobody asked whose job it was. we assembled a team of the most brilliant people i have ever had the opportunity to work with (and remember, i was an HRT intern 🙃). i am surrounded by ambitious, visionary, technically excellent, hard-working, pragmatic, thoughtful scientists, engineers, and product folks—people who will chase a weird loss spike past midnight just because they need to know why. these models are the product of their passion, hard work, and brilliance. somewhat paradoxically, when we started TBD, we set a principle of no deadlines. we knew we had an astronomical amount of work ahead of us—across pretraining, post-training, RL, multimodal, infrastructure, safety, data, AND frontier research. there was no use setting arbitrary timelines—we just had to get to work, be thoughtful, and build the foundations of a frontier research effort in record time. and run after run, this team did exactly that. our researchers are magicians. i can only describe building these models with this team as a wondrous journey of scientific discovery. i am constantly amazed by what we can accomplish with scaling. i will remember this past year for the rest of my life—the late nights, the broken runs, the evals that came back better than any of us dared to hope. watching this team create wonder after wonder has been a true and deep gift. more than just the models we released this week, we have built a machine that builds new models. it often sounds like a cop-out to say labs can just turn the crank to keep scaling, but now i have seen it first-hand. sure, it's a lot of work and a careful process, but we have built a scalable system to keep advancing at the frontier, and i am really proud of how fast this team keeps making these models better. lastly, i get to work with researchers who care deeply about how their work benefits humanity. it's easy to forget when everything is changing so fast, but the whole damn point is to make people's lives better. time and time again, i have seen our researchers, engineers, and product folks build our technology with care so it can truly be good for the world—whether that's building the best models for muse, thoughtfully open-sourcing strong models, or making sure the alignment and security of our systems are rock solid. this is a team of people who never forget there's a real person on the other side of every prompt. thank you to everyone at MSL for being part of this crazy journey over the past year. i'm so grateful for every one of you, and our work is not done!",
+      "likes": 1567,
+      "reposts": 73,
+      "replies": 103
+    },
+    {
+      "id": "2111237421568299266",
+      "companyId": "xai",
+      "handle": "elonmusk",
+      "name": "Elon Musk",
+      "created": "2026-10-16T23:26:40+00:00",
+      "text": "Neuralink will help millions of people",
+      "likes": 9562,
+      "reposts": 973,
+      "replies": 1025
+    },
+    {
       "id": "2111213093577691337",
       "companyId": "openai",
       "handle": "OpenAIDevs",
       "name": "OpenAI Developers",
       "created": "2026-10-16T21:50:00+00:00",
       "text": "Here’s how our engineers use Codex at OpenAI to dig through our codebase, find what needs attention, and chip away at the maintenance backlog:",
-      "likes": 303,
-      "reposts": 7,
-      "replies": 25
+      "likes": 759,
+      "reposts": 34,
+      "replies": 48
     },
     {
       "id": "2111211411766399288",
@@ -18,9 +73,9 @@
       "name": "OpenAI Developers",
       "created": "2026-10-16T21:43:19+00:00",
       "text": "Put your dot on call. Ali, an engineer at OpenAI, used his dot to triage an on-call incident at 3am. His dot investigated the issue and started a Codex thread, so he could steer the work from his phone in the ChatGPT app. https://t.co/xLhtGUSzsx",
-      "likes": 556,
-      "reposts": 32,
-      "replies": 104
+      "likes": 813,
+      "reposts": 45,
+      "replies": 137
     },
     {
       "id": "2111192259073094035",
@@ -29,9 +84,9 @@
       "name": "OpenAI",
       "created": "2026-10-16T20:27:13+00:00",
       "text": "GPT-6 Astra Pro in ChatGPT got an upgrade with faster responses and improved use of plugins and tools. And now, multiple agents can tackle different parts of a task in parallel. You can follow each agent’s progress and open completed tasks to review their work. Now available to Pro users in the Chat tab.",
-      "likes": 4713,
-      "reposts": 227,
-      "replies": 326
+      "likes": 6736,
+      "reposts": 352,
+      "replies": 431
     },
     {
       "id": "2111185504746213705",
@@ -51,9 +106,9 @@
       "name": "Claude",
       "created": "2026-10-16T19:29:54+00:00",
       "text": "Six projects from the last few weeks that caught our attention: A wildfire analysis prototype that maps the fire’s spread over time and tracks hot spots, made with Opus 5.5. https://t.co/yagXxk13V1",
-      "likes": 12224,
-      "reposts": 642,
-      "replies": 236
+      "likes": 15623,
+      "reposts": 882,
+      "replies": 301
     },
     {
       "id": "2111170548038324695",
@@ -62,9 +117,9 @@
       "name": "Elon Musk",
       "created": "2026-10-16T19:00:56+00:00",
       "text": "Incentives drive outcomes",
-      "likes": 7654,
-      "reposts": 1038,
-      "replies": 1005
+      "likes": 9202,
+      "reposts": 1255,
+      "replies": 1101
     },
     {
       "id": "2111158659971699136",
@@ -73,9 +128,9 @@
       "name": "Boris Cherny",
       "created": "2026-10-16T18:13:42+00:00",
       "text": "Don't sleep on Claude Slides. This is how I make slide decks now -- no more googling \"iphone frame svg\" like the old days Try it: https://t.co/cAWdwarzgp https://t.co/POdqFL9oIP",
-      "likes": 2110,
-      "reposts": 53,
-      "replies": 105
+      "likes": 2508,
+      "reposts": 73,
+      "replies": 115
     },
     {
       "id": "2111158313463525518",
@@ -84,9 +139,9 @@
       "name": "Boris Cherny",
       "created": "2026-10-16T18:12:20+00:00",
       "text": "I could not imagine being productive without Claude Code Review. It runs on all of my PRs, and catches almost every bug before it goes it. This is a piece of the secret sauce that lets the team and I move so quickly while raising the quality bar",
-      "likes": 2261,
-      "reposts": 59,
-      "replies": 193
+      "likes": 2828,
+      "reposts": 83,
+      "replies": 220
     },
     {
       "id": "2111152183240511640",
@@ -95,9 +150,9 @@
       "name": "Anthropic",
       "created": "2026-10-16T17:47:58+00:00",
       "text": "New from our STEM Fellows Program: Designing more efficient quantum circuits with Claude. Given plain-language instructions, Claude Mythos 5 designed quantum circuits that improve on the best published ones, sometimes by an order of magnitude or more. More efficient circuits reduce the resources needed by quantum algorithms, which could bring quantum computing applications in chemistry and materials science within reach sooner. Read more: https://t.co/QCvoJLDmBo",
-      "likes": 2734,
-      "reposts": 269,
-      "replies": 250
+      "likes": 3241,
+      "reposts": 343,
+      "replies": 270
     },
     {
       "id": "2111147597159415874",
@@ -106,8 +161,8 @@
       "name": "Jeff Dean",
       "created": "2026-10-16T17:29:45+00:00",
       "text": "Have a glimpse at this! Nice work, @AndrewDai and Elorian folks!",
-      "likes": 365,
-      "reposts": 25,
+      "likes": 437,
+      "reposts": 27,
       "replies": 22
     },
     {
@@ -117,9 +172,9 @@
       "name": "Google Gemini",
       "created": "2026-10-16T17:29:16+00:00",
       "text": "With Gemini 4 Argon, you can use Canvas to turn dense PDFs into interactive, animated web apps you can explore at your own pace.",
-      "likes": 1327,
-      "reposts": 109,
-      "replies": 90
+      "likes": 1689,
+      "reposts": 138,
+      "replies": 100
     },
     {
       "id": "2111146290730168744",
@@ -139,9 +194,9 @@
       "name": "OpenAI Developers",
       "created": "2026-10-16T17:08:32+00:00",
       "text": "Building apps with GPT-Live-1? Give them a voice that fits. Here’s how to shape a voice with a prompt or choose from new international preset voices: https://t.co/HtMsozvqE7",
-      "likes": 1007,
-      "reposts": 76,
-      "replies": 74
+      "likes": 1151,
+      "reposts": 86,
+      "replies": 80
     },
     {
       "id": "2111139227761266699",
@@ -150,9 +205,9 @@
       "name": "Sam Altman",
       "created": "2026-10-16T16:56:29+00:00",
       "text": "The back of the Navier-Stokes milestone shirt is the last line of the chain-of-thought from the solution: https://t.co/W7mK8WmCz1",
-      "likes": 7525,
-      "reposts": 358,
-      "replies": 486
+      "likes": 8214,
+      "reposts": 378,
+      "replies": 523
     },
     {
       "id": "2111135753732301178",
@@ -172,9 +227,9 @@
       "name": "Sam Altman",
       "created": "2026-10-16T16:26:29+00:00",
       "text": "Wow the new roadster looks quite amazing, good job @elonmusk",
-      "likes": 46422,
-      "reposts": 1315,
-      "replies": 2019
+      "likes": 50590,
+      "reposts": 1433,
+      "replies": 2161
     },
     {
       "id": "2111131436191199660",
@@ -205,9 +260,9 @@
       "name": "Sam Altman",
       "created": "2026-10-16T16:22:07+00:00",
       "text": "Very happy to see this from Nick!",
-      "likes": 2367,
-      "reposts": 93,
-      "replies": 150
+      "likes": 2593,
+      "reposts": 102,
+      "replies": 161
     },
     {
       "id": "2111127991401247033",
@@ -216,9 +271,9 @@
       "name": "Google DeepMind",
       "created": "2026-10-16T16:11:50+00:00",
       "text": "Four Gemini 4 Argon agents beat Minecraft from scratch in 27 hours. Operating in a sandbox using only code and text, they wrote 2,783 programs, divided up jobs over chat, shared notes, and debugged errors together - all with no human help ↓ https://t.co/uyIhDOQXGT",
-      "likes": 1498,
-      "reposts": 117,
-      "replies": 188
+      "likes": 1664,
+      "reposts": 126,
+      "replies": 209
     },
     {
       "id": "2111038207240388770",
@@ -227,9 +282,9 @@
       "name": "Google DeepMind",
       "created": "2026-10-16T10:15:04+00:00",
       "text": "Together with scientists around the world, our models and tools are helping make disease more detectable, treatable, and preventable. 🧬 From pinpointing rare genetic variants to speeding up drug discovery, here’s how we’re helping turn lab breakthroughs into real-world care → https://t.co/sM5G0CLcKJ",
-      "likes": 565,
-      "reposts": 55,
-      "replies": 113
+      "likes": 589,
+      "reposts": 56,
+      "replies": 116
     },
     {
       "id": "2110972577686626642",
@@ -238,9 +293,9 @@
       "name": "Alexandr Wang",
       "created": "2026-10-16T05:54:17+00:00",
       "text": "wait who the hell was driving the tesla https://t.co/YGwJuNBKNa",
-      "likes": 10383,
-      "reposts": 266,
-      "replies": 767
+      "likes": 10627,
+      "reposts": 268,
+      "replies": 784
     },
     {
       "id": "2110947164512038931",
@@ -282,9 +337,9 @@
       "name": "Alexandr Wang",
       "created": "2026-10-16T02:00:05+00:00",
       "text": "Holy fuck Holy fucking fuck That video of yours is absurd (but actually the dopamine release from watching this video was insane)",
-      "likes": 1745,
-      "reposts": 69,
-      "replies": 77
+      "likes": 1801,
+      "reposts": 71,
+      "replies": 78
     },
     {
       "id": "2110913107094606330",
@@ -315,8 +370,8 @@
       "name": "Alexandr Wang",
       "created": "2026-10-16T00:42:54+00:00",
       "text": "lmao muse spark open balling out",
-      "likes": 605,
-      "reposts": 22,
+      "likes": 633,
+      "reposts": 23,
       "replies": 38
     },
     {
@@ -359,9 +414,9 @@
       "name": "AI at Meta",
       "created": "2026-10-15T22:32:35+00:00",
       "text": "We’re proud to share that Meta Omnilingual Automatic Speech Recognition (ASR) has been named one of @TIME’s Best Inventions of 2026! Meta Omnilingual ASR is a suite of models providing ASR capabilities for over 1,600 languages, including 500 low-coverage languages never before served by any ASR system. While most ASR systems focus on a limited set of languages that are well-represented on the internet, this release marked a major step toward building a truly universal transcription system. Learn more about it here: https://t.co/PPdTp8RIKt",
-      "likes": 632,
-      "reposts": 61,
-      "replies": 62
+      "likes": 637,
+      "reposts": 62,
+      "replies": 63
     },
     {
       "id": "2110855363616763922",
@@ -370,7 +425,7 @@
       "name": "OpenAI Developers",
       "created": "2026-10-15T22:08:31+00:00",
       "text": "You can just build things with Codex We built a site for you to explore hardware projects from the community and share your own. https://t.co/zJQX1hXn2N",
-      "likes": 1242,
+      "likes": 1252,
       "reposts": 88,
       "replies": 90
     },
@@ -403,9 +458,9 @@
       "name": "Anthropic",
       "created": "2026-10-15T21:31:45+00:00",
       "text": "Working out how best to use AI in mathematics research—and in science more generally—will take time, effort, and resources. We’re eager to support mathematicians as they drive scientific progress and define the future of their field. We’ve committed $5 million of funding, compute, and Claude access to help the math community navigate the massive changes that AI brings. We’re partnering with @SimonsFdn, who will manage the award through a community-driven approach, supporting workshops, conferences, and lectures by domain experts. https://t.co/GzFchwMukC",
-      "likes": 2330,
-      "reposts": 170,
-      "replies": 227
+      "likes": 2370,
+      "reposts": 171,
+      "replies": 229
     },
     {
       "id": "2110841898076418336",
@@ -414,8 +469,8 @@
       "name": "OpenAI",
       "created": "2026-10-15T21:15:00+00:00",
       "text": "We're expanding access to GPT-Rosalind for academic research. The new Rosalind Academic Plan helps scientific labs bring AI into the work of understanding biology, exploring ideas, and deciding what to test next—with sponsored access for eligible labs at U.S. universities. Academic research starts with questions whose impact may take years to impact human health.",
-      "likes": 2965,
-      "reposts": 276,
+      "likes": 3010,
+      "reposts": 280,
       "replies": 289
     },
     {
@@ -425,9 +480,9 @@
       "name": "OpenAI Developers",
       "created": "2026-10-15T20:39:34+00:00",
       "text": "Sites is now generally available for Enterprise, with US and EU data residency for new Sites in eligible workspaces. Build team apps with databases and authentication. @kagigz shows how to schedule updates and let teammates use their own connected data with Plugins in Sites: https://t.co/jYxRh5Pi2U",
-      "likes": 616,
+      "likes": 621,
       "reposts": 37,
-      "replies": 61
+      "replies": 62
     },
     {
       "id": "2110832405426933893",
@@ -480,9 +535,9 @@
       "name": "Logan Kilpatrick",
       "created": "2026-10-15T19:09:49+00:00",
       "text": "We are hosting our first \"Bench Summit\" to bring together people excited about pushing the frontier of benchmarking, model evals, and more. Great benchmarks are a gating function for model progress, lots to do here! Join us in SF: https://t.co/7qqyPLe5Vp",
-      "likes": 779,
+      "likes": 789,
       "reposts": 38,
-      "replies": 114
+      "replies": 115
     },
     {
       "id": "2110803201893232663",
@@ -491,9 +546,9 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T18:41:14+00:00",
       "text": "MUSE CODE RESET ALERT 🚨",
-      "likes": 1146,
+      "likes": 1149,
       "reposts": 51,
-      "replies": 100
+      "replies": 101
     },
     {
       "id": "2110800663383040482",
@@ -502,7 +557,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T18:31:09+00:00",
       "text": "great doing business with you john apple 🍎🤝",
-      "likes": 12502,
+      "likes": 12655,
       "reposts": 170,
       "replies": 134
     },
@@ -513,9 +568,9 @@
       "name": "OpenAI",
       "created": "2026-10-15T18:19:54+00:00",
       "text": "New voices. Better accents. And less \"checking...\" GPT-Live-1.1 brings these updates to Voice in ChatGPT, Codex, and dots, with new voices in French, German, Hindi, Mexican Spanish, Korean, and Japanese. Rolling out today to all users. Coming soon to the API. https://t.co/L6K8ZUC1xm",
-      "likes": 10776,
-      "reposts": 775,
-      "replies": 801
+      "likes": 10849,
+      "reposts": 778,
+      "replies": 802
     },
     {
       "id": "2110791698611855624",
@@ -524,7 +579,7 @@
       "name": "Boris Cherny",
       "created": "2026-10-15T17:55:32+00:00",
       "text": "Over the last few years, we have made significant progress on prompt injection for Claude models. As agents do more, it is increasingly urgent that we solve it across the industry. Really excited to partner with Gray Swan to host this competition. Can’t wait to see what you find!",
-      "likes": 740,
+      "likes": 741,
       "reposts": 42,
       "replies": 131
     },
@@ -568,9 +623,9 @@
       "name": "Anthropic",
       "created": "2026-10-15T17:27:34+00:00",
       "text": "We’ve committed to having evaluators assess our safety practices. We're in discussions with multiple organizations, and have now given employee-like access to a team from @METR_Evals. In this post, we describe how we work with third-party evaluators: https://t.co/8CLQnMVg4X",
-      "likes": 3665,
-      "reposts": 250,
-      "replies": 387
+      "likes": 3692,
+      "reposts": 253,
+      "replies": 389
     },
     {
       "id": "2110780784051474666",
@@ -579,9 +634,9 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T17:12:09+00:00",
       "text": "muse spark open. why 2026 won't be like 1984  https://t.co/jYnOSfZf9u",
-      "likes": 5011,
-      "reposts": 261,
-      "replies": 187
+      "likes": 5039,
+      "reposts": 262,
+      "replies": 194
     },
     {
       "id": "2110779754274292212",
@@ -590,9 +645,9 @@
       "name": "AI at Meta",
       "created": "2026-10-15T17:08:04+00:00",
       "text": "Today we’re releasing Muse Spark Open, the most capable US open-weight model to date. Built for coding and agentic work, it excels at long-horizon tasks, complex software engineering, and multi-step reasoning. Key Model Specs: → 816B total / 42B active parameters → 1M token context window → Natively multimodal across text, image, video, audio",
-      "likes": 11035,
-      "reposts": 1162,
-      "replies": 436
+      "likes": 11101,
+      "reposts": 1171,
+      "replies": 437
     },
     {
       "id": "2110778736434184611",
@@ -601,9 +656,9 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T17:04:01+00:00",
       "text": "1/ muse spark open is the most capable US open-weight model to date. 816B total params, 42B active. 1M-token context. natively multimodal. built for coding and agentic work like long-horizon tasks, hard software engineering, multi-step reasoning. america! 🇺🇲 https://t.co/NjtOB7aY9D",
-      "likes": 5463,
+      "likes": 5519,
       "reposts": 455,
-      "replies": 290
+      "replies": 292
     },
     {
       "id": "2110778579764285512",
@@ -612,9 +667,9 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T17:03:24+00:00",
       "text": "muse spark open -- weights out today! best US open-source model, and runs on the new mac studio 🍎",
-      "likes": 5744,
-      "reposts": 230,
-      "replies": 172
+      "likes": 5765,
+      "reposts": 231,
+      "replies": 173
     },
     {
       "id": "2110778025629347999",
@@ -623,9 +678,9 @@
       "name": "Mark Zuckerberg",
       "created": "2026-10-15T17:01:12+00:00",
       "text": "Muse Spark Open -- weights releasing today -- runs great on new Mac Studios thanks to work with @johnternus and Apple. https://t.co/U2wJNrKBOg",
-      "likes": 26842,
-      "reposts": 1468,
-      "replies": 961
+      "likes": 27552,
+      "reposts": 1483,
+      "replies": 984
     },
     {
       "id": "2110772859580895678",
@@ -634,8 +689,8 @@
       "name": "Google Gemini",
       "created": "2026-10-15T16:40:40+00:00",
       "text": "Plus up your furniture with 3D-printed accessories using Gemini 4 Argon. Upload a pic with rough measurements, and use Canvas in Gemini to build an interactive 3D CAD studio where you can explore styles, tweak live sliders, and export printable STLs to upgrade your space.",
-      "likes": 2636,
-      "reposts": 223,
+      "likes": 2649,
+      "reposts": 224,
       "replies": 113
     },
     {
@@ -645,7 +700,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T15:37:04+00:00",
       "text": "you see, meta superintelligence labs is in South Bay so if someone you don’t know is trying to talk to you, you KNOW something is up",
-      "likes": 3056,
+      "likes": 3062,
       "reposts": 58,
       "replies": 106
     },
@@ -656,9 +711,9 @@
       "name": "OpenAI",
       "created": "2026-10-15T14:35:29+00:00",
       "text": "We want to support the mathematics community in turning progress in AI into deeper human understanding and new discoveries. To support that goal, we are contributing $5 million to a new Simons Foundation initiative to help mathematicians examine, understand, and build on results produced by AI, including the results we recently published. The funding, managed and awarded by the @SimonsFdn will support workshops, conferences, and special programs. We will also provide access to our models and computing resources to Simons Foundation-supported researchers.",
-      "likes": 6069,
-      "reposts": 479,
-      "replies": 505
+      "likes": 6097,
+      "reposts": 480,
+      "replies": 506
     },
     {
       "id": "2110720940665372825",
@@ -667,9 +722,9 @@
       "name": "Anthropic",
       "created": "2026-10-15T13:14:22+00:00",
       "text": "Applications are now open for two new Anthropic Fellowships. STEM Fellows (science and engineering) and Conceptual Reasoning Fellows (philosophy, cognitive science, economics, policy, and law) will spend four months at Anthropic from January 2027, working to help Claude reason well about some of the hardest problems in those fields. For more information, see the descriptions below. The application deadline is October 28. Conceptual Reasoning Fellows: https://t.co/kTaBPqttbK STEM Fellows: https://t.co/KkD5ruJkjq",
-      "likes": 6704,
-      "reposts": 549,
-      "replies": 368
+      "likes": 6719,
+      "reposts": 551,
+      "replies": 369
     },
     {
       "id": "2110715601454784965",
@@ -678,7 +733,7 @@
       "name": "Google DeepMind",
       "created": "2026-10-15T12:53:09+00:00",
       "text": "SynthID has been named one of @TIME's Best Inventions of 2026. With over 180 billion images and videos already watermarked, it’s making it easier for people to distinguish AI-generated content from other media → https://t.co/ClIEdQLgV1 https://t.co/STbjqj9iUu",
-      "likes": 609,
+      "likes": 611,
       "reposts": 58,
       "replies": 175
     },
@@ -733,7 +788,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T07:02:31+00:00",
       "text": "it's kind of hard to explain but asian lesbian is what everyone in SF looks like",
-      "likes": 12859,
+      "likes": 12899,
       "reposts": 266,
       "replies": 378
     },
@@ -777,7 +832,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T05:28:28+00:00",
       "text": "REMY OR LINGUINI? for those of you who have seen ratatouille, one of the great questions in the ai age: are we remy or linguini? are the humans in control of the combined entity (we are remy), or are the ai in control and we are simply the meat proxies (we are linguini)? our vision with muse is undeniably the former—we are remy! we have big dreams and goals, many of which may not be appropriate for our station or our exact starting condition. but that doesn't matter—we dream like a rat who wants to be a michelin-starred chef in paris. muse is our partner to help make that happen. ultimately, we are pulling the hairs (?), and it is our vision that ends up on the plate (?), but over time we will accomplish things that we could not do without muse. (obviously this metaphor is super confusing because i'm saying the humans are the rat, but if you watched the movie you catch my drift) anyway this whole mini-essay was just to justify my shitpost—pls enjoy",
-      "likes": 754,
+      "likes": 756,
       "reposts": 35,
       "replies": 88
     },
@@ -799,7 +854,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T05:01:04+00:00",
       "text": "this is what the corposlops call co-marketing but damn is it cute",
-      "likes": 480,
+      "likes": 482,
       "reposts": 20,
       "replies": 34
     },
@@ -810,7 +865,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T04:16:59+00:00",
       "text": "okay this was very good. well done",
-      "likes": 341,
+      "likes": 342,
       "reposts": 17,
       "replies": 23
     },
@@ -821,7 +876,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-15T04:11:44+00:00",
       "text": "thoughtful review of muse wonder full clearly lots to improve on but great to see people enjoy using the model!",
-      "likes": 325,
+      "likes": 326,
       "reposts": 6,
       "replies": 41
     },
@@ -988,7 +1043,7 @@
       "text": "thoughtful review of muse wonder and muse wonder full from the lovely claire vo!",
       "likes": 266,
       "reposts": 14,
-      "replies": 31
+      "replies": 32
     },
     {
       "id": "2110520607276499109",
@@ -1063,7 +1118,7 @@
       "name": "Google Gemini",
       "created": "2026-10-14T22:02:05+00:00",
       "text": "What are you building with Gemini 4 Argon? Show us what you've made 👇",
-      "likes": 3843,
+      "likes": 3845,
       "reposts": 123,
       "replies": 1031
     },
@@ -1085,7 +1140,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-14T20:52:37+00:00",
       "text": "still room for muse wonder full to improve... we are working on it!",
-      "likes": 695,
+      "likes": 696,
       "reposts": 12,
       "replies": 51
     },
@@ -1096,7 +1151,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-14T20:47:21+00:00",
       "text": "amen muse jensen, amen https://t.co/LcVhKEqZX7",
-      "likes": 4893,
+      "likes": 4891,
       "reposts": 255,
       "replies": 230
     },
@@ -1107,7 +1162,7 @@
       "name": "Alexandr Wang",
       "created": "2026-10-14T20:45:49+00:00",
       "text": "10 new papers in health science research. all written with muse models in under 4 weeks. health is one of the areas where we believe muse is going to have the greatest positive impact on humanity ❤️",
-      "likes": 1429,
+      "likes": 1428,
       "reposts": 102,
       "replies": 73
     },
@@ -1129,7 +1184,7 @@
       "name": "OpenAI",
       "created": "2026-10-14T18:45:57+00:00",
       "text": "European businesses are rapidly expanding their use of AI agents. More than half of the AI use among our EU enterprise and business customers now involves these tools, and the number of small business users has grown 8x across the region. Our latest Economic Research report explores Europe’s shift toward agentic AI—and the opportunity to turn broader adoption into deeper use. https://t.co/jUjCF5sW0B",
-      "likes": 2877,
+      "likes": 2879,
       "reposts": 232,
       "replies": 571
     },
@@ -1173,7 +1228,7 @@
       "name": "Google Gemini",
       "created": "2026-10-14T17:41:36+00:00",
       "text": "With Gemini 4 Argon, spend less time on repetitive admin and more time on your craft. Just connect your @GoogleWorkspace apps to turn scattered recipes, handwritten guest lists, and photos of seating charts into a polished proposal deck, email draft, and automated tracker.",
-      "likes": 980,
+      "likes": 982,
       "reposts": 107,
       "replies": 87
     },
@@ -1184,7 +1239,7 @@
       "name": "Google DeepMind",
       "created": "2026-10-14T17:25:56+00:00",
       "text": "Gemini 4 Argon is already unlocking new scientific breakthroughs in quantum computing, nuclear fusion, protein design and beyond. 🧵",
-      "likes": 2443,
+      "likes": 2450,
       "reposts": 304,
       "replies": 186
     },
@@ -1195,9 +1250,9 @@
       "name": "Logan Kilpatrick",
       "created": "2026-10-14T17:22:20+00:00",
       "text": "A conversation with Sergey Brin, @joshwoodward, @tulseedoshi, and @melvinjohnsonp about Gemini 4 Argon, how we got here, and the path ahead! https://t.co/L04XLkhw8X",
-      "likes": 2673,
+      "likes": 2674,
       "reposts": 182,
-      "replies": 166
+      "replies": 167
     },
     {
       "id": "2110413877024526603",
@@ -1294,7 +1349,7 @@
       "name": "Anthropic",
       "created": "2026-10-14T08:40:45+00:00",
       "text": "We’ve opened an office in Singapore—our fifth in the Asia-Pacific region. We’ve also signed an MOU with the Government of Singapore on AI safety and responsible adoption. You can read more about our new office here: https://t.co/125mBgHLkM",
-      "likes": 3457,
+      "likes": 3458,
       "reposts": 215,
       "replies": 468
     },
@@ -1450,7 +1505,7 @@
       "text": "Over half of reported crimes in Singapore use sophisticated social engineering. With @GovTechSG, we’re building on-device fraud detection using our open model Gemma. By fine-tuning it on local scam tactics, it identifies threats in real time without compromising personal privacy → https://t.co/VdCio2nrHC",
       "likes": 634,
       "reposts": 58,
-      "replies": 142
+      "replies": 143
     },
     {
       "id": "2110189301153898799",
@@ -1525,7 +1580,7 @@
       "name": "Google Gemini",
       "created": "2026-10-13T20:28:48+00:00",
       "text": "Gemini 4 Argon lets you reimagine your video or webcam feed as a playable synthesizer. Spin up an interactive audio app in Canvas, set the vibe, and play your camera like an instrument.",
-      "likes": 1297,
+      "likes": 1298,
       "reposts": 126,
       "replies": 75
     },
@@ -1547,9 +1602,9 @@
       "name": "Google DeepMind",
       "created": "2026-10-13T18:41:04+00:00",
       "text": "Gemini 4 Argon taught a robot to play cornhole just by watching a video. It mapped the physics, coded its own simulation, and taught @Apptronik's Apollo humanoid to sink 7 throws in a row. https://t.co/JIyoKnVc4q",
-      "likes": 3388,
-      "reposts": 405,
-      "replies": 281
+      "likes": 3389,
+      "reposts": 406,
+      "replies": 280
     },
     {
       "id": "2110076821471682864",
@@ -1569,9 +1624,9 @@
       "name": "Greg Brockman",
       "created": "2026-10-13T17:43:29+00:00",
       "text": "6 days and $40,000 of compute with GPT-5.6 Sol to find a critical vulnerability in Chrome, claiming Google’s first full-chain reward in 2026 for a vulnerability that would affect an estimated 1 billion users. Highlights the opportunity for defenders to utilize these tools to secure their software to unprecedented levels:",
-      "likes": 6384,
+      "likes": 6385,
       "reposts": 329,
-      "replies": 257
+      "replies": 256
     },
     {
       "id": "2110062758532423922",
@@ -1614,8 +1669,8 @@
       "created": "2026-10-13T17:14:09+00:00",
       "text": "Try the Supabase plugin in @bot to monitor, debug, and ship changes to your backend",
       "likes": 1606,
-      "reposts": 158,
-      "replies": 218
+      "reposts": 161,
+      "replies": 221
     },
     {
       "id": "2110055802090459207",
@@ -1635,7 +1690,7 @@
       "name": "Demis Hassabis",
       "created": "2026-10-13T16:59:56+00:00",
       "text": "I love lasers (really wanted to work on them as a kid)… especially Argon lasers 😀 reminded me of this scene from one of my fave films: ‘synthesize excited bromide in an argon matrix… but that would be hotter than the sun’ 😂 Val Kilmer was so cool https://t.co/A7BKAJDJhm",
-      "likes": 2157,
+      "likes": 2158,
       "reposts": 108,
       "replies": 111
     },
@@ -1657,7 +1712,7 @@
       "name": "Demis Hassabis",
       "created": "2026-10-13T16:12:33+00:00",
       "text": "Gemini 4 Argon is amazing for knowledge work and coding - and it’s super fun to build with! We asked it to create this wizard chess game and it's so cool to see Argon's physics understanding & 3D modelling capabilities, makes me nostalgic for Battlechess on the Amiga - fun times! Argon is rolling out today to Google Ultra and Pro subscribers in the @GeminiApp and Search, and Ultra subscribers in @antigravity! More info & full availability in the blog: https://t.co/7d3791mRNH",
-      "likes": 5136,
+      "likes": 5134,
       "reposts": 516,
       "replies": 354
     },
@@ -1668,9 +1723,9 @@
       "name": "Google Gemini",
       "created": "2026-10-13T16:05:51+00:00",
       "text": "The moment you've been waiting 4… Our new frontier model, Gemini 4 Argon, is rolling out now in the Gemini app to bring your most complex ideas into reality. See how Gemini 4 Argon and our latest updates across the Gemini app help you get the most out of every prompt. 🧵",
-      "likes": 7014,
+      "likes": 7022,
       "reposts": 739,
-      "replies": 462
+      "replies": 463
     },
     {
       "id": "2110039274922131792",
@@ -1679,9 +1734,9 @@
       "name": "Google DeepMind",
       "created": "2026-10-13T16:05:40+00:00",
       "text": "Gemini 4 Argon is now globally available. Built to solve your hardest problems from start to finish, the model brings frontier capabilities across coding, enterprise workflows, and cyber defense. https://t.co/N8tOQjwk0x",
-      "likes": 6405,
+      "likes": 6407,
       "reposts": 665,
-      "replies": 377
+      "replies": 376
     },
     {
       "id": "2110038940841545827",
@@ -1690,9 +1745,9 @@
       "name": "Logan Kilpatrick",
       "created": "2026-10-13T16:04:20+00:00",
       "text": "Today we are rolling out Gemini 4 Argon globally in the Gemini API, to Pro + Ultra in Gemini App, and Ultra subs in Antigravity! Argon is a huge step forward for Gemini, and a labor of love. This model has been battle tested by over 100,000 people at Google over the last month, with so much new innovation, ambition, and hard work baked into this release. The team has been heads down over the last 6 months working to make this possible across the stack (research, infra, safety, eng, etc). We rolled the model out to cyber defenders as part of our fairwind program and early access customers over the last 2 weeks, it has been amazing to see and talk to folks who are now using this model daily. Seeing the models writing capability, raw knowledge and persistence for coding, paired with new features like 1M token output when the model needs to work more has gotten me even more excited about our path ahead. This is just the start of the Gemini 4 era. As you saw with 3.5, 3.6, 3.7, and 3.8 Flash, our iteration speed with Gemini is fast : ) Now with Gemini 4 Argon to work from, I am cannot wait to see the progress continue, and most importantly see what this new model enables for the world. This is such a special moment in the arc of technology, as millions of people everyday tackle problems they could never have thought possible before. Gemini 4 Argon was built to help you tackle the hardest problems. I have personally felt this spark with Argon and hope you do too. Onwards!!",
-      "likes": 10978,
+      "likes": 10979,
       "reposts": 770,
-      "replies": 1251
+      "replies": 1249
     },
     {
       "id": "2110034343892771186",
@@ -1822,9 +1877,9 @@
       "name": "Anthropic",
       "created": "2026-10-12T23:58:35+00:00",
       "text": "Over the last few months, we’ve made significant progress in reducing the effectiveness of distillation attacks against Claude. In this post, we explain how: https://t.co/uWiRSLBuOS",
-      "likes": 6538,
-      "reposts": 617,
-      "replies": 847
+      "likes": 6537,
+      "reposts": 616,
+      "replies": 846
     },
     {
       "id": "2109791657633997008",
@@ -1855,9 +1910,9 @@
       "name": "Grok",
       "created": "2026-10-12T23:10:44+00:00",
       "text": "Grok is now part of The X Subscription. Get Grok, Cursor, and X Premium benefits in one plan starting at $8/month, with five tiers to choose from. Subscribe today, or if you're already on SuperGrok, head to your account settings to switch to The X Subscription.",
-      "likes": 2991,
+      "likes": 2994,
       "reposts": 277,
-      "replies": 358
+      "replies": 364
     },
     {
       "id": "2109781951796420969",
@@ -2218,9 +2273,9 @@
       "name": "Meta",
       "created": "2026-10-12T17:42:01+00:00",
       "text": "Check out our most capable models to date",
-      "likes": 704,
+      "likes": 702,
       "reposts": 47,
-      "replies": 199
+      "replies": 202
     },
     {
       "id": "2109699673221169617",
@@ -2317,9 +2372,9 @@
       "name": "Mark Zuckerberg",
       "created": "2026-10-12T16:55:01+00:00",
       "text": "Introducing Muse Wonder, our new family of frontier models with state of the art performance for personal and professional agentic work. https://t.co/NKHrybrGKQ",
-      "likes": 38805,
-      "reposts": 3079,
-      "replies": 2327
+      "likes": 38806,
+      "reposts": 3080,
+      "replies": 2326
     },
     {
       "id": "2109660829952176518",
@@ -2328,7 +2383,7 @@
       "name": "Mark Zuckerberg",
       "created": "2026-10-12T15:01:52+00:00",
       "text": "Muse ordered me 🍉 how thoughtful! https://t.co/1M2lImJdkB",
-      "likes": 7119,
+      "likes": 7121,
       "reposts": 348,
       "replies": 712
     },
@@ -2372,7 +2427,7 @@
       "name": "Logan Kilpatrick",
       "created": "2026-10-11T17:22:06+00:00",
       "text": "this is the golden age of startups, builders, and developers",
-      "likes": 5474,
+      "likes": 5471,
       "reposts": 341,
       "replies": 556
     },

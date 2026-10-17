@@ -1,6 +1,6 @@
 {
   "xai": [
-    {"handle": "xai", "role": "company"},
+    {"handle": "SpaceXSI", "role": "company"},
     {"handle": "grok", "role": "company"},
     {"handle": "elonmusk", "role": "leader"},
     {"handle": "Yuhu_ai_", "role": "leader"}

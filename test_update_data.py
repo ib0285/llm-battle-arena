@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from unittest import mock
@@ -425,6 +426,120 @@ class UpdateDataTests(unittest.TestCase):
         self.calls.clear()
         self.run_update(http_get, full=True, now=NOW + timedelta(days=1, hours=1))
         self.assertIn(update_data.USER_URL, self.calls)
+
+    def test_light_run_keeps_posts_that_are_not_on_the_newest_page(self):
+        def http_get(url, params, api_key):
+            self.calls.append((url, params["userName"], params.get("cursor")))
+            if url == update_data.USER_URL:
+                return user_info(1_000)
+            handle = params["userName"]
+            if handle != "OpenAI":
+                return page([tweet(f"{handle}{i}", handle, handle, 30, 1, 0, 0, text=handle) for i in range(3)])
+            if not params.get("cursor"):
+                return page(
+                    [tweet("new", "OpenAI", "OpenAI", 10, 5, 0, 0, text="new")],
+                    has_next=True,
+                    cursor="page-2",
+                )
+            return page([tweet("five-days-old", "OpenAI", "OpenAI", 60 * 24 * 5, 9, 1, 1, text="kept")])
+
+        self.run_update(http_get, full=True)
+        self.calls.clear()
+        code, _before, _after = self.run_update(http_get, full=False, now=NOW + timedelta(hours=3))
+        self.assertEqual(code, 0)
+        history = json.loads((self.data / "history.json").read_text(encoding="utf-8"))
+        ids = {post["id"] for post in history["posts"]}
+        self.assertIn("five-days-old", ids)
+        self.assertIn("new", ids)
+        openai_pages = [call for call in self.calls if call[0] == update_data.TWEETS_URL and call[1] == "OpenAI"]
+        self.assertEqual(openai_pages, [(update_data.TWEETS_URL, "OpenAI", None)])
+
+    def test_full_pass_runs_about_once_a_day_unless_forced(self):
+        def http_get(url, params, api_key):
+            self.calls.append((url, params["userName"], params.get("cursor")))
+            if url == update_data.USER_URL:
+                return user_info(1_000)
+            handle = params["userName"]
+            if handle != "OpenAI":
+                return page([tweet(f"{handle}{i}", handle, handle, 20, 1, 0, 0, text=handle) for i in range(3)])
+            cursor = params.get("cursor")
+            page_number = 1 if not cursor else int(cursor)
+            tweets = [
+                tweet(f"p{page_number}-{i}", "OpenAI", "OpenAI", 5, 1, 0, 0, text=f"p{page_number}")
+                for i in range(20)
+            ]
+            return page(tweets, has_next=True, cursor=str(page_number + 1))
+
+        def openai_pages():
+            return [call for call in self.calls if call[0] == update_data.TWEETS_URL and call[1] == "OpenAI"]
+
+        with mock.patch.dict(os.environ, {"ARENA_FULL_REFRESH": ""}, clear=False):
+            code, _before, _after = self.run_update(http_get, full=None)
+            self.assertEqual(code, 0)
+            self.assertEqual(len(openai_pages()), 8)
+            self.calls.clear()
+            code, _before, _after = self.run_update(http_get, full=None, now=NOW + timedelta(hours=4))
+            self.assertEqual(code, 0)
+            self.assertEqual(len(openai_pages()), 1)
+            self.assertFalse(any(call[0] == update_data.USER_URL for call in self.calls))
+            history = json.loads((self.data / "history.json").read_text(encoding="utf-8"))
+            self.assertTrue(any(post["id"].startswith("p8-") for post in history["posts"]))
+            self.calls.clear()
+            code, _before, _after = self.run_update(http_get, full=None, now=NOW + timedelta(hours=23))
+            self.assertEqual(code, 0)
+            self.assertEqual(len(openai_pages()), 8)
+
+        self.calls.clear()
+        with mock.patch.dict(os.environ, {"ARENA_FULL_REFRESH": "true"}):
+            code, _before, _after = self.run_update(http_get, full=None, now=NOW + timedelta(hours=24))
+            self.assertEqual(code, 0)
+            self.assertEqual(len(openai_pages()), 8)
+
+    def test_zero_follower_lookup_is_cached_for_a_day(self):
+        def http_get(url, params, api_key):
+            self.calls.append((url, params["userName"]))
+            if url == update_data.USER_URL:
+                if params["userName"] == "xai":
+                    return user_info(0)
+                return user_info(1_000)
+            return page(
+                [tweet(f"{params['userName']}-{i}", params["userName"], params["userName"], 15, 2, 0, 0) for i in range(3)]
+            )
+
+        code, _before, _after = self.run_update(http_get, full=True)
+        self.assertEqual(code, 0)
+        self.assertEqual(self.calls.count((update_data.USER_URL, "xai")), 1)
+        self.assertNotIn((update_data.TWEETS_URL, "xai"), self.calls)
+        cached = json.loads((self.data / "followers.json").read_text(encoding="utf-8"))
+        self.assertEqual(cached["accounts"]["xai"]["followers"], 0)
+        self.assertTrue(cached["accounts"]["xai"]["fetchedAt"])
+        self.calls.clear()
+        code, _before, _after = self.run_update(http_get, full=True, now=NOW + timedelta(hours=4))
+        self.assertEqual(code, 0)
+        self.assertNotIn((update_data.USER_URL, "xai"), self.calls)
+        self.assertNotIn((update_data.TWEETS_URL, "xai"), self.calls)
+        self.calls.clear()
+        self.run_update(http_get, full=True, now=NOW + timedelta(days=1, hours=1))
+        self.assertIn((update_data.USER_URL, "xai"), self.calls)
+
+    def test_failed_follower_lookup_is_cached_for_a_day(self):
+        def http_get(url, params, api_key):
+            self.calls.append((url, params["userName"]))
+            if url == update_data.USER_URL and params["userName"] == "xai":
+                return 500, {"status": "error", "msg": "temporary"}
+            if url == update_data.USER_URL:
+                return user_info(1_000)
+            return page(
+                [tweet(f"{params['userName']}-{i}", params["userName"], params["userName"], 15, 2, 0, 0) for i in range(3)]
+            )
+
+        code, _before, _after = self.run_update(http_get, full=True)
+        self.assertEqual(code, 0)
+        cached = json.loads((self.data / "followers.json").read_text(encoding="utf-8"))
+        self.assertEqual(cached["accounts"]["xai"]["followers"], 0)
+        self.calls.clear()
+        self.run_update(http_get, full=False, now=NOW + timedelta(hours=3))
+        self.assertNotIn((update_data.USER_URL, "xai"), self.calls)
 
     def test_today_delta_uses_the_snapshot_from_about_a_day_ago(self):
         self.data.mkdir()

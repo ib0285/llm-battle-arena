@@ -5,6 +5,22 @@ import { Heart, MessageCircle, Repeat2 } from 'lucide-react'
 import { formatCount, timeAgo, type EntityPost } from '@/lib/arena-data'
 import styles from './arena.module.css'
 
+const IMAGE_URL = /https?:\/\/\S+\.(?:jpe?g|png|gif|webp)(?:\?\S*)?/i
+
+function PostMedia({ text }: { text: string }) {
+  const [hidden, setHidden] = useState(false)
+  const match = text.match(IMAGE_URL)
+  if (!match || hidden) return null
+  return (
+    <img
+      className={styles.entityMedia}
+      src={match[0]}
+      alt=""
+      onError={() => setHidden(true)}
+    />
+  )
+}
+
 export function EntityPosts({ posts, shareHref }: { posts: EntityPost[]; shareHref: string }) {
   const [mode, setMode] = useState<'top' | 'new'>('top')
   const [more, setMore] = useState(false)
@@ -47,6 +63,7 @@ export function EntityPosts({ posts, shareHref }: { posts: EntityPost[]; shareHr
             return (
               <li key={`${post.at}-${index}`} className={styles.entityPost}>
                 <p className={styles.entityText}>{post.text}</p>
+                <PostMedia text={post.text} />
                 <p className={styles.entityCounts}>
                   <span className={styles.entityStat}>
                     <Heart aria-hidden="true" />

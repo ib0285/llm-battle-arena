@@ -24,6 +24,57 @@
           "raw": 5.7008
         }
       }
+    },
+    {
+      "at": "2026-10-17T14:36:28.767842+00:00",
+      "companies": {
+        "openai": {
+          "index": 4.1,
+          "raw": 2.08
+        },
+        "meta": {
+          "index": 5.4,
+          "raw": 2.9612
+        },
+        "anthropic": {
+          "index": 10.0,
+          "raw": 6.0997
+        },
+        "deepmind": {
+          "index": 7.1,
+          "raw": 4.1433
+        }
+      },
+      "leaders": {
+        "officiallogank": {
+          "index": 10.0,
+          "raw": 16.5015
+        },
+        "finkd": {
+          "index": 7.2,
+          "raw": 11.3376
+        },
+        "bcherny": {
+          "index": 3.8,
+          "raw": 5.1002
+        },
+        "sama": {
+          "index": 3.3,
+          "raw": 4.1634
+        },
+        "alexandr_wang": {
+          "index": 2.5,
+          "raw": 2.7481
+        },
+        "demishassabis": {
+          "index": 1.9,
+          "raw": 1.7118
+        },
+        "elonmusk": {
+          "index": 1.1,
+          "raw": 0.2498
+        }
+      }
     }
   ]
 }

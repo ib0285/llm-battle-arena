@@ -18,7 +18,28 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  overflow: hidden;
+}
+
+.ringDrift,
+.ringSweep {
+  transform-box: view-box;
+  transform-origin: 380px 315px;
+  will-change: transform;
+}
+
+.ringDrift {
+  animation: ring-drift 52s linear infinite reverse;
+}
+
+.ringSweep {
+  animation: ring-drift 36s linear infinite;
+}
+
+@keyframes ring-drift {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* Center leader */
@@ -110,6 +131,58 @@
   flex-direction: column;
   cursor: pointer;
   overflow: hidden;
+}
+
+.cardFace {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.cardGlide {
+  transition:
+    left 0.75s cubic-bezier(0.22, 0.8, 0.3, 1),
+    top 0.75s cubic-bezier(0.22, 0.8, 0.3, 1),
+    width 0.75s cubic-bezier(0.22, 0.8, 0.3, 1),
+    min-height 0.75s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+
+.cardEnter {
+  animation: card-orbit 1.8s ease-in-out both;
+  animation-delay: var(--enter-delay, 0ms);
+  will-change: transform, opacity;
+}
+
+@keyframes card-orbit {
+  0% {
+    transform: translate(calc(var(--from-x) * var(--u)), calc(var(--from-y) * var(--u)));
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(calc(var(--mid-x) * var(--u)), calc(var(--mid-y) * var(--u)));
+  }
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+.corePulse {
+  animation: leader-pulse 0.9s ease-out;
+}
+
+@keyframes leader-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(243, 196, 91, 0);
+  }
+  40% {
+    box-shadow: 0 0 28px 4px rgba(243, 196, 91, 0.55);
+  }
 }
 
 .cardHead {
@@ -247,8 +320,16 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dot {
+  .dot,
+  .ringDrift,
+  .ringSweep,
+  .cardEnter,
+  .corePulse {
     animation: none;
+  }
+
+  .cardGlide {
+    transition: none;
   }
 }
 
@@ -1516,7 +1597,15 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ping,
-  .refreshSpin {
+  .refreshSpin,
+  .ringDrift,
+  .ringSweep,
+  .cardEnter,
+  .corePulse {
     animation: none;
+  }
+
+  .cardGlide {
+    transition: none;
   }
 }

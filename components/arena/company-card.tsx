@@ -12,16 +12,47 @@ type CompanyCardProps = {
   splitName?: boolean
   selected?: boolean
   onSelect?: () => void
+  /** One-shot orbit into this slot. Off after the intro, or immediately on tap. */
+  entering?: boolean
+  /** Smooth left/top move when this card changes rank slot. */
+  gliding?: boolean
+  enterIndex?: number
 }
 
 const u = (n: number) => `calc(${n} * var(--u))`
 
-export function CompanyCard({ company, box, splitName, selected, onSelect }: CompanyCardProps) {
+/** Shift that places the card where a rotation around the ring center would. */
+function arcShift(box: Box, deg: number) {
+  const vx = box.left + box.width / 2 - 380
+  const vy = box.top + box.height / 2 - 315
+  const a = (deg * Math.PI) / 180
+  const rx = vx * Math.cos(a) - vy * Math.sin(a)
+  const ry = vx * Math.sin(a) + vy * Math.cos(a)
+  return { x: rx - vx, y: ry - vy }
+}
+
+export function CompanyCard({
+  company,
+  box,
+  splitName,
+  selected,
+  onSelect,
+  entering,
+  gliding,
+  enterIndex = 0,
+}: CompanyCardProps) {
   const qualified = company.status === 'ok' && company.index !== null
   const scoreText = qualified ? formatIndex(company.index as number) : '—'
   const label = company.status === 'not_enough_posts' ? 'not enough posts' : "This week's score"
+  const from = arcShift(box, -84)
+  const mid = arcShift(box, -36)
   const style = {
     '--accent': company.accent,
+    '--enter-delay': `${enterIndex * 60}ms`,
+    '--from-x': from.x,
+    '--from-y': from.y,
+    '--mid-x': mid.x,
+    '--mid-y': mid.y,
     left: u(box.left),
     top: u(box.top),
     width: u(box.width),
@@ -30,10 +61,15 @@ export function CompanyCard({ company, box, splitName, selected, onSelect }: Com
 
   const [first, ...rest] = company.name.split(' ')
 
+  const className = [styles.card, selected ? styles.cardOn : '', gliding ? styles.cardGlide : '', entering ? styles.cardEnter : '']
+    .filter(Boolean)
+    .join(' ')
+
   return (
     <article
-      className={selected ? `${styles.card} ${styles.cardOn}` : styles.card}
+      className={className}
       style={style}
+      data-company={company.id}
       role="button"
       tabIndex={0}
       aria-pressed={selected}
@@ -46,6 +82,7 @@ export function CompanyCard({ company, box, splitName, selected, onSelect }: Com
         }
       }}
     >
+      <div className={styles.cardFace}>
       <div className={styles.cardHead}>
         <BrandLogo company={company} className={styles.cardLogo} />
         <h2 className={styles.cardName}>
@@ -80,6 +117,7 @@ export function CompanyCard({ company, box, splitName, selected, onSelect }: Com
         <span>
           {formatNumber(company.posts)} posts · 7d
         </span>
+      </div>
       </div>
     </article>
   )

@@ -20,12 +20,15 @@ rounded to one decimal. Fewer than 3 posts in the week is "not enough posts"
 and ranks last. Leaders also keep a separate total-reach sum, which is not
 part of the index. There is no xAI boost.
 
-Follower counts are cached and refreshed at most once a day. A full pass
-(walk back 7 days, and refresh stale follower counts) runs at most every 3
-hours. The hourly run only reads the newest page of each account and folds
-those posts into data/history.json, so older posts are not downloaded again.
-Posts older than 7 days are dropped. Metrics on a post are updated when that
-post is seen again.
+Follower counts are cached and refreshed at most once a day. A lookup that
+fails, or an account with no followers, is cached the same way and is not
+tried again until that day is up. Those accounts are left out of the score.
+
+A full pass (walk back 7 days, and refresh stale follower counts) runs when
+the last one is at least 23 hours old. Every other run reads only the newest
+page of each account and folds those posts into data/history.json. A light
+run never replaces the stored week. Posts older than 7 days are dropped.
+Metrics on a post are updated when that post is seen again.
 
 The Action passes TWITTERAPI_IO_KEY. If that key is missing, the API rejects
 it, every account fails, or the week is empty, this script leaves the data
@@ -56,10 +59,12 @@ USER_URL = "https://api.twitterapi.io/twitter/user/info"
 
 WEEK = timedelta(days=7)
 DAY = timedelta(hours=24)
-FULL_EVERY = timedelta(hours=3)
+FULL_EVERY = timedelta(hours=23)
 FOLLOWER_TTL = timedelta(days=1)
-# One page is about 20 tweets. The hourly run reads one page. A full pass
-# keeps going until a tweet is older than 7 days, and never past eight pages.
+# One page is about 20 tweets. A light run reads one page. A full pass keeps
+# going until a tweet is older than 7 days, and never past eight pages.
+# A shorter cap would drop posts that are still inside the week for the
+# busiest accounts, so the page limit stays at eight.
 MAX_PAGES_LIGHT = 1
 MAX_PAGES_FULL = 8
 MIN_POSTS = 3
@@ -393,15 +398,16 @@ def follower_count(followers, handle):
 
 
 def followers_need_fetch(entry, now, full):
-    count = as_count(entry.get("followers")) if isinstance(entry, dict) else 0
-    if count <= 0:
+    if not isinstance(entry, dict):
         return True
-    fetched = parse_time(entry.get("fetchedAt")) if isinstance(entry, dict) else None
-    if fetched is None:
-        return True
-    if now - fetched < FOLLOWER_TTL:
+    fetched = parse_time(entry.get("fetchedAt"))
+    # A recorded lookup, including a failure or a zero count, lasts a day.
+    if fetched is not None and now - fetched < FOLLOWER_TTL:
         return False
-    # A stale count is only refreshed on the full pass, and at most daily.
+    count = as_count(entry.get("followers"))
+    if count <= 0 or fetched is None:
+        return True
+    # A stale positive count is only refreshed on the full pass.
     return bool(full)
 
 
@@ -411,17 +417,17 @@ def fetch_followers(handle, api_key, http_get):
     data = body.get("data") if isinstance(body.get("data"), dict) else {}
     if data.get("unavailable"):
         raise AccountError(data.get("unavailableReason") or "unavailable")
-    count = as_count(data.get("followers"))
-    if count <= 0:
-        raise AccountError("no follower count")
-    return count
+    return as_count(data.get("followers"))
 
 
 def ensure_followers(handle, followers, api_key, http_get, now, full):
     key = cache_key(handle)
     entry = followers.get(key)
     if not followers_need_fetch(entry, now, full):
-        return follower_count(followers, handle)
+        count = follower_count(followers, handle)
+        if count <= 0:
+            raise AccountError("no follower count")
+        return count
     try:
         count = fetch_followers(handle, api_key, http_get)
     except AccountError:
@@ -429,8 +435,11 @@ def ensure_followers(handle, followers, api_key, http_get, now, full):
         if cached > 0:
             print(f"@{handle}: follower refresh failed, using the cached count", file=sys.stderr)
             return cached
+        followers[key] = {"followers": 0, "fetchedAt": now.isoformat()}
         raise
     followers[key] = {"followers": count, "fetchedAt": now.isoformat()}
+    if count <= 0:
+        raise AccountError("no follower count")
     return count
 
 
@@ -1070,7 +1079,7 @@ def execute(scores_path, accounts_path, api_key, http_get, now, data_dir=None, f
         state = load_optional(state_path) or {}
         forced = bool(full) if full is not None else os.environ.get("ARENA_FULL_REFRESH", "").strip().lower() in ("1", "true", "full", "yes")
         full_run = choose_full(state, now, forced)
-        print("Refresh mode: full 7-day" if full_run else "Refresh mode: hourly newest page")
+        print("Refresh mode: full 7-day" if full_run else "Refresh mode: light pass, newest page")
         fetched, failed_companies = collect(accounts, followers, api_key.strip(), http_get, now, full_run)
         history = merge_history(history, fetched, now)
         if not history:
@@ -1087,9 +1096,13 @@ def execute(scores_path, accounts_path, api_key, http_get, now, data_dir=None, f
         state = {}
     follower_payload = {
         "accounts": {
-            handle: followers[handle]
+            handle: {
+                "followers": as_count(followers[handle].get("followers")),
+                "fetchedAt": followers[handle].get("fetchedAt") or "",
+            }
             for handle in sorted(followers)
-            if follower_count(followers, handle) > 0
+            if isinstance(followers[handle], dict)
+            and (follower_count(followers, handle) > 0 or followers[handle].get("fetchedAt"))
         }
     }
     write_json(history_path, {"posts": history})

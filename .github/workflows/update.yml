@@ -2,13 +2,20 @@ name: Update Arena Data
 
 on:
   schedule:
-    - cron: '0 * * * *' # every hour
-  workflow_dispatch: # allow a manual run from the Actions tab
+    - cron: '0 */3 * * *' # every 3 hours
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Run a full 7-day refresh'
+        required: false
+        default: false
+        type: boolean
 
-# The hourly job reads recent posts from X and commits scores.json plus the
+# The job reads recent posts from X and commits scores.json plus the
 # 7-day history, follower cache, and daily snapshots in data/.
-# A manual run forces a full 7-day refresh. The hourly run only does that
-# when the last full pass is more than 3 hours old.
+# A full 7-day pass runs when the last one is at least 23 hours old.
+# Other runs read one page per account and merge it into the stored week.
+# A manual run does the same, unless "full" is checked.
 # The repository setting "Workflow permissions" must allow read and write.
 # TWITTERAPI_IO_KEY is a repository secret. The script sends it as X-API-Key.
 permissions:
@@ -32,7 +39,7 @@ jobs:
       - name: Update scores from X
         env:
           TWITTERAPI_IO_KEY: ${{ secrets.TWITTERAPI_IO_KEY }}
-          ARENA_FULL_REFRESH: ${{ github.event_name == 'workflow_dispatch' && '1' || '0' }}
+          ARENA_FULL_REFRESH: ${{ inputs.full == true && '1' || '0' }}
         run: python update_data.py
 
       - name: Check scores.json

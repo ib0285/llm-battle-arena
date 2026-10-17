@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-17T07:17:02.877572+00:00",
+  "updatedAt": "2026-10-17T11:49:37.137978+00:00",
   "companies": [
     {
       "id": "xai",
@@ -19,33 +19,33 @@
       "highlights": [
         {
           "text": "Grok is now part of The X Subscription. Get Grok, Cursor, and X Premium benefits in one p…",
-          "likes": 2994,
-          "reposts": 277,
-          "replies": 365,
+          "likes": 2995,
+          "reposts": 278,
+          "replies": 369,
           "at": "2026-10-12T23:10:44+00:00",
           "url": "https://x.com/grok/status/2109783860636500318"
         },
         {
           "text": "Try the Supabase plugin in @bot to monitor, debug, and ship changes to your backend",
-          "likes": 1610,
-          "reposts": 161,
-          "replies": 227,
+          "likes": 1612,
+          "reposts": 162,
+          "replies": 234,
           "at": "2026-10-13T17:14:09+00:00",
           "url": "https://x.com/grok/status/2110056511405949409"
         }
       ],
-      "reactions": 5634,
-      "reactionsLabel": "5.6K"
+      "reactions": 5650,
+      "reactionsLabel": "5.7K"
     },
     {
       "id": "openai",
       "name": "OpenAI",
-      "score": 4.0,
-      "index": 4.0,
-      "raw": 1.9101,
+      "score": 4.1,
+      "index": 4.1,
+      "raw": 2.0187,
       "posts": 13,
-      "progress": 0.4,
-      "delta": null,
+      "progress": 0.41,
+      "delta": -28,
       "weekDelta": null,
       "status": "ok",
       "accent": "#34d399",
@@ -55,65 +55,65 @@
       "highlights": [
         {
           "text": "New voices. Better accents. And less \"checking...\" GPT-Live-1.1 brings these updates to V…",
-          "likes": 10960,
-          "reposts": 791,
-          "replies": 807,
+          "likes": 11054,
+          "reposts": 799,
+          "replies": 812,
           "at": "2026-10-15T18:19:54+00:00",
           "url": "https://x.com/OpenAI/status/2110797830361436604"
         },
         {
           "text": "GPT-6 Astra Pro in ChatGPT got an upgrade with faster responses and improved use of plugi…",
-          "likes": 8743,
-          "reposts": 461,
-          "replies": 543,
+          "likes": 9755,
+          "reposts": 513,
+          "replies": 617,
           "at": "2026-10-16T20:27:13+00:00",
           "url": "https://x.com/OpenAI/status/2111192259073094035"
         },
         {
           "text": "We want to support the mathematics community in turning progress in AI into deeper human…",
-          "likes": 6146,
+          "likes": 6163,
           "reposts": 485,
-          "replies": 508,
+          "replies": 509,
           "at": "2026-10-15T14:35:29+00:00",
           "url": "https://x.com/OpenAI/status/2110741355739963884"
+        },
+        {
+          "text": "We're expanding access to GPT-Rosalind for academic research. The new Rosalind Academic P…",
+          "likes": 3166,
+          "reposts": 291,
+          "replies": 301,
+          "at": "2026-10-15T21:15:00+00:00",
+          "url": "https://x.com/OpenAI/status/2110841898076418336"
         },
         {
           "text": "European businesses are rapidly expanding their use of AI agents. More than half of the A…",
           "likes": 2883,
           "reposts": 232,
-          "replies": 575,
+          "replies": 577,
           "at": "2026-10-14T18:45:57+00:00",
           "url": "https://x.com/OpenAI/status/2110442001749659890"
         },
         {
-          "text": "We're expanding access to GPT-Rosalind for academic research. The new Rosalind Academic P…",
-          "likes": 3089,
-          "reposts": 285,
-          "replies": 298,
-          "at": "2026-10-15T21:15:00+00:00",
-          "url": "https://x.com/OpenAI/status/2110841898076418336"
-        },
-        {
           "text": "Building apps with GPT-Live-1? Give them a voice that fits. Here’s how to shape a voice w…",
-          "likes": 1281,
-          "reposts": 93,
-          "replies": 86,
+          "likes": 1380,
+          "reposts": 99,
+          "replies": 87,
           "at": "2026-10-16T17:08:32+00:00",
           "url": "https://x.com/OpenAIDevs/status/2111142258867335430"
         }
       ],
-      "reactions": 46343,
-      "reactionsLabel": "46.3K"
+      "reactions": 48227,
+      "reactionsLabel": "48.2K"
     },
     {
       "id": "meta",
       "name": "Meta",
-      "score": 5.7,
-      "index": 5.7,
-      "raw": 2.924,
+      "score": 5.5,
+      "index": 5.5,
+      "raw": 2.95,
       "posts": 8,
-      "progress": 0.57,
-      "delta": null,
+      "progress": 0.55,
+      "delta": -2,
       "weekDelta": null,
       "status": "ok",
       "accent": "#3b9cf6",
@@ -122,23 +122,23 @@
       "highlights": [
         {
           "text": "Today we’re releasing Muse Spark Open, the most capable US open-weight model to date. Bui…",
-          "likes": 11240,
-          "reposts": 1184,
-          "replies": 442,
+          "likes": 11371,
+          "reposts": 1200,
+          "replies": 450,
           "at": "2026-10-15T17:08:04+00:00",
           "url": "https://x.com/AIatMeta/status/2110779754274292212"
         },
         {
           "text": "We’re excited to introduce the Muse Wonder series with Muse Wonder and Muse Wonder Full,…",
-          "likes": 2175,
+          "likes": 2177,
           "reposts": 231,
-          "replies": 202,
+          "replies": 203,
           "at": "2026-10-12T17:02:20+00:00",
           "url": "https://x.com/AIatMeta/status/2109691148943999167"
         },
         {
           "text": "From rebuilding our foundation to pushing the frontier in 14 months 🚀 https://t.co/EiGmDw…",
-          "likes": 2137,
+          "likes": 2139,
           "reposts": 105,
           "replies": 91,
           "at": "2026-10-12T17:32:22+00:00",
@@ -146,15 +146,15 @@
         },
         {
           "text": "Check out our most capable models to date",
-          "likes": 704,
-          "reposts": 47,
-          "replies": 208,
+          "likes": 705,
+          "reposts": 48,
+          "replies": 216,
           "at": "2026-10-12T17:42:01+00:00",
           "url": "https://x.com/Meta/status/2109701133744943286"
         },
         {
           "text": "We’re exploring how AI can accelerate health science research. While AI has made signific…",
-          "likes": 705,
+          "likes": 707,
           "reposts": 97,
           "replies": 70,
           "at": "2026-10-14T18:44:49+00:00",
@@ -162,25 +162,25 @@
         },
         {
           "text": "We’re proud to share that Meta Omnilingual Automatic Speech Recognition (ASR) has been na…",
-          "likes": 641,
-          "reposts": 64,
-          "replies": 63,
+          "likes": 653,
+          "reposts": 66,
+          "replies": 66,
           "at": "2026-10-15T22:32:35+00:00",
           "url": "https://x.com/AIatMeta/status/2110861420321759269"
         }
       ],
-      "reactions": 21205,
-      "reactionsLabel": "21.2K"
+      "reactions": 21395,
+      "reactionsLabel": "21.4K"
     },
     {
       "id": "anthropic",
       "name": "Anthropic",
       "score": 10.0,
       "index": 10.0,
-      "raw": 5.6563,
+      "raw": 5.9436,
       "posts": 8,
       "progress": 1.0,
-      "delta": null,
+      "delta": 25,
       "weekDelta": null,
       "status": "ok",
       "accent": "#9f6bf5",
@@ -190,23 +190,23 @@
       "highlights": [
         {
           "text": "New on our Engineering blog: Creating in-house source control. In May, we merged around 2…",
-          "likes": 25615,
+          "likes": 25622,
           "reposts": 2628,
-          "replies": 1147,
+          "replies": 1149,
           "at": "2026-10-13T16:36:41+00:00",
           "url": "https://x.com/AnthropicAI/status/2110047081414987957"
         },
         {
           "text": "Six projects from the last few weeks that caught our attention: A wildfire analysis proto…",
-          "likes": 20255,
-          "reposts": 1256,
-          "replies": 369,
+          "likes": 23660,
+          "reposts": 1524,
+          "replies": 422,
           "at": "2026-10-16T19:29:54+00:00",
           "url": "https://x.com/claudeai/status/2111177834127601902"
         },
         {
           "text": "Over the last few months, we’ve made significant progress in reducing the effectiveness o…",
-          "likes": 6542,
+          "likes": 6543,
           "reposts": 615,
           "replies": 845,
           "at": "2026-10-12T23:58:35+00:00",
@@ -214,41 +214,41 @@
         },
         {
           "text": "Applications are now open for two new Anthropic Fellowships. STEM Fellows (science and en…",
-          "likes": 6756,
-          "reposts": 554,
-          "replies": 370,
+          "likes": 6770,
+          "reposts": 555,
+          "replies": 372,
           "at": "2026-10-15T13:14:22+00:00",
           "url": "https://x.com/AnthropicAI/status/2110720940665372825"
         },
         {
           "text": "New from our STEM Fellows Program: Designing more efficient quantum circuits with Claude.…",
-          "likes": 3973,
-          "reposts": 421,
-          "replies": 319,
+          "likes": 4432,
+          "reposts": 480,
+          "replies": 352,
           "at": "2026-10-16T17:47:58+00:00",
           "url": "https://x.com/AnthropicAI/status/2111152183240511640"
         },
         {
           "text": "We’ve committed to having evaluators assess our safety practices. We're in discussions wi…",
-          "likes": 3721,
-          "reposts": 254,
-          "replies": 391,
+          "likes": 3745,
+          "reposts": 257,
+          "replies": 393,
           "at": "2026-10-15T17:27:34+00:00",
           "url": "https://x.com/AnthropicAI/status/2110784662071398807"
         }
       ],
-      "reactions": 82998,
-      "reactionsLabel": "83K"
+      "reactions": 87347,
+      "reactionsLabel": "87.3K"
     },
     {
       "id": "deepmind",
       "name": "Google DeepMind",
-      "score": 7.5,
-      "index": 7.5,
-      "raw": 4.0574,
+      "score": 7.2,
+      "index": 7.2,
+      "raw": 4.115,
       "posts": 16,
-      "progress": 0.75,
-      "delta": null,
+      "progress": 0.72,
+      "delta": -28,
       "weekDelta": null,
       "status": "ok",
       "accent": "#3b82f6",
@@ -258,9 +258,9 @@
       "highlights": [
         {
           "text": "The moment you've been waiting 4… Our new frontier model, Gemini 4 Argon, is rolling out…",
-          "likes": 7033,
-          "reposts": 740,
-          "replies": 467,
+          "likes": 7049,
+          "reposts": 743,
+          "replies": 469,
           "at": "2026-10-13T16:05:51+00:00",
           "url": "https://x.com/GeminiApp/status/2110039322229649783"
         },
@@ -274,23 +274,23 @@
         },
         {
           "text": "Gemini 4 Argon is now globally available. Built to solve your hardest problems from start…",
-          "likes": 6412,
-          "reposts": 666,
-          "replies": 377,
+          "likes": 6414,
+          "reposts": 667,
+          "replies": 378,
           "at": "2026-10-13T16:05:40+00:00",
           "url": "https://x.com/GoogleDeepMind/status/2110039274922131792"
         },
         {
           "text": "What are you building with Gemini 4 Argon? Show us what you've made 👇",
-          "likes": 3846,
+          "likes": 3847,
           "reposts": 123,
-          "replies": 1031,
+          "replies": 1030,
           "at": "2026-10-14T22:02:05+00:00",
           "url": "https://x.com/GeminiApp/status/2110491356376576409"
         },
         {
           "text": "https://t.co/oADallGYuR",
-          "likes": 3888,
+          "likes": 3887,
           "reposts": 323,
           "replies": 171,
           "at": "2026-10-13T15:46:00+00:00",
@@ -300,13 +300,13 @@
           "text": "Gemini 4 Argon taught a robot to play cornhole just by watching a video. It mapped the ph…",
           "likes": 3393,
           "reposts": 408,
-          "replies": 280,
+          "replies": 281,
           "at": "2026-10-13T18:41:04+00:00",
           "url": "https://x.com/GoogleDeepMind/status/2110078384617464201"
         }
       ],
-      "reactions": 53318,
-      "reactionsLabel": "53.3K"
+      "reactions": 54020,
+      "reactionsLabel": "54K"
     }
   ],
   "leaders": [
@@ -317,12 +317,12 @@
       "companyName": "Google DeepMind",
       "score": 10.0,
       "index": 10.0,
-      "raw": 16.4889,
+      "raw": 16.4963,
       "posts": 5,
       "progress": 1.0,
       "delta": null,
       "status": "ok",
-      "reach": 31452,
+      "reach": 31466,
       "biggestReach": false,
       "reachLabel": "31.5K",
       "highlights": [
@@ -330,13 +330,13 @@
           "text": "Today we are rolling out Gemini 4 Argon globally in the Gemini API, to Pro + Ultra in Gem…",
           "likes": 10979,
           "reposts": 770,
-          "replies": 1250,
+          "replies": 1251,
           "at": "2026-10-13T16:04:20+00:00",
           "url": "https://x.com/OfficialLoganK/status/2110038940841545827"
         },
         {
           "text": "Gemini",
-          "likes": 6654,
+          "likes": 6652,
           "reposts": 386,
           "replies": 1058,
           "at": "2026-10-13T02:39:51+00:00",
@@ -344,7 +344,7 @@
         },
         {
           "text": "this is the golden age of startups, builders, and developers",
-          "likes": 5474,
+          "likes": 5477,
           "reposts": 341,
           "replies": 556,
           "at": "2026-10-11T17:22:06+00:00",
@@ -352,17 +352,17 @@
         },
         {
           "text": "A conversation with Sergey Brin, @joshwoodward, @tulseedoshi, and @melvinjohnsonp about G…",
-          "likes": 2681,
-          "reposts": 182,
-          "replies": 169,
+          "likes": 2689,
+          "reposts": 184,
+          "replies": 170,
           "at": "2026-10-14T17:22:20+00:00",
           "url": "https://x.com/OfficialLoganK/status/2110420958737813612"
         },
         {
           "text": "We are hosting our first \"Bench Summit\" to bring together people excited about pushing th…",
-          "likes": 797,
+          "likes": 796,
           "reposts": 38,
-          "replies": 117,
+          "replies": 119,
           "at": "2026-10-15T19:09:49+00:00",
           "url": "https://x.com/OfficialLoganK/status/2110810395598528788"
         }
@@ -375,36 +375,36 @@
       "companyName": "Meta",
       "score": 7.1,
       "index": 7.1,
-      "raw": 11.1452,
+      "raw": 11.2694,
       "posts": 3,
       "progress": 0.71,
       "delta": null,
       "status": "ok",
-      "reach": 83725,
+      "reach": 84658,
       "biggestReach": false,
-      "reachLabel": "83.7K",
+      "reachLabel": "84.7K",
       "highlights": [
         {
           "text": "Introducing Muse Wonder, our new family of frontier models with state of the art performa…",
-          "likes": 38828,
+          "likes": 38830,
           "reposts": 3079,
-          "replies": 2329,
+          "replies": 2331,
           "at": "2026-10-12T16:55:01+00:00",
           "url": "https://x.com/finkd/status/2109689305073614918"
         },
         {
           "text": "Muse Spark Open -- weights releasing today -- runs great on new Mac Studios thanks to wor…",
-          "likes": 28732,
-          "reposts": 1538,
-          "replies": 1027,
+          "likes": 29563,
+          "reposts": 1594,
+          "replies": 1064,
           "at": "2026-10-15T17:01:12+00:00",
           "url": "https://x.com/finkd/status/2110778025629347999"
         },
         {
           "text": "Muse ordered me 🍉 how thoughtful! https://t.co/1M2lImJdkB",
-          "likes": 7132,
-          "reposts": 347,
-          "replies": 713,
+          "likes": 7133,
+          "reposts": 348,
+          "replies": 716,
           "at": "2026-10-12T15:01:52+00:00",
           "url": "https://x.com/finkd/status/2109660829952176518"
         }
@@ -415,38 +415,38 @@
       "name": "Boris Cherny",
       "companyId": "anthropic",
       "companyName": "Anthropic",
-      "score": 3.4,
-      "index": 3.4,
-      "raw": 4.4619,
+      "score": 3.7,
+      "index": 3.7,
+      "raw": 4.8811,
       "posts": 3,
-      "progress": 0.34,
+      "progress": 0.37,
       "delta": null,
       "status": "ok",
-      "reach": 8088,
+      "reach": 8848,
       "biggestReach": false,
-      "reachLabel": "8.1K",
+      "reachLabel": "8.8K",
       "highlights": [
         {
           "text": "I could not imagine being productive without Claude Code Review. It runs on all of my PRs…",
-          "likes": 3473,
-          "reposts": 109,
-          "replies": 255,
+          "likes": 3787,
+          "reposts": 122,
+          "replies": 279,
           "at": "2026-10-16T18:12:20+00:00",
           "url": "https://x.com/bcherny/status/2111158313463525518"
         },
         {
           "text": "Don't sleep on Claude Slides. This is how I make slide decks now -- no more googling \"iph…",
-          "likes": 3096,
-          "reposts": 104,
-          "replies": 130,
+          "likes": 3481,
+          "reposts": 114,
+          "replies": 141,
           "at": "2026-10-16T18:13:42+00:00",
           "url": "https://x.com/bcherny/status/2111158659971699136"
         },
         {
           "text": "Over the last few years, we have made significant progress on prompt injection for Claude…",
-          "likes": 747,
+          "likes": 749,
           "reposts": 42,
-          "replies": 132,
+          "replies": 133,
           "at": "2026-10-15T17:55:32+00:00",
           "url": "https://x.com/bcherny/status/2110791698611855624"
         }
@@ -457,38 +457,38 @@
       "name": "Sam Altman",
       "companyId": "openai",
       "companyName": "OpenAI",
-      "score": 3.1,
-      "index": 3.1,
-      "raw": 3.8408,
+      "score": 3.2,
+      "index": 3.2,
+      "raw": 4.0446,
       "posts": 3,
-      "progress": 0.31,
+      "progress": 0.32,
       "delta": null,
       "status": "ok",
-      "reach": 73563,
+      "reach": 77465,
       "biggestReach": false,
-      "reachLabel": "73.6K",
+      "reachLabel": "77.5K",
       "highlights": [
         {
           "text": "Wow the new roadster looks quite amazing, good job @elonmusk",
-          "likes": 56315,
-          "reposts": 1595,
-          "replies": 2306,
+          "likes": 59272,
+          "reposts": 1691,
+          "replies": 2395,
           "at": "2026-10-16T16:26:29+00:00",
           "url": "https://x.com/sama/status/2111131677351432197"
         },
         {
           "text": "The back of the Navier-Stokes milestone shirt is the last line of the chain-of-thought fr…",
-          "likes": 9108,
-          "reposts": 414,
-          "replies": 572,
+          "likes": 9608,
+          "reposts": 430,
+          "replies": 598,
           "at": "2026-10-16T16:56:29+00:00",
           "url": "https://x.com/sama/status/2111139227761266699"
         },
         {
           "text": "Very happy to see this from Nick!",
-          "likes": 2966,
-          "reposts": 115,
-          "replies": 172,
+          "likes": 3164,
+          "reposts": 126,
+          "replies": 181,
           "at": "2026-10-16T16:22:07+00:00",
           "url": "https://x.com/sama/status/2111130577789493706"
         }
@@ -501,26 +501,26 @@
       "companyName": "Meta",
       "score": 2.5,
       "index": 2.5,
-      "raw": 2.7279,
+      "raw": 2.7403,
       "posts": 103,
       "progress": 0.25,
       "delta": null,
       "status": "ok",
-      "reach": 229411,
+      "reach": 230458,
       "biggestReach": false,
-      "reachLabel": "229.4K",
+      "reachLabel": "230.5K",
       "highlights": [
         {
           "text": "somehow the corposlops refused to use my video https://t.co/5PS0tyMfys",
-          "likes": 18770,
-          "reposts": 645,
+          "likes": 18775,
+          "reposts": 646,
           "replies": 1043,
           "at": "2026-10-12T17:10:50+00:00",
           "url": "https://x.com/alexandr_wang/status/2109693288752337109"
         },
         {
           "text": "it's kind of hard to explain but asian lesbian is what everyone in SF looks like",
-          "likes": 12927,
+          "likes": 12926,
           "reposts": 266,
           "replies": 380,
           "at": "2026-10-15T07:02:31+00:00",
@@ -528,17 +528,17 @@
         },
         {
           "text": "great doing business with you john apple 🍎🤝",
-          "likes": 12941,
-          "reposts": 174,
-          "replies": 136,
+          "likes": 13104,
+          "reposts": 176,
+          "replies": 138,
           "at": "2026-10-15T18:31:09+00:00",
           "url": "https://x.com/alexandr_wang/status/2110800663383040482"
         },
         {
           "text": "wait who the hell was driving the tesla https://t.co/YGwJuNBKNa",
-          "likes": 11041,
-          "reposts": 281,
-          "replies": 813,
+          "likes": 11256,
+          "reposts": 289,
+          "replies": 824,
           "at": "2026-10-16T05:54:17+00:00",
           "url": "https://x.com/alexandr_wang/status/2110972577686626642"
         },
@@ -552,7 +552,7 @@
         },
         {
           "text": "whole team feels dumb now, but it's true, we did not explicitly train our model on 3d dem…",
-          "likes": 9654,
+          "likes": 9652,
           "reposts": 193,
           "replies": 382,
           "at": "2026-10-12T19:31:29+00:00",
@@ -567,20 +567,20 @@
       "companyName": "Google DeepMind",
       "score": 1.9,
       "index": 1.9,
-      "raw": 1.7096,
+      "raw": 1.7106,
       "posts": 3,
       "progress": 0.19,
       "delta": null,
       "status": "ok",
-      "reach": 10030,
+      "reach": 10036,
       "biggestReach": false,
       "reachLabel": "10K",
       "highlights": [
         {
           "text": "Gemini 4 Argon is amazing for knowledge work and coding - and it’s super fun to build wit…",
-          "likes": 5135,
+          "likes": 5138,
           "reposts": 516,
-          "replies": 357,
+          "replies": 359,
           "at": "2026-10-13T16:12:33+00:00",
           "url": "https://x.com/demishassabis/status/2110041008100843835"
         },
@@ -588,15 +588,15 @@
           "text": "I love lasers (really wanted to work on them as a kid)… especially Argon lasers 😀 reminde…",
           "likes": 2159,
           "reposts": 108,
-          "replies": 114,
+          "replies": 115,
           "at": "2026-10-13T16:59:56+00:00",
           "url": "https://x.com/demishassabis/status/2110052931110318464"
         },
         {
           "text": "Amazing to see research move from the lab to real-world clinical utility - congrats to th…",
-          "likes": 1436,
+          "likes": 1435,
           "reposts": 114,
-          "replies": 91,
+          "replies": 92,
           "at": "2026-10-13T01:09:37+00:00",
           "url": "https://x.com/demishassabis/status/2109813775377563908"
         }
@@ -609,60 +609,60 @@
       "companyName": "xAI",
       "score": 1.1,
       "index": 1.1,
-      "raw": 0.2447,
-      "posts": 58,
+      "raw": 0.248,
+      "posts": 59,
       "progress": 0.11,
       "delta": null,
       "status": "ok",
-      "reach": 3427851,
+      "reach": 3533451,
       "biggestReach": true,
-      "reachLabel": "3.4M",
+      "reachLabel": "3.5M",
       "highlights": [
         {
           "text": "Turns out the future does have flying cars https://t.co/6fexPp6SXI",
-          "likes": 763971,
-          "reposts": 91770,
-          "replies": 40131,
+          "likes": 779577,
+          "reposts": 93722,
+          "replies": 41684,
           "at": "2026-10-16T01:57:58+00:00",
           "url": "https://x.com/elonmusk/status/2110913107094606330"
         },
         {
           "text": "Maybe we should start a competitor to Amazon 🤔",
-          "likes": 199304,
-          "reposts": 18830,
-          "replies": 21511,
+          "likes": 202398,
+          "reposts": 19104,
+          "replies": 21638,
           "at": "2026-10-15T12:52:58+00:00",
           "url": "https://x.com/elonmusk/status/2110715556328579219"
         },
         {
           "text": "New Roadster is beyond movies, beyond imagination, beyond human, yet still made by humans…",
-          "likes": 192230,
-          "reposts": 16224,
-          "replies": 7689,
+          "likes": 196421,
+          "reposts": 16567,
+          "replies": 7869,
           "at": "2026-10-15T12:37:09+00:00",
           "url": "https://x.com/elonmusk/status/2110711574121857208"
         },
         {
-          "text": "https://t.co/KBWjjWknXe",
-          "likes": 169815,
-          "reposts": 22630,
-          "replies": 7752,
-          "at": "2026-10-16T02:40:01+00:00",
-          "url": "https://x.com/elonmusk/status/2110923689797808453"
-        },
-        {
           "text": "Going forward, all advertising on 𝕏 will be subject to a reasonable esthetic standard. Ad…",
-          "likes": 177185,
-          "reposts": 11683,
-          "replies": 7643,
+          "likes": 188614,
+          "reposts": 12474,
+          "replies": 8085,
           "at": "2026-10-16T16:24:26+00:00",
           "url": "https://x.com/elonmusk/status/2111131160348688395"
         },
         {
+          "text": "https://t.co/KBWjjWknXe",
+          "likes": 172758,
+          "reposts": 23067,
+          "replies": 7864,
+          "at": "2026-10-16T02:40:01+00:00",
+          "url": "https://x.com/elonmusk/status/2110923689797808453"
+        },
+        {
           "text": "And so the slaughter continues … Time for Zelensky to go",
-          "likes": 123021,
-          "reposts": 20880,
-          "replies": 23423,
+          "likes": 123155,
+          "reposts": 20911,
+          "replies": 23502,
           "at": "2026-10-15T02:23:41+00:00",
           "url": "https://x.com/elonmusk/status/2110557192650641827"
         }
@@ -680,15 +680,15 @@
       "progress": 0,
       "delta": null,
       "status": "not_enough_posts",
-      "reach": 6972,
+      "reach": 6976,
       "biggestReach": false,
       "reachLabel": "7K",
       "highlights": [
         {
           "text": "6 days and $40,000 of compute with GPT-5.6 Sol to find a critical vulnerability in Chrome…",
-          "likes": 6384,
+          "likes": 6386,
           "reposts": 329,
-          "replies": 259,
+          "replies": 261,
           "at": "2026-10-13T17:43:29+00:00",
           "url": "https://x.com/gdb/status/2110063893016096831"
         }
@@ -706,9 +706,9 @@
       "progress": 0,
       "delta": null,
       "status": "not_enough_posts",
-      "reach": 1424,
+      "reach": 1527,
       "biggestReach": false,
-      "reachLabel": "1.4K",
+      "reachLabel": "1.5K",
       "highlights": [
         {
           "text": "I've been a personal supporter (through our family foundation) of @Khipu_AI &amp; @DeepIn…",
@@ -720,8 +720,8 @@
         },
         {
           "text": "Have a glimpse at this! Nice work, @AndrewDai and Elorian folks!",
-          "likes": 570,
-          "reposts": 36,
+          "likes": 668,
+          "reposts": 41,
           "replies": 25,
           "at": "2026-10-16T17:29:45+00:00",
           "url": "https://x.com/JeffDean/status/2111147597159415874"
@@ -805,8 +805,8 @@
       "handle": "@grok",
       "time": "4d",
       "text": "Grok is now part of The X Subscription. Get Grok, Cursor, and X Premium benefits in one plan starting at $8/month, with five tiers to choose from. Subscribe today, or if you're already on SuperGrok, head to your account settings to switch to The X Subscription.",
-      "replies": "365",
-      "reposts": "277",
+      "replies": "369",
+      "reposts": "278",
       "likes": "3K",
       "inlineHandle": false,
       "url": "https://x.com/grok/status/2109783860636500318"
@@ -818,9 +818,9 @@
       "handle": "@OpenAI",
       "time": "1d",
       "text": "New voices. Better accents. And less \"checking...\" GPT-Live-1.1 brings these updates to Voice in ChatGPT, Codex, and dots, with new voices in French, German, Hindi, Mexican Spanish, Korean, and Japanese. Rolling out today to all users. Coming soon to the API. https://t.co/L6K8ZUC1xm",
-      "replies": "807",
-      "reposts": "791",
-      "likes": "11K",
+      "replies": "812",
+      "reposts": "799",
+      "likes": "11.1K",
       "inlineHandle": false,
       "url": "https://x.com/OpenAI/status/2110797830361436604"
     },
@@ -831,9 +831,9 @@
       "handle": "@AIatMeta",
       "time": "1d",
       "text": "Today we’re releasing Muse Spark Open, the most capable US open-weight model to date. Built for coding and agentic work, it excels at long-horizon tasks, complex software engineering, and multi-step reasoning. Key Model Specs: → 816B total / 42B active parameters → 1M token context window → Natively multimodal across text, image, video, audio",
-      "replies": "442",
+      "replies": "450",
       "reposts": "1.2K",
-      "likes": "11.2K",
+      "likes": "11.4K",
       "inlineHandle": false,
       "url": "https://x.com/AIatMeta/status/2110779754274292212"
     },
@@ -857,25 +857,31 @@
       "handle": "@GeminiApp",
       "time": "3d",
       "text": "The moment you've been waiting 4… Our new frontier model, Gemini 4 Argon, is rolling out now in the Gemini app to bring your most complex ideas into reality. See how Gemini 4 Argon and our latest updates across the Gemini app help you get the most out of every prompt. 🧵",
-      "replies": "467",
-      "reposts": "740",
+      "replies": "469",
+      "reposts": "743",
       "likes": "7K",
       "inlineHandle": false,
       "url": "https://x.com/GeminiApp/status/2110039322229649783"
     }
   ],
+  "mover": {
+    "companyId": "anthropic",
+    "name": "Anthropic",
+    "change": 25,
+    "period": "today"
+  },
   "topPost": {
     "author": "Elon Musk",
     "handle": "@elonmusk",
     "lab": "xAI",
     "companyId": "xai",
     "text": "Going forward, all advertising on 𝕏 will be subject to a reasonable esthetic standard. Advertisers who post ads that are ugly, shrill, strident or overstate claims about their product will be barred from advertising.",
-    "likes": "177.2K",
-    "reposts": "11.7K",
-    "replies": "7.6K",
-    "engagement": 196511,
+    "likes": "188.6K",
+    "reposts": "12.5K",
+    "replies": "8.1K",
+    "engagement": 209173,
     "createdAt": "2026-10-16T16:24:26+00:00",
-    "time": "14h",
+    "time": "19h",
     "url": "https://x.com/elonmusk/status/2111131160348688395"
   },
   "leaderPosts": [
@@ -886,9 +892,9 @@
       "handle": "@elonmusk",
       "time": "1d",
       "text": "Turns out the future does have flying cars https://t.co/6fexPp6SXI",
-      "replies": "40.1K",
-      "reposts": "91.8K",
-      "likes": "764K",
+      "replies": "41.7K",
+      "reposts": "93.7K",
+      "likes": "779.6K",
       "inlineHandle": false,
       "url": "https://x.com/elonmusk/status/2110913107094606330"
     },
@@ -897,11 +903,11 @@
       "companyId": "openai",
       "name": "Sam Altman",
       "handle": "@sama",
-      "time": "14h",
+      "time": "19h",
       "text": "Wow the new roadster looks quite amazing, good job @elonmusk",
-      "replies": "2.3K",
-      "reposts": "1.6K",
-      "likes": "56.3K",
+      "replies": "2.4K",
+      "reposts": "1.7K",
+      "likes": "59.3K",
       "inlineHandle": false,
       "url": "https://x.com/sama/status/2111131677351432197"
     },
@@ -926,7 +932,7 @@
       "time": "4d",
       "text": "somehow the corposlops refused to use my video https://t.co/5PS0tyMfys",
       "replies": "1K",
-      "reposts": "645",
+      "reposts": "646",
       "likes": "18.8K",
       "inlineHandle": false,
       "url": "https://x.com/alexandr_wang/status/2109693288752337109"
@@ -938,7 +944,7 @@
       "handle": "@OfficialLoganK",
       "time": "3d",
       "text": "Today we are rolling out Gemini 4 Argon globally in the Gemini API, to Pro + Ultra in Gemini App, and Ultra subs in Antigravity! Argon is a huge step forward for Gemini, and a labor of love. This model has been battle tested by over 100,000 people at Google over the last month, with so much new innovation, ambition, and hard work baked into this release. The team has been heads down over the last 6 months working to make this possible across the stack (research, infra, safety, eng, etc). We rolled the model out to cyber defenders as part of our fairwind program and early access customers over the last 2 weeks, it has been amazing to see and talk to folks who are now using this model daily. Seeing the models writing capability, raw knowledge and persistence for coding, paired with new features like 1M token output when the model needs to work more has gotten me even more excited about our path ahead. This is just the start of the Gemini 4 era. As you saw with 3.5, 3.6, 3.7, and 3.8 Flash, our iteration speed with Gemini is fast : ) Now with Gemini 4 Argon to work from, I am cannot wait to see the progress continue, and most importantly see what this new model enables for the world. This is such a special moment in the arc of technology, as millions of people everyday tackle problems they could never have thought possible before. Gemini 4 Argon was built to help you tackle the hardest problems. I have personally felt this spark with Argon and hope you do too. Onwards!!",
-      "replies": "1.2K",
+      "replies": "1.3K",
       "reposts": "770",
       "likes": "11K",
       "inlineHandle": false,
@@ -951,7 +957,7 @@
       "handle": "@gdb",
       "time": "3d",
       "text": "6 days and $40,000 of compute with GPT-5.6 Sol to find a critical vulnerability in Chrome, claiming Google’s first full-chain reward in 2026 for a vulnerability that would affect an estimated 1 billion users. Highlights the opportunity for defenders to utilize these tools to secure their software to unprecedented levels:",
-      "replies": "259",
+      "replies": "261",
       "reposts": "329",
       "likes": "6.4K",
       "inlineHandle": false,
@@ -964,7 +970,7 @@
       "handle": "@demishassabis",
       "time": "3d",
       "text": "Gemini 4 Argon is amazing for knowledge work and coding - and it’s super fun to build with! We asked it to create this wizard chess game and it's so cool to see Argon's physics understanding & 3D modelling capabilities, makes me nostalgic for Battlechess on the Amiga - fun times! Argon is rolling out today to Google Ultra and Pro subscribers in the @GeminiApp and Search, and Ultra subscribers in @antigravity! More info & full availability in the blog: https://t.co/7d3791mRNH",
-      "replies": "357",
+      "replies": "359",
       "reposts": "516",
       "likes": "5.1K",
       "inlineHandle": false,
@@ -975,11 +981,11 @@
       "companyId": "anthropic",
       "name": "Boris Cherny",
       "handle": "@bcherny",
-      "time": "13h",
+      "time": "17h",
       "text": "I could not imagine being productive without Claude Code Review. It runs on all of my PRs, and catches almost every bug before it goes it. This is a piece of the secret sauce that lets the team and I move so quickly while raising the quality bar",
-      "replies": "255",
-      "reposts": "109",
-      "likes": "3.5K",
+      "replies": "279",
+      "reposts": "122",
+      "likes": "3.8K",
       "inlineHandle": false,
       "url": "https://x.com/bcherny/status/2111158313463525518"
     }

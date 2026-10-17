@@ -45,7 +45,12 @@ export function LeadersBoard({
   return (
     <div className={styles.leaderWrap}>
       {ranked.length > 0 ? (
-        <ol className={styles.leaderList}>
+        <>
+          <div className={styles.leaderColumns} aria-hidden="true">
+            <span>Score</span>
+            <span>Reactions</span>
+          </div>
+          <ol className={styles.leaderList}>
           {ranked.map((person, index) => {
             const place = index + 1
             const id = leaderKey(person.handle)
@@ -88,6 +93,7 @@ export function LeadersBoard({
             )
           })}
         </ol>
+        </>
       ) : null}
       {quiet.length > 0 ? (
         <section className={styles.leaderQuiet} aria-label="Not enough posts this week">

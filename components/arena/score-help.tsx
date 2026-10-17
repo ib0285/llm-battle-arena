@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useState } from 'react'
+import { createPortal } from 'react-dom'
 import changelog from '@/changelog.json'
 import styles from './arena.module.css'
 
@@ -45,25 +46,30 @@ export function ScoreHelp() {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setOpen(false)
     }
+    const previous = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previous
+      window.removeEventListener('keydown', onKey)
+    }
   }, [open])
 
-  return (
-    <>
-      <button type="button" className={styles.infoLink} onClick={() => setOpen(true)}>
-        How it&apos;s scored ⓘ
-      </button>
-      {open ? (
-        <div className={styles.modalBackdrop} onClick={() => setOpen(false)}>
-          <div
-            className={styles.modal}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={titleId}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h2 id={titleId}>How it&apos;s scored</h2>
+  const dialog = open ? (
+    <div className={styles.modalBackdrop} onClick={() => setOpen(false)}>
+      <div
+        className={styles.modal}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <div className={styles.modalBar}>
+          <h2 id={titleId}>How it&apos;s scored</h2>
+          <button type="button" className={styles.modalClose} onClick={() => setOpen(false)}>
+            Close
+          </button>
+        </div>
             <p>
               For each account we add likes, reposts, and replies on its original posts from the last 7 days, divide by
               the number of posts, then divide by followers and multiply by 1,000. That is the average engagement per
@@ -109,12 +115,16 @@ export function ScoreHelp() {
             <a className={styles.suggestFix} href={SUGGEST_URL} target="_blank" rel="noopener noreferrer">
               Suggest a fix to the method
             </a>
-            <button type="button" className={styles.modalClose} onClick={() => setOpen(false)}>
-              Close
-            </button>
           </div>
         </div>
-      ) : null}
+  ) : null
+
+  return (
+    <>
+      <button type="button" className={styles.infoLink} onClick={() => setOpen(true)}>
+        How it&apos;s scored ⓘ
+      </button>
+      {dialog && typeof document !== 'undefined' ? createPortal(dialog, document.body) : null}
     </>
   )
 }

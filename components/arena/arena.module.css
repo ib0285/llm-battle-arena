@@ -584,7 +584,7 @@
   align-items: flex-end;
   justify-content: flex-end;
   gap: 12px;
-  padding: 2px 16px 6px 10px;
+  padding: 2px 14px 6px 8px;
   color: rgba(255, 255, 255, 0.62);
   font-size: 12px;
   font-weight: 700;
@@ -611,7 +611,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  margin-top: 4px;
+  margin: 4px 0 0;
+  padding: 0;
   min-width: 0;
   max-width: 100%;
 }
@@ -642,7 +643,7 @@
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  padding: 12px 16px 12px 10px;
+  padding: 12px 14px 12px 8px;
   border: 0;
   background: transparent;
   color: inherit;
@@ -781,7 +782,8 @@
 
 .leaderQuietList {
   list-style: none;
-  margin-top: 8px;
+  margin: 8px 0 0;
+  padding: 0;
   overflow: hidden;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -798,7 +800,7 @@
   gap: 8px;
   width: 100%;
   min-width: 0;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border: 0;
   background: transparent;
   color: inherit;
@@ -988,15 +990,31 @@
   font-size: 13px;
 }
 
+.entityActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 12px;
+}
+
 .showMore {
-  margin-top: 6px;
-  padding: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 8px 2px;
   border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   background: none;
   color: rgba(255, 255, 255, 0.78);
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
+  text-align: left;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -1005,10 +1023,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  align-self: flex-start;
   width: auto;
   max-width: 100%;
   min-height: 44px;
-  margin-top: 10px;
+  margin: 0;
   padding: 0 18px;
   border-radius: 999px;
   background: #fff;
@@ -1102,16 +1121,26 @@
 }
 
 .feedHead {
+  position: relative;
+  z-index: 3;
+  padding: 8px 8px 8px 16px;
+}
+
+.feedHeadRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px 12px;
+  gap: 8px;
+  min-width: 0;
 }
 
 .feedHead h2 {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   gap: 12px;
+  min-width: 0;
+  overflow: hidden;
   font-size: 16px;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.9);
@@ -1134,18 +1163,62 @@
   mask-position: center;
 }
 
-.refresh {
-  display: inline-flex;
-  border: 0;
-  border-radius: 6px;
-  background: transparent;
-  padding: 4px;
-  color: rgba(255, 255, 255, 0.75);
-  cursor: pointer;
+.refreshWrap {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.refresh:hover {
+.refresh {
+  position: relative;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+.refresh:hover,
+.refresh:focus-visible {
   color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.refresh:disabled {
+  cursor: progress;
+}
+
+.refreshNote {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 6px);
+  right: 0;
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #1b1b26;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .refreshIcon,
@@ -1156,8 +1229,18 @@
 }
 
 .refreshIcon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
+}
+
+.refreshSpin {
+  animation: refresh-spin 0.7s linear infinite;
+}
+
+@keyframes refresh-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .feedList {
@@ -1290,6 +1373,8 @@
   position: absolute;
   top: 12px;
   right: 12px;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .more {
@@ -1430,7 +1515,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ping {
+  .ping,
+  .refreshSpin {
     animation: none;
   }
 }

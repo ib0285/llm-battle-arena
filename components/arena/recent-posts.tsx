@@ -1,7 +1,8 @@
 import type { CSSProperties } from 'react'
-import { BadgeCheck, ExternalLink, Heart, MessageCircle, Repeat2, RotateCw } from 'lucide-react'
+import { BadgeCheck, ExternalLink, Heart, MessageCircle, Repeat2 } from 'lucide-react'
 import type { Company, Mover, Post, TopPost } from '@/lib/arena-data'
 import { BrandLogo } from './brand-logo'
+import { RefreshScores } from './refresh-scores'
 import styles from './arena.module.css'
 
 function TopPostCard({ post, company }: { post: TopPost; company?: Company }) {
@@ -69,12 +70,14 @@ export function RecentPosts({
   mover,
   topPost,
   heading,
+  updatedAt,
 }: {
   posts: Post[]
   companies: Company[]
   mover: Mover | null
   topPost: TopPost | null
   heading: string
+  updatedAt: string | null
 }) {
   const byId = new Map(companies.map((company) => [company.id, company]))
   const changeClass = mover && mover.change < 0 ? styles.down : styles.up
@@ -92,13 +95,13 @@ export function RecentPosts({
         </div>
       ) : null}
       <header className={styles.feedHead}>
-        <h2 id="recent-posts-title">
-          <XMark />
-          {heading}
-        </h2>
-        <button type="button" className={styles.refresh} aria-label="Refresh posts">
-          <RotateCw className={styles.refreshIcon} aria-hidden="true" />
-        </button>
+        <div className={styles.feedHeadRow}>
+          <h2 id="recent-posts-title">
+            <XMark />
+            {heading}
+          </h2>
+          <RefreshScores updatedAt={updatedAt} />
+        </div>
       </header>
       {topPost ? <TopPostCard post={topPost} company={byId.get(topPost.companyId)} /> : null}
       {posts.length === 0 ? (
